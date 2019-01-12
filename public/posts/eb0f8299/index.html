@@ -1,0 +1,1127 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="实践与总结," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="安装1~]# yum -y install samba samba-common samba-client samba服务器访问过慢的问题123456具体表现：	samba服务正常启动，win下可以访问，打开时要等待很久解决办法：	1、查看/etc/sysconfig/network中hostname	2、编辑/etc/hosts文件，添加hostname的值到127.0.0.1	3、重启服务或服">
+<meta name="keywords" content="实践与总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="samba服务器搭建">
+<meta property="og:url" content="http://yort.xin/posts/eb0f8299/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="安装1~]# yum -y install samba samba-common samba-client samba服务器访问过慢的问题123456具体表现：	samba服务正常启动，win下可以访问，打开时要等待很久解决办法：	1、查看/etc/sysconfig/network中hostname	2、编辑/etc/hosts文件，添加hostname的值到127.0.0.1	3、重启服务或服">
+<meta property="og:updated_time" content="2017-07-28T13:18:59.253Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="samba服务器搭建">
+<meta name="twitter:description" content="安装1~]# yum -y install samba samba-common samba-client samba服务器访问过慢的问题123456具体表现：	samba服务正常启动，win下可以访问，打开时要等待很久解决办法：	1、查看/etc/sysconfig/network中hostname	2、编辑/etc/hosts文件，添加hostname的值到127.0.0.1	3、重启服务或服">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/eb0f8299/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> samba服务器搭建 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                samba服务器搭建
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-03-27T00:00:00+08:00" content="2017-03-27">
+              2017-03-27
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-07-28T21:18:59+08:00" content="2017-07-28">
+              2017-07-28
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实践与总结/" itemprop="url" rel="index">
+                    <span itemprop="name">实践与总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~]<span class="comment"># yum -y install samba samba-common samba-client</span></div></pre></td></tr></table></figure>
+<h3 id="samba服务器访问过慢的问题"><a href="#samba服务器访问过慢的问题" class="headerlink" title="samba服务器访问过慢的问题"></a>samba服务器访问过慢的问题</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">具体表现：</div><div class="line">	samba服务正常启动，win下可以访问，打开时要等待很久</div><div class="line">解决办法：</div><div class="line">	<span class="number">1</span>、查看/etc/sysconfig/network中hostname</div><div class="line">	<span class="number">2</span>、编辑/etc/hosts文件，添加hostname的值到<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></div><div class="line">	<span class="number">3</span>、重启服务或服务器</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><h4 id="samba配置"><a href="#samba配置" class="headerlink" title="samba配置"></a>samba配置</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">~]# vim /etc/samba/smb.conf</div><div class="line">[global]</div><div class="line">	workgroup = WORKGROUP</div><div class="line"><span class="built_in">	server </span>string = Samba<span class="built_in"> Server </span>Version %v</div><div class="line">	log file = /var/log/samba/log.%m</div><div class="line">	max log size = 50</div><div class="line">	security =<span class="built_in"> user</span></div><div class="line">	passdb backend = tdbsam</div><div class="line">	load printers = <span class="literal">yes</span></div><div class="line">	hosts allow = 192.168.1.</div><div class="line">	cups options =<span class="built_in"> raw</span></div><div class="line"></div><div class="line">[公共]</div><div class="line">    comment = This is a public directory</div><div class="line">    path = /data/public</div><div class="line">    public = <span class="literal">yes</span></div><div class="line">    writable = <span class="literal">yes</span></div><div class="line">    create mask = 0755</div><div class="line">    directory mask = 0755</div><div class="line"></div><div class="line">[开发组]</div><div class="line">    path = /data/kaifazu</div><div class="line">    valid<span class="built_in"> users </span>= @kaifazu</div><div class="line">   <span class="built_in"> group </span>= kaifazu</div><div class="line">	read list = @kaifazu</div><div class="line">    write list = @kaifazu</div><div class="line">	create mode = 0664</div><div class="line">	directory mode = 0775</div><div class="line"></div><div class="line">[测试组]</div><div class="line">    path = /data/ceshizu</div><div class="line">    valid<span class="built_in"> users </span>= @ceshizu</div><div class="line">   <span class="built_in"> group </span>= @ceshizu</div><div class="line">    write list = @ceshizu</div><div class="line">	create mode = 0664</div><div class="line">	directory mode = 0775</div></pre></td></tr></table></figure>
+<h4 id="组配置"><a href="#组配置" class="headerlink" title="组配置"></a>组配置</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">kaifazu</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:531</span><span class="selector-pseudo">:zhangsan</span>,<span class="selector-tag">lisi</span></div><div class="line"><span class="selector-tag">ceshizu</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:532</span><span class="selector-pseudo">:wangwu</span></div></pre></td></tr></table></figure>
+<h3 id="samba服务器磁盘检测脚本"><a href="#samba服务器磁盘检测脚本" class="headerlink" title="samba服务器磁盘检测脚本"></a>samba服务器磁盘检测脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="keyword">function</span> <span class="function"><span class="title">fun_chksize</span></span>() </div><div class="line">&#123;</div><div class="line">    <span class="comment"># $1 file_name</span></div><div class="line">    <span class="comment"># $2 file_size</span></div><div class="line">    <span class="comment"># $3 max_size</span></div><div class="line">    <span class="comment"># $4 mail_addr</span></div><div class="line">    <span class="comment"># switch_file_size=file_size/1024  将K转换为M，方便阅读</span></div><div class="line">    <span class="keyword">if</span> [ <span class="variable">$2</span> -ge <span class="variable">$3</span> ];<span class="keyword">then</span></div><div class="line">        switch_file_size=$((<span class="variable">$2</span>/1024))</div><div class="line">        <span class="built_in">echo</span> -n -e <span class="string">"samba服务器 <span class="variable">$&#123;1&#125;</span> 空间已使用<span class="variable">$&#123;switch_file_size&#125;</span>M\n"</span> | mail -s <span class="string">"samba服务器空间使用告警"</span>  <span class="variable">$4</span></div><div class="line">    <span class="keyword">fi</span></div><div class="line">&#125;</div><div class="line"><span class="comment">#定义一些变量</span></div><div class="line">smb_dir=/data</div><div class="line">ip=`ifconfig | grep Bcast | awk <span class="string">'&#123;print $2&#125;'</span> | awk -F: <span class="string">'&#123;print $2&#125;'</span>` <span class="comment">#IP地址</span></div><div class="line">admin_mail_addr=<span class="string">"123456@qq.com"</span> <span class="comment">#管理员邮箱</span></div><div class="line">total_max_size=1024000 <span class="comment">#总空间最大可用1G，单位K</span></div><div class="line">total_use_size=`du -s <span class="variable">$smb_dir</span> | awk <span class="string">'&#123;print $1&#125;'</span>` <span class="comment">#总使用大小，单位K</span></div><div class="line">max_size=10240 <span class="comment">#子目录默认最大可用10M  </span></div><div class="line">public_max_size=10240 <span class="comment">#public最大可用10M</span></div><div class="line"><span class="comment">#检测总目录大小</span></div><div class="line">fun_chksize <span class="variable">$smb_dir</span> <span class="variable">$total_use_size</span> <span class="variable">$total_max_size</span> <span class="variable">$admin_mail_addr</span></div><div class="line"><span class="comment">#检测子目录大小</span></div><div class="line"><span class="keyword">for</span> list1 <span class="keyword">in</span> <span class="variable">$&#123;smb_dir&#125;</span>/*; <span class="keyword">do</span></div><div class="line">    file_list=`basename <span class="variable">$list1</span>` <span class="comment">#列表</span></div><div class="line">    <span class="built_in">cd</span> <span class="variable">$smb_dir</span></div><div class="line">    file_size=`du -s <span class="variable">$file_list</span> | awk <span class="string">'&#123;print $1&#125;'</span>` <span class="comment">#大小，单位K</span></div><div class="line">    switch_file_size=$((<span class="variable">$file_size</span>/1024)) <span class="comment">#将K转换为M</span></div><div class="line">    file_name=`du -s <span class="variable">$file_list</span> | awk <span class="string">'&#123;print $2&#125;'</span>` <span class="comment">#文件名或目录名</span></div><div class="line">    <span class="keyword">case</span> <span class="variable">$file_name</span> <span class="keyword">in</span></div><div class="line">        public)</div><div class="line">	    fun_chksize <span class="variable">$file_name</span> <span class="variable">$file_size</span> <span class="variable">$public_max_size</span> <span class="variable">$admin_mail_addr</span></div><div class="line">	    ;;</div><div class="line">	    kaifazu)</div><div class="line">	    fun_chksize <span class="variable">$file_name</span> <span class="variable">$file_size</span> <span class="variable">$max_size</span> <span class="variable">$admin_mail_addr</span></div><div class="line">	    ;;</div><div class="line">        *)</div><div class="line">	    fun_chksize <span class="variable">$file_name</span> <span class="variable">$file_size</span> <span class="variable">$max_size</span> <span class="variable">$admin_mail_addr</span></div><div class="line">	    ;;</div><div class="line">    <span class="keyword">esac</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/eb0f8299/">samba服务器搭建</a></p>
+           <p><span>原文链接：</span><a href="/posts/eb0f8299/" title="samba服务器搭建">http://yort.xin/posts/eb0f8299/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/实践与总结/" rel="tag">#实践与总结</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#samba服务器访问过慢的问题"><span class="nav-number">2.</span> <span class="nav-text">samba服务器访问过慢的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">3.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#samba配置"><span class="nav-number">3.1.</span> <span class="nav-text">samba配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#组配置"><span class="nav-number">3.2.</span> <span class="nav-text">组配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#samba服务器磁盘检测脚本"><span class="nav-number">4.</span> <span class="nav-text">samba服务器磁盘检测脚本</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

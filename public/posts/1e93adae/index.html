@@ -1,0 +1,1257 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="shell," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="企业中常见AWK使用案例总结">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AWK使用案例总结">
+<meta property="og:url" content="http://yort.xin/posts/1e93adae/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="企业中常见AWK使用案例总结">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AWK使用案例总结">
+<meta name="twitter:description" content="企业中常见AWK使用案例总结">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/1e93adae/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> AWK使用案例总结 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                AWK使用案例总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-01T00:00:00+08:00" content="2016-07-01">
+              2016-07-01
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>企业中常见AWK使用案例总结<br><a id="more"></a></p>
+<h1 id="1、Nginx日志分析"><a href="#1、Nginx日志分析" class="headerlink" title="1、Nginx日志分析"></a>1、Nginx日志分析</h1><h2 id="日志格式"><a href="#日志格式" class="headerlink" title="日志格式"></a>日志格式</h2><figure class="highlight nsis"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">'<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" <span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>" "<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span></div></pre></td></tr></table></figure>
+<h2 id="日志记录"><a href="#日志记录" class="headerlink" title="日志记录"></a>日志记录</h2><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="number">27.189.231.39</span> - - <span class="string">[09/Apr/2016:17:21:23 +0800]</span> <span class="string">"<span class="keyword">GET</span> /Public/index/images/icon_pre.png HTTP/1.1"</span> <span class="number">200</span> <span class="number">44668</span> <span class="string">"http://www.test.com/Public/index/css/global.css"</span> <span class="string">"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"</span> <span class="string">"-"</span></div></pre></td></tr></table></figure>
+<h1 id="案例分享"><a href="#案例分享" class="headerlink" title="案例分享"></a>案例分享</h1><h2 id="1）统计日志中访问最多的10个IP"><a href="#1）统计日志中访问最多的10个IP" class="headerlink" title="1）统计日志中访问最多的10个IP"></a>1）统计日志中访问最多的10个IP</h2><p><strong> 思路：对第一列进行去重，并输出出现的次数 </strong><br>方法1：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;a[<span class="variable">$1</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> a[i],i|<span class="string">"sort -k1 -nr|head -n10"</span>&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure></p>
+<p>方法2：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;<span class="keyword">print</span> <span class="variable">$1&#125;</span>' access.<span class="keyword">log</span> |<span class="keyword">sort</span> |uniq -c |<span class="keyword">sort</span> -k1 -nr |head -n10</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>说明：a[$1]++ 创建数组a，以第一列作为下标，使用运算符++作为数组元素，元素初始值为0。处理一个IP时，下标是IP，元素加1，处理第二个IP时，下标是IP，元素加1，如果这个IP已经存在，则元素再加1，也就是这个IP出现了两次，元素结果是2，以此类推。因此可以实现去重，统计出现次数。</p>
+</blockquote>
+<h2 id="2）统计日志中访问大于100次的IP"><a href="#2）统计日志中访问大于100次的IP" class="headerlink" title="2）统计日志中访问大于100次的IP"></a>2）统计日志中访问大于100次的IP</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">方法1：</div><div class="line">$ awk '&#123;a[<span class="variable">$1</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)&#123;<span class="keyword">if</span>(a[i]&gt;100)<span class="keyword">print</span> i,a[i]&#125;&#125;' access.<span class="built_in">log</span></div><div class="line"></div><div class="line">方法2：</div><div class="line">$ awk '&#123;a[<span class="variable">$1</span>]++;<span class="keyword">if</span>(a[<span class="variable">$1</span>]&gt;100)&#123;b[<span class="variable">$1</span>]++&#125;&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> b)&#123;<span class="keyword">print</span> i,a[i]&#125;&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：方法1是将结果保存a数组后，输出时判断符合要求的IP。方法2是将结果保存a数组时，并判断符合要求的IP放到b数组，最后打印b数组的IP。</p>
+</blockquote>
+<h2 id="3）统计2016年4月9日一天内访问最多的10个IP"><a href="#3）统计2016年4月9日一天内访问最多的10个IP" class="headerlink" title="3）统计2016年4月9日一天内访问最多的10个IP"></a>3）统计2016年4月9日一天内访问最多的10个IP</h2><p><strong> 思路：先过滤出这个时间段的日志，然后去重，统计出现次数 </strong><br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">方法1：$ awk '<span class="variable">$4</span>&gt;=<span class="string">"[9/Apr/2016:00:00:01"</span> &amp;&amp; <span class="variable">$4</span>&lt;=<span class="string">"[9/Apr/2016:23:59:59"</span> &#123;a[<span class="variable">$1</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> a[i],i|<span class="string">"sort -k1 -nr|head -n10"</span>&#125;' access.<span class="built_in">log</span></div><div class="line">方法2：$ sed -<span class="keyword">n</span> '/\[9\/Apr\/2016:00:00:01/,/\[9\/Apr\/2016:23:59:59/p' access.<span class="keyword">log</span> |<span class="keyword">sort</span> |uniq -c |<span class="keyword">sort</span> -k1 -nr |head -n10  #前提开始时间与结束时间日志中必须存在</div></pre></td></tr></table></figure></p>
+<h2 id="4）统计当前时间前一分钟的访问数"><a href="#4）统计当前时间前一分钟的访问数" class="headerlink" title="4）统计当前时间前一分钟的访问数"></a>4）统计当前时间前一分钟的访问数</h2><p><strong> 思路：先获取当前时间前一分钟对应日志格式的时间，再匹配统计 </strong><br><figure class="highlight mel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">date</span>=$(<span class="keyword">date</span> -d <span class="string">'-1 minute'</span> +%d/%b/%Y:%H:%M);awk -vdate=$date <span class="string">'$0~date&#123;c++&#125;END&#123;print c&#125;'</span> access.<span class="keyword">log</span></div><div class="line">$ <span class="keyword">date</span>=$(<span class="keyword">date</span> -d <span class="string">'-1 minute'</span> +%d/%b/%Y:%H:%M);awk -vdate=$date <span class="string">'$4&gt;="["date":00" &amp;&amp; $4&lt;="["date":59"&#123;c++&#125;END&#123;print c&#125;'</span> access.<span class="keyword">log</span></div><div class="line">$ grep -c $(<span class="keyword">date</span> -d <span class="string">'-1 minute'</span> +%d/%b/%Y:%H:%M) access.<span class="keyword">log</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>说明：date +%d/%b/%Y:%H:%M –&gt; 09/Apr/2016:01:55</p>
+</blockquote>
+<h2 id="5）统计访问最多的前10个页面（-request）"><a href="#5）统计访问最多的前10个页面（-request）" class="headerlink" title="5）统计访问最多的前10个页面（$request）"></a>5）统计访问最多的前10个页面（$request）</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;a[<span class="variable">$7</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> a[i],i|<span class="string">"sort -k1 -nr|head -n10"</span>&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<h2 id="6）统计每个URL访问内容的总大小（-body-bytes-sent）"><a href="#6）统计每个URL访问内容的总大小（-body-bytes-sent）" class="headerlink" title="6）统计每个URL访问内容的总大小（$body_bytes_sent）"></a>6）统计每个URL访问内容的总大小（$body_bytes_sent）</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;a[<span class="variable">$7</span>]++;size[<span class="variable">$7</span>]+=<span class="variable">$10&#125;</span>END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> a[i],size[i],i&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<h2 id="7）统计每个IP访问状态码数量（-status）"><a href="#7）统计每个IP访问状态码数量（-status）" class="headerlink" title="7）统计每个IP访问状态码数量（$status）"></a>7）统计每个IP访问状态码数量（$status）</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;a[<span class="variable">$1</span><span class="string">" "</span><span class="variable">$9</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> i,a[i]&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<h2 id="8）统计访问状态码为404的IP及出现次数"><a href="#8）统计访问状态码为404的IP及出现次数" class="headerlink" title="8）统计访问状态码为404的IP及出现次数"></a>8）统计访问状态码为404的IP及出现次数</h2><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;<span class="keyword">if</span>(<span class="variable">$9</span>~/404/)a[<span class="variable">$1</span><span class="string">" "</span><span class="variable">$9</span>]++&#125;END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> i,a[i]&#125;' access.<span class="built_in">log</span></div></pre></td></tr></table></figure>
+<h1 id="2、两个文件对比"><a href="#2、两个文件对比" class="headerlink" title="2、两个文件对比"></a>2、两个文件对比</h1><p>文件内容如下：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ cat a</div><div class="line">    <span class="number">1</span></div><div class="line">    <span class="number">2</span></div><div class="line">    <span class="number">3</span></div><div class="line">    <span class="number">4</span></div><div class="line">    <span class="number">5</span></div><div class="line">    <span class="number">6</span></div><div class="line">$ cat b</div><div class="line">    <span class="number">3</span></div><div class="line">    <span class="number">4</span></div><div class="line">    <span class="number">5</span></div><div class="line">    <span class="number">6</span></div><div class="line">    <span class="number">7</span></div><div class="line">    <span class="number">8</span></div></pre></td></tr></table></figure></p>
+<h2 id="1）找出相同记录"><a href="#1）找出相同记录" class="headerlink" title="1）找出相同记录"></a>1）找出相同记录</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">方法<span class="number">1</span>：</div><div class="line">$ awk 'FNR==NR&#123;a[$<span class="number">0</span>];next&#125;($<span class="number">0</span> in a)' a b</div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">6</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>解释前，先看下FNR和NR区别：</p>
+</blockquote>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;print NR,$<span class="number">0</span>&#125;' a b</div><div class="line"><span class="number">1</span> <span class="number">1</span></div><div class="line"><span class="number">2</span> <span class="number">2</span></div><div class="line"><span class="number">3</span> <span class="number">3</span></div><div class="line"><span class="number">4</span> <span class="number">4</span></div><div class="line"><span class="number">5</span> <span class="number">5</span></div><div class="line"><span class="number">6</span> <span class="number">6</span></div><div class="line"><span class="number">7</span> <span class="number">3</span></div><div class="line"><span class="number">8</span> <span class="number">4</span></div><div class="line"><span class="number">9</span> <span class="number">5</span></div><div class="line"><span class="number">10</span> <span class="number">6</span></div><div class="line"><span class="number">11</span> <span class="number">7</span></div><div class="line"><span class="number">12</span> <span class="number">8</span></div><div class="line">$ awk '&#123;print FNR,$<span class="number">0</span>&#125;' a b</div><div class="line"><span class="number">1</span> <span class="number">1</span></div><div class="line"><span class="number">2</span> <span class="number">2</span></div><div class="line"><span class="number">3</span> <span class="number">3</span></div><div class="line"><span class="number">4</span> <span class="number">4</span></div><div class="line"><span class="number">5</span> <span class="number">5</span></div><div class="line"><span class="number">6</span> <span class="number">6</span></div><div class="line"><span class="number">1</span> <span class="number">3</span></div><div class="line"><span class="number">2</span> <span class="number">4</span></div><div class="line"><span class="number">3</span> <span class="number">5</span></div><div class="line"><span class="number">4</span> <span class="number">6</span></div><div class="line"><span class="number">5</span> <span class="number">7</span></div><div class="line"><span class="number">6</span> <span class="number">8</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>可以看出NR是处理一行记录，编号就会加1，同时也可以看到awk将两个文件当成一个合并后的文件处理。<br>而FNR则是处理一行记录，编号也会加1，但是，处理到第二个文件时，编号重新计数。<br>说明：FNR和NR是内置变量。FNR==NR常用于对两个文件处理，这个例子可以理解为awk将两个文件当成一个文件处理。<br>处理a文件时，FNR是等于NR的，条件为真，执行a[$0],next表达式，意思是将每条记录存放到a数组作为下标（无元素），next是跳出，类似于continue，不执行后面表达式。<br>执行过程以此类推，直到处理b件时，FNR不等于NR（FNR重新计数是1，NR继续加1是7），条件为假，不执行后面a[$0],next表达式，直接执行($0 in a)表达式，这句意思是处理b文件第一条继续判断是否在a数组中，如果在则打印这条记录，以此类推。</p>
+</blockquote>
+<h3 id="这样可能更好理解些："><a href="#这样可能更好理解些：" class="headerlink" title="这样可能更好理解些："></a>这样可能更好理解些：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk 'FNR==NR&#123;a[<span class="variable">$0</span>]&#125;NR&gt;FNR&#123;<span class="keyword">if</span>(<span class="variable">$0</span> <span class="keyword">in</span> a)<span class="keyword">print</span> <span class="variable">$0&#125;</span>' a b</div></pre></td></tr></table></figure>
+<h3 id="方法2："><a href="#方法2：" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'FNR==NR&#123;a[$0]=1;next&#125;(a[$0])'</span> <span class="selector-tag">a</span> <span class="selector-tag">b</span>   #小括号可以不加</div><div class="line">$ awk <span class="string">'FNR==NR&#123;a[$0]=1;next&#125;(a[$0]==1)'</span> <span class="selector-tag">a</span> <span class="selector-tag">b</span></div><div class="line">$ awk <span class="string">'FNR==NR&#123;a[$0]=1;next&#125;&#123;if(a[$0]==1)print&#125;'</span> <span class="selector-tag">a</span> <span class="selector-tag">b</span></div><div class="line">$ awk <span class="string">'FNR==NR&#123;a[$0]=1&#125;FNR!=NR&amp;&amp;a[$0]==1'</span> <span class="selector-tag">a</span> b</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：先要知道后面的a[$0]不是一个数组，而是通过下标（b文件每条记录）来访问a数组元素。如果a[b的一行记录]获取的a数组元素是1，则为真，也就是等于1，打印这条记录，否则获取不到元素，则为假。</p>
+</blockquote>
+<h3 id="方法3："><a href="#方法3：" class="headerlink" title="方法3："></a>方法3：</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk 'ARGIND==<span class="number">1</span>&#123;a[$<span class="number">0</span>]=<span class="number">1</span>&#125;ARGIND==<span class="number">2</span>&amp;&amp;a[$<span class="number">0</span>]==<span class="number">1</span>' a b</div><div class="line">$ awk 'FILENAME==<span class="string">"a"</span>&#123;a[$<span class="number">0</span>]=<span class="number">1</span>&#125;FILENAME==<span class="string">"b"</span>&amp;&amp;a[$<span class="number">0</span>]==<span class="number">1</span>' a b</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：ARGIND内置变量，处理文件标识符，第一个文件为1，第二个文件为2。FILENAME也是内置变量，表示输入文件的名字</p>
+</blockquote>
+<h3 id="方法4："><a href="#方法4：" class="headerlink" title="方法4："></a>方法4：</h3><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sort</span> <span class="keyword">a</span> b |uniq -d</div></pre></td></tr></table></figure>
+<h3 id="方法5："><a href="#方法5：" class="headerlink" title="方法5："></a>方法5：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> grep -f a b</span></div></pre></td></tr></table></figure>
+<h2 id="2）找不同记录（同上，取反）"><a href="#2）找不同记录（同上，取反）" class="headerlink" title="2）找不同记录（同上，取反）"></a>2）找不同记录（同上，取反）</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ awk 'FNR==NR&#123;a[$<span class="number">0</span>];next&#125;!($<span class="number">0</span> in a)' a b</div><div class="line">$ awk 'FNR==NR&#123;a[$<span class="number">0</span>]=<span class="number">1</span>;next&#125;!a[$<span class="number">0</span>]' a b</div><div class="line">$ awk 'ARGIND==<span class="number">1</span>&#123;a[$<span class="number">0</span>]=<span class="number">1</span>&#125;ARGIND==<span class="number">2</span>&amp;&amp;a[$<span class="number">0</span>]!=<span class="number">1</span>' a b</div><div class="line">$ awk 'FILENAME==<span class="string">"a"</span>&#123;a[$<span class="number">0</span>]=<span class="number">1</span>&#125;FILENAME==<span class="string">"b"</span>&amp;&amp;a[$<span class="number">0</span>]!=<span class="number">1</span>' a b</div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">8</span></div><div class="line">方法<span class="number">2</span>：$ sort a b |uniq -d</div><div class="line">方法<span class="number">3</span>：$ grep -vf a b</div></pre></td></tr></table></figure>
+<h1 id="3、合并两个文件"><a href="#3、合并两个文件" class="headerlink" title="3、合并两个文件"></a>3、合并两个文件</h1><h2 id="1）将d文件性别合并到c文件"><a href="#1）将d文件性别合并到c文件" class="headerlink" title="1）将d文件性别合并到c文件"></a>1）将d文件性别合并到c文件</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> cat c</span></div><div class="line">zhangsan 100</div><div class="line">lisi 200</div><div class="line">wangwu 300</div><div class="line"><span class="meta">$</span><span class="bash"> cat d</span></div><div class="line">zhangsan man</div><div class="line">lisi woman</div></pre></td></tr></table></figure>
+<h3 id="方法1："><a href="#方法1：" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk  'FNR==NR&#123;a[<span class="variable">$1</span>]=<span class="variable">$0</span>;next&#125;&#123;<span class="keyword">print</span> a[<span class="variable">$1</span>],<span class="variable">$2&#125;</span>' c <span class="built_in">d</span></div><div class="line">zhangsan 100  <span class="keyword">man</span></div><div class="line">lisi 200 woman</div><div class="line">wangwu 300 <span class="keyword">man</span></div></pre></td></tr></table></figure>
+<h3 id="方法2：-1"><a href="#方法2：-1" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk  'FNR==NR&#123;a[<span class="variable">$1</span>]=<span class="variable">$0&#125;</span>NR&gt;FNR&#123;<span class="keyword">print</span> a[<span class="variable">$1</span>],<span class="variable">$2&#125;</span>' c <span class="built_in">d</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：NR==FNR匹配第一个文件，NR&gt;FNR匹配第二个文件，将$1为数组下标</p>
+</blockquote>
+<p>###方法3：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk 'ARGIND==<span class="number">1</span>&#123;a[$<span class="number">1</span>]=$<span class="number">0</span>&#125;ARGIND==<span class="number">2</span>&#123;print a[$<span class="number">1</span>],$<span class="number">2</span>&#125;' c d</div></pre></td></tr></table></figure></p>
+<h2 id="2）将a-txt文件中服务名称合并到一个IP中"><a href="#2）将a-txt文件中服务名称合并到一个IP中" class="headerlink" title="2）将a.txt文件中服务名称合并到一个IP中"></a>2）将a.txt文件中服务名称合并到一个IP中</h2><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ cat a.txt</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.100</span> : httpd</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.100</span> : tomcat</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.101</span> : httpd</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.101</span> : postfix</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.102</span> : mysqld</div><div class="line"><span class="number">192.168</span><span class="meta">.2</span><span class="meta">.102</span> : httpd</div></pre></td></tr></table></figure>
+<h3 id="方法1：-1"><a href="#方法1：-1" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk -F: -vOFS=<span class="string">":"</span> '&#123;a[<span class="variable">$1</span>]=a[<span class="variable">$1</span>] <span class="variable">$2&#125;</span>END&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> i,a[i]&#125;' a.txt</div></pre></td></tr></table></figure>
+<h3 id="方法2"><a href="#方法2" class="headerlink" title="方法2:"></a>方法2:</h3><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk -F: -vOFS=<span class="string">":"</span> '&#123;a<span class="string">[$1]</span>=$<span class="number">2</span> a<span class="string">[$1]</span>&#125;END&#123;for(i in a)print i,a<span class="string">[i]</span>&#125;' a.txt</div><div class="line"><span class="number">192.168.2.100</span> : httpd  tomcat</div><div class="line"><span class="number">192.168.2.101</span> : httpd  postfix</div><div class="line"><span class="number">192.168.2.102</span> : mysqld  httpd</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：a[$1]=$2 第一列为下标，第二个列是元素，后面跟的a[$1]是通过第一列取a数组元素（服务名），结果是$1=$2 $2，并作为a数组元素。</p>
+</blockquote>
+<h2 id="3）将第一行附加给下面每行开头"><a href="#3）将第一行附加给下面每行开头" class="headerlink" title="3）将第一行附加给下面每行开头"></a>3）将第一行附加给下面每行开头</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line">xiaoli</div><div class="line"><span class="selector-tag">a</span> <span class="number">100</span></div><div class="line"><span class="selector-tag">b</span> <span class="number">110</span></div><div class="line">c <span class="number">120</span></div></pre></td></tr></table></figure>
+<h3 id="方法1：-2"><a href="#方法1：-2" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="comment">'NF==1&#123;a=$0;next&#125;&#123;print a,$0&#125;' a.txt</span></div></pre></td></tr></table></figure>
+<h3 id="方法2：-2"><a href="#方法2：-2" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'NF==1&#123;a=$0&#125;NF!=1&#123;print a,$0&#125;'</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line">xiaoli  <span class="selector-tag">a</span> <span class="number">100</span></div><div class="line">xiaoli  <span class="selector-tag">b</span> <span class="number">110</span></div><div class="line">xiaoli  c <span class="number">120</span></div></pre></td></tr></table></figure>
+<h1 id="4、倒叙列打印文本"><a href="#4、倒叙列打印文本" class="headerlink" title="4、倒叙列打印文本"></a>4、倒叙列打印文本</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line">xiaoli   <span class="selector-tag">a</span> <span class="number">100</span></div><div class="line">xiaoli   <span class="selector-tag">b</span> <span class="number">110</span></div><div class="line">xiaoli   c <span class="number">120</span></div><div class="line">$ awk <span class="string">'&#123;for(i=NF;i&gt;=1;i--)&#123;printf "%s ",$i&#125;print s&#125;'</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line"><span class="number">100</span> <span class="selector-tag">a</span> xiaoli</div><div class="line"><span class="number">110</span> <span class="selector-tag">b</span> xiaoli</div><div class="line"><span class="number">120</span> c xiaoli</div><div class="line">$ awk <span class="string">'&#123;for(i=NF;i&gt;=1;i--)if(i==1)printf $i"\n";else printf $i" "&#125;'</span> <span class="selector-tag">a</span>.txt</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：利用NF降序输出，把最后一个域作为第一个输出，然后自减，print s或print “”打印一个换行符</p>
+</blockquote>
+<h1 id="5、从第二列打印到最后"><a href="#5、从第二列打印到最后" class="headerlink" title="5、从第二列打印到最后"></a>5、从第二列打印到最后</h1><h3 id="方法1：-3"><a href="#方法1：-3" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;<span class="keyword">for</span>(i=<span class="number">2</span>;i&lt;=NF;i++)<span class="keyword">if</span>(i==NF)<span class="built_in">printf</span> $i<span class="string">"\n"</span>;<span class="keyword">else</span> <span class="built_in">printf</span> $i<span class="string">" "</span>&#125;' a.txt</div></pre></td></tr></table></figure>
+<h3 id="方法2：-3"><a href="#方法2：-3" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'&#123;$1=""&#125;&#123;print $0&#125;'</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line"><span class="selector-tag">a</span> <span class="number">100</span></div><div class="line"><span class="selector-tag">b</span> <span class="number">110</span></div><div class="line">c <span class="number">120</span></div></pre></td></tr></table></figure>
+<h1 id="6、将c文件中第一列放到到d文件中的第三列"><a href="#6、将c文件中第一列放到到d文件中的第三列" class="headerlink" title="6、将c文件中第一列放到到d文件中的第三列"></a>6、将c文件中第一列放到到d文件中的第三列</h1><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cat</span> c</div><div class="line">a</div><div class="line">b</div><div class="line">c</div><div class="line">$ <span class="keyword">cat</span> <span class="built_in">d</span></div><div class="line">1 <span class="keyword">one</span></div><div class="line">2 <span class="keyword">two</span></div><div class="line">3 three</div></pre></td></tr></table></figure>
+<h3 id="方法1：-4"><a href="#方法1：-4" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk 'FNR==NR&#123;a[NR]=$<span class="number">0</span>;next&#125;&#123;$<span class="number">3</span>=a[FNR]&#125;<span class="number">1</span>' c d</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：以NR编号为下标，元素是每行，当处理d文件时第三列等于获取a数据FNR（重新计数1-3）编号作为下标。</p>
+</blockquote>
+<h3 id="方法2：-4"><a href="#方法2：-4" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;getline f&lt;<span class="string">"c"</span>;<span class="keyword">print</span> <span class="variable">$0</span>,f&#125;' <span class="built_in">d</span></div><div class="line">1 <span class="keyword">one</span> a</div><div class="line">2 <span class="keyword">two</span> b</div><div class="line">3 three c</div></pre></td></tr></table></figure>
+<h4 id="1）替换第二列"><a href="#1）替换第二列" class="headerlink" title="1）替换第二列"></a>1）替换第二列</h4><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;getline f&lt;<span class="string">"c"</span>;gsub($<span class="number">2</span>,f,$<span class="number">2</span>)&#125;<span class="number">1</span>' d</div><div class="line"><span class="number">1</span> a</div><div class="line"><span class="number">2</span> b</div><div class="line"><span class="number">3</span> c</div></pre></td></tr></table></figure>
+<h4 id="2）替换第二列的two"><a href="#2）替换第二列的two" class="headerlink" title="2）替换第二列的two"></a>2）替换第二列的two</h4><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;getline f&lt;<span class="string">"c"</span>;gsub(<span class="string">"two"</span>,f,$<span class="number">2</span>)&#125;<span class="number">1</span>' d</div><div class="line"><span class="number">1</span> one</div><div class="line"><span class="number">2</span> b</div><div class="line"><span class="number">3</span> three</div></pre></td></tr></table></figure>
+<h1 id="7、数字求和"><a href="#7、数字求和" class="headerlink" title="7、数字求和"></a>7、数字求和</h1><h3 id="方法1：-5"><a href="#方法1：-5" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ seq 1 100 |awk '&#123;<span class="keyword">sum</span>+=<span class="variable">$0&#125;</span>END&#123;<span class="keyword">print</span> <span class="keyword">sum</span>&#125;'</div></pre></td></tr></table></figure>
+<h3 id="方法2：-5"><a href="#方法2：-5" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk 'BEGIN&#123;<span class="built_in">sum</span>=<span class="number">0</span>;i=<span class="number">1</span>;<span class="keyword">while</span>(i&lt;=<span class="number">100</span>)&#123;<span class="built_in">sum</span>+=i;i++&#125;<span class="built_in">print</span> <span class="built_in">sum</span>&#125;'</div></pre></td></tr></table></figure>
+<h3 id="方法3：-1"><a href="#方法3：-1" class="headerlink" title="方法3："></a>方法3：</h3><figure class="highlight gauss"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk 'BEGIN&#123;<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="number">100</span>;i++)sum+=i&#125;<span class="keyword">END</span>&#123;<span class="keyword">print</span> sum&#125;' /dev/<span class="built_in">null</span></div></pre></td></tr></table></figure>
+<h3 id="方法4：-1"><a href="#方法4：-1" class="headerlink" title="方法4："></a>方法4：</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ seq -s + <span class="number">1</span> <span class="number">100</span> |bc</div></pre></td></tr></table></figure>
+<h1 id="8、每隔三行添加一个换行符或内容"><a href="#8、每隔三行添加一个换行符或内容" class="headerlink" title="8、每隔三行添加一个换行符或内容"></a>8、每隔三行添加一个换行符或内容</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">方法<span class="number">1</span>：$ awk <span class="string">'$0;NR%3==0&#123;printf "\n"&#125;'</span> <span class="selector-tag">a</span></div><div class="line"></div><div class="line">方法<span class="number">2</span>：$ awk <span class="string">'&#123;print NR%3?$0:$0"\n"&#125;'</span> <span class="selector-tag">a</span></div><div class="line"></div><div class="line">方法<span class="number">3</span>：$ sed <span class="string">'4~3s/^/\n/'</span> a</div></pre></td></tr></table></figure>
+<h1 id="9、字符串拆分"><a href="#9、字符串拆分" class="headerlink" title="9、字符串拆分"></a>9、字符串拆分</h1><h3 id="方法1：-6"><a href="#方法1：-6" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"hello"</span> |awk -F <span class="string">''</span> <span class="string">'&#123;for(i=1;i&lt;=NF;i++)print $i&#125;'</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">"hello"</span> |awk -F <span class="string">''</span> <span class="string">'&#123;i=1;while(i&lt;=NF)&#123;print $i;i++&#125;&#125;'</span></span></div><div class="line">h</div><div class="line">e</div><div class="line">l</div><div class="line">l</div><div class="line">o</div></pre></td></tr></table></figure>
+<h3 id="方法2：-6"><a href="#方法2：-6" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ echo <span class="string">"hello"</span> |awk '&#123;<span class="keyword">split</span>(<span class="variable">$0</span>,a,<span class="string">"''"</span>);<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="keyword">print</span> a[i]&#125;'  #无序</div><div class="line"><span class="keyword">l</span></div><div class="line">o</div><div class="line"><span class="built_in">h</span></div><div class="line"><span class="built_in">e</span></div><div class="line"><span class="keyword">l</span></div></pre></td></tr></table></figure>
+<h1 id="10、统计字符串中每个字母出现的次数"><a href="#10、统计字符串中每个字母出现的次数" class="headerlink" title="10、统计字符串中每个字母出现的次数"></a>10、统计字符串中每个字母出现的次数</h1><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ echo a,b.<span class="built_in">c</span>.a,b.a |tr <span class="string">"[,. ]"</span> <span class="string">"\n"</span> |awk -<span class="type">F</span> '' '&#123;<span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=<span class="type">NF</span>;i++)a[$i]++&#125;<span class="type">END</span>&#123;<span class="keyword">for</span>(i <span class="keyword">in</span> a)<span class="built_in">print</span> i,a[i]|<span class="string">"sort -k2 -rn"</span>&#125;'</div><div class="line">a <span class="number">3</span></div><div class="line">b <span class="number">2</span></div><div class="line"><span class="built_in">c</span> <span class="number">1</span></div></pre></td></tr></table></figure>
+<h1 id="11、第一列排序"><a href="#11、第一列排序" class="headerlink" title="11、第一列排序"></a>11、第一列排序</h1><figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">awk</span> <span class="comment">'&#123;a</span><span class="title">[</span><span class="comment">NR</span><span class="title">]</span><span class="comment">=$1&#125;END&#123;s=asort(a</span><span class="string">,</span><span class="comment">b);for(i=1;i</span>&lt;<span class="comment">=s;i</span><span class="literal">+</span><span class="literal">+</span><span class="comment">)&#123;print</span> <span class="comment">i</span><span class="string">,</span><span class="comment">b</span><span class="title">[</span><span class="comment">i</span><span class="title">]</span><span class="comment">&#125;&#125;'</span> <span class="comment">a</span><span class="string">.</span><span class="comment">txt</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：以每行编号作为下标值为$1，并将a数组值放到数组b，a下标丢弃，并将asort默认返回值（原a数组长度）赋值给s，使用for循环小于s的行号，从1开始到数组长度打印排序好的数组。</p>
+</blockquote>
+<h1 id="12、删除重复行，顺序不变"><a href="#12、删除重复行，顺序不变" class="headerlink" title="12、删除重复行，顺序不变"></a>12、删除重复行，顺序不变</h1><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> awk <span class="string">'!a[$0]++'</span> <span class="keyword">file</span></div></pre></td></tr></table></figure>
+<h1 id="13、删除指定行"><a href="#13、删除指定行" class="headerlink" title="13、删除指定行"></a>13、删除指定行</h1><h3 id="删除第一行："><a href="#删除第一行：" class="headerlink" title="删除第一行："></a>删除第一行：</h3><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">$</span> awk <span class="string">'NR==1&#123;next&#125;&#123;print $0&#125;'</span> <span class="keyword">file</span> #<span class="symbol">$</span><span class="number">0</span>可省略</div><div class="line"><span class="symbol">$</span> awk <span class="string">'NR!=1&#123;print&#125;'</span> <span class="keyword">file</span></div><div class="line"><span class="symbol">$</span> sed <span class="string">'1d'</span> <span class="keyword">file</span></div><div class="line"><span class="symbol">$</span> sed -n <span class="string">'1!p'</span> <span class="keyword">file</span></div></pre></td></tr></table></figure>
+<h1 id="14、在指定行前后加一行"><a href="#14、在指定行前后加一行" class="headerlink" title="14、在指定行前后加一行"></a>14、在指定行前后加一行</h1><h3 id="在第二行前一行加txt："><a href="#在第二行前一行加txt：" class="headerlink" title="在第二行前一行加txt："></a>在第二行前一行加txt：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'NR==2&#123;sub('</span>/.*/<span class="string">',"txt\n&amp;")&#125;&#123;print&#125;'</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line">$ sed<span class="string">'2s/.*/txt\n&amp;/'</span> <span class="selector-tag">a</span>.txt</div></pre></td></tr></table></figure>
+<h3 id="在第二行后一行加txt："><a href="#在第二行后一行加txt：" class="headerlink" title="在第二行后一行加txt："></a>在第二行后一行加txt：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'NR==2&#123;sub('</span>/.*/<span class="string">',"&amp;\ntxt")&#125;&#123;print&#125;'</span> <span class="selector-tag">a</span><span class="selector-class">.txt</span></div><div class="line">$ sed<span class="string">'2s/.*/&amp;\ntxt/'</span> <span class="selector-tag">a</span>.txt</div></pre></td></tr></table></figure>
+<h1 id="15、通过IP获取网卡名"><a href="#15、通过IP获取网卡名" class="headerlink" title="15、通过IP获取网卡名"></a>15、通过IP获取网卡名</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> ifconfig |awk -F<span class="string">'[: ]'</span> <span class="string">'/^eth/&#123;nic=$1&#125;/192.168.18.15/&#123;print nic&#125;'</span></span></div></pre></td></tr></table></figure>
+<h1 id="16、浮点数运算（数字46保留小数点）"><a href="#16、浮点数运算（数字46保留小数点）" class="headerlink" title="16、浮点数运算（数字46保留小数点）"></a>16、浮点数运算（数字46保留小数点）</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> awk <span class="string">'BEGIN&#123;print 46/100&#125;'</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> awk <span class="string">'BEGIN&#123;printf "%.2f\n",46/100&#125;'</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> 46|awk <span class="string">'&#123;print $0/100&#125;'</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">echo</span> <span class="string">'scale=2;46/100'</span> |bc|sed <span class="string">'s/^/0/'</span></span></div><div class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">printf</span> <span class="string">"%.2f\n"</span> $(<span class="built_in">echo</span> <span class="string">"scale=2;46/100"</span> |bc)</span></div><div class="line"></div><div class="line">结果：0.46</div></pre></td></tr></table></figure>
+<h1 id="17、替换换行符为逗号"><a href="#17、替换换行符为逗号" class="headerlink" title="17、替换换行符为逗号"></a>17、替换换行符为逗号</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cat a.txt</div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">3</span></div><div class="line">替换后：<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="方法1：-7"><a href="#方法1：-7" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;s=(s?s<span class="string">","</span><span class="variable">$0</span>:<span class="variable">$0</span>)&#125;END&#123;<span class="keyword">print</span> s&#125;' a.txt</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：三目运算符(a?b:c)，第一个s是变量，s?s”,”$0:$0,第一次处理1时，s变量没有赋值初值是0，0为假，结果打印1，第二次处理2时，s值是1，为真，结果1,2。以此类推，小括号可以不写。</p>
+</blockquote>
+<h3 id="方法2：-7"><a href="#方法2：-7" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="selector-tag">tr</span> <span class="string">'\n'</span> <span class="string">','</span> &lt; <span class="selector-tag">a</span>.txt</div></pre></td></tr></table></figure>
+<h3 id="方法3：-2"><a href="#方法3：-2" class="headerlink" title="方法3："></a>方法3：</h3><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sed <span class="comment">':a;N;s/\n/,/;$!b a' a.txt</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：第一个标签a，先读取第一行记录1追加到模式空间，此时模式空间内容是1$，执行$!b（$!最后一行不跳转，b是控制流跳转命令）跳转到a标签，继续读取第二行记录2追加到模式空间，因为使用N命令，每个记录以换行符（\n）分割，此时模式空间内容是1\n2$，执行将换行符替换逗号命令，继续跳转到a标签…</p>
+</blockquote>
+<h3 id="方法4：-2"><a href="#方法4：-2" class="headerlink" title="方法4："></a>方法4：</h3><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sed <span class="comment">':a;$!N;s/\n/,/;t a' a.txt</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：与上面类似，其中t是测试命令，当上一个命令（替换）执行成功才跳转。</p>
+</blockquote>
+<h3 id="方法5：-1"><a href="#方法5：-1" class="headerlink" title="方法5："></a>方法5：</h3><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;<span class="keyword">if</span>(<span class="variable">$0</span>!=3)printf <span class="string">"%s,"</span>,<span class="variable">$0</span>;<span class="keyword">else</span> <span class="keyword">print</span> <span class="variable">$0&#125;</span>' a.txt</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：3是文本最后一个数</p>
+<h3 id="方法6："><a href="#方法6：" class="headerlink" title="方法6："></a>方法6：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></div><div class="line">    a+=(<span class="variable">$line</span>)</div><div class="line"><span class="keyword">done</span> &lt; a.txt</div><div class="line"><span class="built_in">echo</span> <span class="variable">$&#123;a[*]&#125;</span> |sed <span class="string">'s/ /,/g'</span></div></pre></td></tr></table></figure>
+<p>说明：将每行放到数组，然后替换</p>
+</blockquote>
+<h1 id="18、把奇数换行符去掉"><a href="#18、把奇数换行符去掉" class="headerlink" title="18、把奇数换行符去掉"></a>18、把奇数换行符去掉</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="selector-tag">b</span><span class="selector-class">.txt</span></div><div class="line">string</div><div class="line">number</div><div class="line"><span class="selector-tag">a</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="selector-tag">b</span></div><div class="line"><span class="number">2</span></div></pre></td></tr></table></figure>
+<h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ awk <span class="string">'ORS=NR%2?"\t":"\n"'</span> <span class="selector-tag">b</span><span class="selector-class">.txt</span>  #把奇数行换行符去掉</div></pre></td></tr></table></figure>
+<h3 id="方法2-1"><a href="#方法2-1" class="headerlink" title="方法2"></a>方法2</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ xargs -n2 &lt; <span class="selector-tag">a</span><span class="selector-class">.txt</span>  #将两个字段作为一行</div><div class="line">string number</div><div class="line"><span class="selector-tag">a</span> <span class="number">1</span></div><div class="line"><span class="selector-tag">b</span> <span class="number">2</span></div></pre></td></tr></table></figure>
+<h1 id="19、费用统计"><a href="#19、费用统计" class="headerlink" title="19、费用统计"></a>19、费用统计</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ cat a.txt</div><div class="line">姓名             费用   数量</div><div class="line">zhangsan        <span class="number">8000</span>    <span class="number">1</span></div><div class="line">zhangsan        <span class="number">5000</span>    <span class="number">1</span></div><div class="line">lisi            <span class="number">1000</span>    <span class="number">1</span></div><div class="line">lisi            <span class="number">2000</span>    <span class="number">1</span></div><div class="line">wangwu          <span class="number">1500</span>    <span class="number">1</span></div><div class="line">zhaoliu         <span class="number">6000</span>    <span class="number">1</span></div><div class="line">zhaoliu         <span class="number">2000</span>    <span class="number">1</span></div><div class="line">zhaoliu         <span class="number">3000</span>    <span class="number">1</span></div></pre></td></tr></table></figure>
+<h3 id="统计每人总费用、总数量："><a href="#统计每人总费用、总数量：" class="headerlink" title="统计每人总费用、总数量："></a>统计每人总费用、总数量：</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ awk '&#123;name[$<span class="number">1</span>]++;number[$<span class="number">1</span>]+=$<span class="number">3</span>;<span class="section">money</span>[$<span class="number">1</span>]+=$<span class="number">2</span>&#125;END&#123;for(i in name)print i,number[i],<span class="section">money</span>[i]&#125;' a.txt</div><div class="line"></div><div class="line">zhaoliu <span class="number">3</span> <span class="number">11000</span></div><div class="line">zhangsan <span class="number">2</span> <span class="number">13000</span></div><div class="line">wangwu <span class="number">1</span> <span class="number">1500</span></div><div class="line">lisi <span class="number">2</span> <span class="number">3000</span></div></pre></td></tr></table></figure>
+<h1 id="20、打印乘法口诀"><a href="#20、打印乘法口诀" class="headerlink" title="20、打印乘法口诀"></a>20、打印乘法口诀</h1><h3 id="方法1：-8"><a href="#方法1：-8" class="headerlink" title="方法1："></a>方法1：</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ awk 'BEGIN&#123;for(n=<span class="number">0</span>;n++&lt;<span class="number">9</span>;)&#123;for(i=<span class="number">0</span>;i++&lt;n;)printf i<span class="string">"x"</span>n<span class="string">"="</span>i*n<span class="string">" "</span>;print <span class="string">""</span>&#125;&#125;'</div><div class="line"></div><div class="line"><span class="number">1</span>x1=<span class="number">1</span></div><div class="line"><span class="number">1</span>x2=<span class="number">2</span> <span class="number">2</span>x2=<span class="number">4</span></div><div class="line"><span class="number">1</span>x3=<span class="number">3</span> <span class="number">2</span>x3=<span class="number">6</span> <span class="number">3</span>x3=<span class="number">9</span></div><div class="line"><span class="number">1</span>x4=<span class="number">4</span> <span class="number">2</span>x4=<span class="number">8</span> <span class="number">3</span>x4=<span class="number">12</span> <span class="number">4</span>x4=<span class="number">16</span></div><div class="line"><span class="number">1</span>x5=<span class="number">5</span> <span class="number">2</span>x5=<span class="number">10</span> <span class="number">3</span>x5=<span class="number">15</span> <span class="number">4</span>x5=<span class="number">20</span> <span class="number">5</span>x5=<span class="number">25</span></div><div class="line"><span class="number">1</span>x6=<span class="number">6</span> <span class="number">2</span>x6=<span class="number">12</span> <span class="number">3</span>x6=<span class="number">18</span> <span class="number">4</span>x6=<span class="number">24</span> <span class="number">5</span>x6=<span class="number">30</span> <span class="number">6</span>x6=<span class="number">36</span></div><div class="line"><span class="number">1</span>x7=<span class="number">7</span> <span class="number">2</span>x7=<span class="number">14</span> <span class="number">3</span>x7=<span class="number">21</span> <span class="number">4</span>x7=<span class="number">28</span> <span class="number">5</span>x7=<span class="number">35</span> <span class="number">6</span>x7=<span class="number">42</span> <span class="number">7</span>x7=<span class="number">49</span></div><div class="line"><span class="number">1</span>x8=<span class="number">8</span> <span class="number">2</span>x8=<span class="number">16</span> <span class="number">3</span>x8=<span class="number">24</span> <span class="number">4</span>x8=<span class="number">32</span> <span class="number">5</span>x8=<span class="number">40</span> <span class="number">6</span>x8=<span class="number">48</span> <span class="number">7</span>x8=<span class="number">56</span> <span class="number">8</span>x8=<span class="number">64</span></div><div class="line"><span class="number">1</span>x9=<span class="number">9</span> <span class="number">2</span>x9=<span class="number">18</span> <span class="number">3</span>x9=<span class="number">27</span> <span class="number">4</span>x9=<span class="number">36</span> <span class="number">5</span>x9=<span class="number">45</span> <span class="number">6</span>x9=<span class="number">54</span> <span class="number">7</span>x9=<span class="number">63</span> <span class="number">8</span>x9=<span class="number">72</span> <span class="number">9</span>x9=<span class="number">81</span></div></pre></td></tr></table></figure>
+<h3 id="方法2：-8"><a href="#方法2：-8" class="headerlink" title="方法2："></a>方法2：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/bash</span></div><div class="line"><span class="keyword">for</span> ((i=1;i&lt;=9;i++)); <span class="keyword">do</span></div><div class="line">   <span class="keyword">for</span> ((j=1;j&lt;=i;j++)); <span class="keyword">do</span></div><div class="line">     result=$((<span class="variable">$i</span>*<span class="variable">$j</span>))</div><div class="line">     <span class="comment">#let "result=i*j"</span></div><div class="line">     <span class="built_in">echo</span> -n <span class="string">"<span class="variable">$i</span>*<span class="variable">$j</span>=<span class="variable">$result</span> "</span></div><div class="line">   <span class="keyword">done</span></div><div class="line">   <span class="built_in">echo</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+<h1 id="21、只打印奇数或偶数行"><a href="#21、只打印奇数或偶数行" class="headerlink" title="21、只打印奇数或偶数行"></a>21、只打印奇数或偶数行</h1><h3 id="打印奇数行："><a href="#打印奇数行：" class="headerlink" title="打印奇数行："></a>打印奇数行：</h3><h4 id="方法1：-9"><a href="#方法1：-9" class="headerlink" title="方法1："></a>方法1：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> seq 1 5 |awk <span class="string">'i=!i'</span></span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：先知道对于数值运算，未定义变量初值为0，对于字符运算，未定义变量初值为空字符串。<br>读取第一行记录，然后进行模式匹配，i是未定义变量，也就是i=!0，!取反意思。感叹号右边是个布尔值，0或空字符串为假，非0或非空字符串为真，!0就是真，因此i=1，条件为真打印第一条记录。<br>没有print为什么会打印呢？因为模式后面没有动作，默认会打印整条记录。<br>读取第二行记录，进行模式匹配，因为上次i的值由0变成了1，此时就是i=!1，条件为假不打印。<br>读取第三行记录，因为上次条件为假，i恢复初值为0，继续打印。以此类推…<br>可以看出，运算时并没有判断记录，而是利用布尔值真假判断。</p>
+</blockquote>
+<h4 id="方法2：-9"><a href="#方法2：-9" class="headerlink" title="方法2："></a>方法2：</h4><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |awk 'NR%<span class="number">2</span>!=<span class="number">0</span>'</div></pre></td></tr></table></figure>
+<h4 id="方法3：-3"><a href="#方法3：-3" class="headerlink" title="方法3："></a>方法3：</h4><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |sed -n '<span class="number">1</span>~<span class="number">2</span>p'</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：步长，每隔一行打印一次</p>
+</blockquote>
+<h4 id="方法4：-3"><a href="#方法4：-3" class="headerlink" title="方法4："></a>方法4：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">$</span><span class="bash"> seq 1 5 |sed -n <span class="string">'p;n'</span></span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：先打印第一行，执行n命令读取当前行的下一行2，放到模式空间，后面再没有打印模式空间行操作，所以只保存不打印，同等方式继续打印第三行。</p>
+</blockquote>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">5</span></div></pre></td></tr></table></figure>
+<h2 id="打印偶数行："><a href="#打印偶数行：" class="headerlink" title="打印偶数行："></a>打印偶数行：</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |awk '!(i=!i)'</div><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |awk 'NR%<span class="number">2</span>==<span class="number">0</span>'</div><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |sed -n '<span class="number">0</span>~<span class="number">2</span>p'</div><div class="line">$ seq <span class="number">1</span> <span class="number">5</span> |sed -n 'n;p'</div></pre></td></tr></table></figure>
+<blockquote>
+<p>说明：读取当前行的下一行2，放到模式空间，使用p命令打印模式空间的行，输出2。</p>
+</blockquote>
+<p>原文地址:<a href="http://lizhenliang.blog.51cto.com/7876557/1764025" target="_blank" rel="external">点我</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/1e93adae/">AWK使用案例总结</a></p>
+           <p><span>原文链接：</span><a href="/posts/1e93adae/" title="AWK使用案例总结">http://yort.xin/posts/1e93adae/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/shell/" rel="tag">#shell</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、Nginx日志分析"><span class="nav-number">1.</span> <span class="nav-text">1、Nginx日志分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#日志格式"><span class="nav-number">1.1.</span> <span class="nav-text">日志格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志记录"><span class="nav-number">1.2.</span> <span class="nav-text">日志记录</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#案例分享"><span class="nav-number">2.</span> <span class="nav-text">案例分享</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）统计日志中访问最多的10个IP"><span class="nav-number">2.1.</span> <span class="nav-text">1）统计日志中访问最多的10个IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）统计日志中访问大于100次的IP"><span class="nav-number">2.2.</span> <span class="nav-text">2）统计日志中访问大于100次的IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）统计2016年4月9日一天内访问最多的10个IP"><span class="nav-number">2.3.</span> <span class="nav-text">3）统计2016年4月9日一天内访问最多的10个IP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4）统计当前时间前一分钟的访问数"><span class="nav-number">2.4.</span> <span class="nav-text">4）统计当前时间前一分钟的访问数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5）统计访问最多的前10个页面（-request）"><span class="nav-number">2.5.</span> <span class="nav-text">5）统计访问最多的前10个页面（$request）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6）统计每个URL访问内容的总大小（-body-bytes-sent）"><span class="nav-number">2.6.</span> <span class="nav-text">6）统计每个URL访问内容的总大小（$body_bytes_sent）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7）统计每个IP访问状态码数量（-status）"><span class="nav-number">2.7.</span> <span class="nav-text">7）统计每个IP访问状态码数量（$status）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8）统计访问状态码为404的IP及出现次数"><span class="nav-number">2.8.</span> <span class="nav-text">8）统计访问状态码为404的IP及出现次数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、两个文件对比"><span class="nav-number">3.</span> <span class="nav-text">2、两个文件对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）找出相同记录"><span class="nav-number">3.1.</span> <span class="nav-text">1）找出相同记录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#这样可能更好理解些："><span class="nav-number">3.1.1.</span> <span class="nav-text">这样可能更好理解些：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2："><span class="nav-number">3.1.2.</span> <span class="nav-text">方法2：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法3："><span class="nav-number">3.1.3.</span> <span class="nav-text">方法3：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法4："><span class="nav-number">3.1.4.</span> <span class="nav-text">方法4：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法5："><span class="nav-number">3.1.5.</span> <span class="nav-text">方法5：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）找不同记录（同上，取反）"><span class="nav-number">3.2.</span> <span class="nav-text">2）找不同记录（同上，取反）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、合并两个文件"><span class="nav-number">4.</span> <span class="nav-text">3、合并两个文件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）将d文件性别合并到c文件"><span class="nav-number">4.1.</span> <span class="nav-text">1）将d文件性别合并到c文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1："><span class="nav-number">4.1.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-1"><span class="nav-number">4.1.2.</span> <span class="nav-text">方法2：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）将a-txt文件中服务名称合并到一个IP中"><span class="nav-number">4.2.</span> <span class="nav-text">2）将a.txt文件中服务名称合并到一个IP中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2"><span class="nav-number">4.2.2.</span> <span class="nav-text">方法2:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）将第一行附加给下面每行开头"><span class="nav-number">4.3.</span> <span class="nav-text">3）将第一行附加给下面每行开头</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-2"><span class="nav-number">4.3.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-2"><span class="nav-number">4.3.2.</span> <span class="nav-text">方法2：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、倒叙列打印文本"><span class="nav-number">5.</span> <span class="nav-text">4、倒叙列打印文本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、从第二列打印到最后"><span class="nav-number">6.</span> <span class="nav-text">5、从第二列打印到最后</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-3"><span class="nav-number">6.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-3"><span class="nav-number">6.0.2.</span> <span class="nav-text">方法2：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、将c文件中第一列放到到d文件中的第三列"><span class="nav-number">7.</span> <span class="nav-text">6、将c文件中第一列放到到d文件中的第三列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-4"><span class="nav-number">7.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-4"><span class="nav-number">7.0.2.</span> <span class="nav-text">方法2：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1）替换第二列"><span class="nav-number">7.0.2.1.</span> <span class="nav-text">1）替换第二列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2）替换第二列的two"><span class="nav-number">7.0.2.2.</span> <span class="nav-text">2）替换第二列的two</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、数字求和"><span class="nav-number">8.</span> <span class="nav-text">7、数字求和</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-5"><span class="nav-number">8.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-5"><span class="nav-number">8.0.2.</span> <span class="nav-text">方法2：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法3：-1"><span class="nav-number">8.0.3.</span> <span class="nav-text">方法3：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法4：-1"><span class="nav-number">8.0.4.</span> <span class="nav-text">方法4：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8、每隔三行添加一个换行符或内容"><span class="nav-number">9.</span> <span class="nav-text">8、每隔三行添加一个换行符或内容</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9、字符串拆分"><span class="nav-number">10.</span> <span class="nav-text">9、字符串拆分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-6"><span class="nav-number">10.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-6"><span class="nav-number">10.0.2.</span> <span class="nav-text">方法2：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10、统计字符串中每个字母出现的次数"><span class="nav-number">11.</span> <span class="nav-text">10、统计字符串中每个字母出现的次数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11、第一列排序"><span class="nav-number">12.</span> <span class="nav-text">11、第一列排序</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12、删除重复行，顺序不变"><span class="nav-number">13.</span> <span class="nav-text">12、删除重复行，顺序不变</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13、删除指定行"><span class="nav-number">14.</span> <span class="nav-text">13、删除指定行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除第一行："><span class="nav-number">14.0.1.</span> <span class="nav-text">删除第一行：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#14、在指定行前后加一行"><span class="nav-number">15.</span> <span class="nav-text">14、在指定行前后加一行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在第二行前一行加txt："><span class="nav-number">15.0.1.</span> <span class="nav-text">在第二行前一行加txt：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在第二行后一行加txt："><span class="nav-number">15.0.2.</span> <span class="nav-text">在第二行后一行加txt：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#15、通过IP获取网卡名"><span class="nav-number">16.</span> <span class="nav-text">15、通过IP获取网卡名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#16、浮点数运算（数字46保留小数点）"><span class="nav-number">17.</span> <span class="nav-text">16、浮点数运算（数字46保留小数点）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#17、替换换行符为逗号"><span class="nav-number">18.</span> <span class="nav-text">17、替换换行符为逗号</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-7"><span class="nav-number">18.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-7"><span class="nav-number">18.0.2.</span> <span class="nav-text">方法2：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法3：-2"><span class="nav-number">18.0.3.</span> <span class="nav-text">方法3：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法4：-2"><span class="nav-number">18.0.4.</span> <span class="nav-text">方法4：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法5：-1"><span class="nav-number">18.0.5.</span> <span class="nav-text">方法5：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法6："><span class="nav-number">18.0.6.</span> <span class="nav-text">方法6：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#18、把奇数换行符去掉"><span class="nav-number">19.</span> <span class="nav-text">18、把奇数换行符去掉</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1"><span class="nav-number">19.0.1.</span> <span class="nav-text">方法1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2-1"><span class="nav-number">19.0.2.</span> <span class="nav-text">方法2</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#19、费用统计"><span class="nav-number">20.</span> <span class="nav-text">19、费用统计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#统计每人总费用、总数量："><span class="nav-number">20.0.1.</span> <span class="nav-text">统计每人总费用、总数量：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#20、打印乘法口诀"><span class="nav-number">21.</span> <span class="nav-text">20、打印乘法口诀</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法1：-8"><span class="nav-number">21.0.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法2：-8"><span class="nav-number">21.0.2.</span> <span class="nav-text">方法2：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#21、只打印奇数或偶数行"><span class="nav-number">22.</span> <span class="nav-text">21、只打印奇数或偶数行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打印奇数行："><span class="nav-number">22.0.1.</span> <span class="nav-text">打印奇数行：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方法1：-9"><span class="nav-number">22.0.1.1.</span> <span class="nav-text">方法1：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法2：-9"><span class="nav-number">22.0.1.2.</span> <span class="nav-text">方法2：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法3：-3"><span class="nav-number">22.0.1.3.</span> <span class="nav-text">方法3：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法4：-3"><span class="nav-number">22.0.1.4.</span> <span class="nav-text">方法4：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">22.0.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印偶数行："><span class="nav-number">22.1.</span> <span class="nav-text">打印偶数行：</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

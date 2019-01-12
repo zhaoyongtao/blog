@@ -1,0 +1,1147 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="示例演示模型： 主从、主主、半同步复制、复制过滤器、基于SSL加密复制">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL主从复制架构示例演示">
+<meta property="og:url" content="http://yort.xin/posts/87bc87f4/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="示例演示模型： 主从、主主、半同步复制、复制过滤器、基于SSL加密复制">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL主从复制架构示例演示">
+<meta name="twitter:description" content="示例演示模型： 主从、主主、半同步复制、复制过滤器、基于SSL加密复制">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/87bc87f4/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> MySQL主从复制架构示例演示 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MySQL主从复制架构示例演示
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-17T00:00:00+08:00" content="2016-07-17">
+              2016-07-17
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="示例演示模型："><a href="#示例演示模型：" class="headerlink" title="示例演示模型："></a>示例演示模型：</h1><p><strong> 主从、主主、半同步复制、复制过滤器、基于SSL加密复制 </strong></p>
+<a id="more"></a>
+<h2 id="主从配置过程"><a href="#主从配置过程" class="headerlink" title="主从配置过程"></a>主从配置过程</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">每个mysql配置都应该启用的配置：</div><div class="line"><span class="attribute">skip_name_resolve</span>=ON</div><div class="line"><span class="attribute">innodb_file_per_table</span>=ON</div><div class="line">注意：mysql5.1版本skip_name_resolve不支持加参数写法</div><div class="line"></div><div class="line">主节点：</div><div class="line">编辑my.cnf配置文件</div><div class="line">(1)启动二进制日志</div><div class="line"></div><div class="line"><span class="attribute">log-bin</span>=log_name</div><div class="line">(2)为当前节点设置一个全局的ID号</div><div class="line"><span class="attribute">server-id</span>=# (配置文件配置)</div><div class="line"></div><div class="line">连接mysql数据库</div><div class="line">(3)创建有复制权限的帐号</div><div class="line">GRANT REPLICATION SLAVE,REPLICATION<span class="built_in"> CLIENT </span>ON *.* <span class="keyword">TO</span> ‘USER’@’HOST’ </div><div class="line">IDENTIFIED BY ‘PASSWORD’</div><div class="line"></div><div class="line">注意：授权账号也是写操作，所以从服务器在主服务器授权账号之后再定义MASTER</div><div class="line"></div><div class="line">从节点：</div><div class="line">（1）启动中继日志</div><div class="line"><span class="attribute">relay-log</span>=log_name</div><div class="line"><span class="attribute">relay-log-index</span>=relay-log.index(中继日志索引文件)</div><div class="line">（2）为当前节点配置一个全局唯一的ID号</div><div class="line"><span class="attribute">sever-id</span>=#</div><div class="line">（3）使用有复制权限的帐号连接至主服务器，并启动复制线程</div><div class="line">授权：</div><div class="line">mysql&gt; CHANGE MASTER <span class="keyword">TO</span> <span class="attribute">MASTER_HOST</span>=’IP’,MASTER_USER=’USERNAME’, <span class="attribute">MASTER_PASSWORD</span>=’PASS’,MASTER_LOG_FILE=’bin-log_file’ <span class="attribute">MASTER_LOG_POS</span>=#;</div><div class="line"></div><div class="line">注意：最后一项是数值，无需添加引号，初始化的事件应该忽略</div><div class="line">启动复制线程：</div><div class="line">mysql&gt; START SLAVE;</div><div class="line"></div><div class="line">查看从服务器信息：</div><div class="line">SHOW SLAVE STATUS\G</div><div class="line"></div><div class="line">获取帮助：</div><div class="line">help CHANGE MASTER <span class="keyword">TO</span>;</div></pre></td></tr></table></figure>
+<p><strong> 注意：主从配置的相关参数，在[mysql_safe]配置段是无效的 </strong></p>
+<h2 id="主主配置过程："><a href="#主主配置过程：" class="headerlink" title="主主配置过程："></a>主主配置过程：</h2><p><strong> 注意： </strong></p>
+<blockquote>
+<p>主主模式数据可能会不一致，慎用，由于两各节点都可以执行写操作，一旦发生同时写入<br>数据的操作，对于可以自动增长的id字段，必然造成id冲突，导致数据库崩溃</p>
+</blockquote>
+<p>为避免这样自动增长字段id冲突，有以下解决方法<br>自动增长字段id需要手动配置（在my.cnf文件配置）<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">一个节点使用奇数id</div><div class="line">auto_increment_offset=1</div><div class="line">设置偏移量，即跳到哪各id作为起始id</div><div class="line">auto_increment_increment=2</div><div class="line">设置自动增长的数值</div><div class="line">另一节点使用偶数id</div><div class="line">auto_incremental_offset=2</div><div class="line">auto_incremental_increment=2</div></pre></td></tr></table></figure></p>
+<h3 id="配置要点"><a href="#配置要点" class="headerlink" title="配置要点"></a>配置要点</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">(1)各节点配置唯一的server id</div><div class="line"><span class="attribute">server-id</span>=your_server_id</div><div class="line">(2)都需要启用二进制日志文件和中继日志</div><div class="line"><span class="attribute">bin-log</span>=log_name</div><div class="line"><span class="attribute">relay-log</span>=log_name</div><div class="line"><span class="attribute">relay-log-index</span>=log_name.index</div><div class="line">(3)配置自动增长字段id的奇偶：</div><div class="line">auto_incremnt_offset=</div><div class="line">auto_incremnt_increment= </div><div class="line">(4)创建拥有复制权限的用户帐号 </div><div class="line">GRANT RELPICATION SLAVE,REPLICATION<span class="built_in"> CLIENT </span>ON *.* <span class="keyword">TO</span> ‘USER’@’HOST’ </div><div class="line">IDENTIFIED BY ‘PASSWORD’;</div><div class="line">(5)把对方指定为主节点，并启动复制线程</div><div class="line"><span class="attribute">CHANGEMASTERTOMASTER_HOST</span>=’HOST’,</div><div class="line"><span class="attribute">MASTER_USER</span>=’USER’,MASTER_PASSWORD=’PASSWD’,</div><div class="line"><span class="attribute">MASTER_LOG_FILE</span>=’bin-log’,MASTER_LOG_POS=#;</div></pre></td></tr></table></figure>
+<h2 id="半同步复制配置"><a href="#半同步复制配置" class="headerlink" title="半同步复制配置"></a>半同步复制配置</h2><blockquote>
+<p>其他配置同主从配置，重点如下</p>
+</blockquote>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">master：</div><div class="line">mysql&gt; <span class="keyword">INSTALL </span>PLUGIN rpl_semi_sync_master SONAME ‘semisync_master.so’<span class="comment">;</span></div><div class="line">mysql&gt; SET GLOBAL rpl_semi_sync_master_enabled=<span class="number">1</span><span class="comment">; </span></div><div class="line"><span class="symbol"></span></div><div class="line">slave:</div><div class="line">mysql&gt; <span class="keyword">INSTALL </span>PLUGIN rpl_semi_sync_slave SONAME ‘semisync_slave.so’<span class="comment">; </span></div><div class="line">mysql&gt; SET GLOBAL rpl_semi_sync_slave_enabled=<span class="number">1</span><span class="comment">;</span></div><div class="line"></div><div class="line">查看相关变量参数：</div><div class="line"><span class="keyword">SHOW </span>GLOBAL VARIABLES LIKE ‘%semi%’<span class="comment">;</span></div><div class="line"><span class="keyword">SHOW </span>GLOBAL STATUS LIKE ‘%semi%’<span class="comment">;</span></div></pre></td></tr></table></figure>
+<h2 id="复制过滤器"><a href="#复制过滤器" class="headerlink" title="复制过滤器"></a>复制过滤器</h2><blockquote>
+<p>让从节点仅复制指定的数据库，或者指定数据库的指定表</p>
+</blockquote>
+<p>有两种实现方式：</p>
+<h3 id="1-主节点仅向二进制日志中记录特定数据库或特定表的相关事件"><a href="#1-主节点仅向二进制日志中记录特定数据库或特定表的相关事件" class="headerlink" title="(1)主节点仅向二进制日志中记录特定数据库或特定表的相关事件"></a>(1)主节点仅向二进制日志中记录特定数据库或特定表的相关事件</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">复制数据库白名单：</div><div class="line">binlog_do_db=”DB1,DB2,..”</div><div class="line">复制数据库黑名单：</div><div class="line">binlog_ignore_db=”DB1,DB2,..”</div></pre></td></tr></table></figure>
+<p><strong> 注意：不用同时使用以上两个参数  </strong></p>
+<h3 id="2-从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表"><a href="#2-从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表" class="headerlink" title="(2)从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表"></a>(2)从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">replicate_do_db= 重放数据库白名单</div><div class="line">replicate_ignore_db= 重放数据库黑名单</div><div class="line"></div><div class="line">还可以过滤到表级别：（实际应用很少）</div><div class="line">replicate_do_table=</div><div class="line">replicate_ignore_table=</div><div class="line"></div><div class="line">使用通配过滤的表：</div><div class="line">replicate_wild_do_tabl=</div><div class="line">replicate_wild_ingore_tabl=</div></pre></td></tr></table></figure>
+<h2 id="基于SSL证书进行复制"><a href="#基于SSL证书进行复制" class="headerlink" title="基于SSL证书进行复制"></a>基于SSL证书进行复制</h2><p><strong> 注意：各节点的时间必须同步好，否则证书将无法使用（多个节点可使用同以证书） </strong><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">(1)开启ssl功能：</div><div class="line">主从配置文件都需要连接以下内容</div><div class="line">ssl</div><div class="line"><span class="attribute">ssl_ca</span>=/var/lib/mysql/ssl/cacert.pem</div><div class="line"><span class="attribute">ssl_cert</span>=/var/lib/mysql/ssl/cacert.crt</div><div class="line"><span class="attribute">ssl_key</span>=/var/lib/mysql/ssl/cakey.pem</div><div class="line"></div><div class="line">注意：以上配置项是开启ssl连接所必须的</div><div class="line">(2)主服务器授权：</div><div class="line">GRANT REPLICATION SLAVE，REPLICATION<span class="built_in"> CLIENT </span>ON *.* <span class="keyword">TO</span> ‘USER’@’HOST’ IDENTIFIED BY</div><div class="line">‘PASSWORD’ REQUIRE SSL;</div><div class="line"></div><div class="line">(3)从服务器设置master</div><div class="line">MariaDB [(none)]&gt; CHANGE MASTER <span class="keyword">TO</span> <span class="attribute">MASTER_HOST</span>=’172.18.17.179′,MASTER_USER=’backuser’,MASTER_PASSWORD=’backpasswd’,MASTER_LOG_FILE=’bin_log.000009′,MASTER_LOG_POS=436,MASTER_SSL_CA=’/var/lib/mysql/ssl/cacert.pem’,MASTER_SSL_CERT=’/var/lib/mysql/ssl/slave.crt’,MASTER_SSL_KEY=’/var/lib/mysql/ssl/slave.key’,MASTER_SSL=1;</div><div class="line"></div><div class="line">补充：测试是否可以基于ssl远程连接数据库</div><div class="line"><span class="comment"># mysql -ubackuser -h172.18.17.179 -pbackpasswd –ssl-ca=/var/lib/mysql/ssl/cacert.pem –ssl-cert=/var/lib/mysql/ssl/slave.crt –ssl-key=/var/lib/mysql/ssl/slave.key</span></div><div class="line"></div><div class="line">参考：</div><div class="line">  | MASTER_SSL = &#123;0|1&#125;</div><div class="line">  | MASTER_SSL_CA = ‘ca_file_name’</div><div class="line">  | MASTER_SSL_CERT = ‘cert_file_name’</div><div class="line">  | MASTER_SSL_KEY = ‘key_file_name’</div></pre></td></tr></table></figure></p>
+<h2 id="MySQL复制的监控和维护"><a href="#MySQL复制的监控和维护" class="headerlink" title="MySQL复制的监控和维护"></a>MySQL复制的监控和维护</h2><h3 id="日志清理："><a href="#日志清理：" class="headerlink" title="日志清理："></a>日志清理：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">PURGE</span> <span class="built_in">BINARY</span> <span class="keyword">LOGS</span> <span class="keyword">TO</span> ‘mysql-<span class="keyword">bin</span><span class="number">.010</span>’ 表示清理<span class="number">010</span>之前的所有日志（不包含<span class="number">010</span>）</div><div class="line"><span class="keyword">PURGE</span> <span class="built_in">BINARY</span> <span class="keyword">LOGS</span> <span class="keyword">BEFORE</span> ‘<span class="number">2016</span><span class="number">-05</span><span class="number">-15</span> <span class="number">22</span>:<span class="number">26</span>:<span class="number">27</span>’ 表示清理此时间点之前的所有日志</div></pre></td></tr></table></figure>
+<p><strong> 注意：谨慎清理，除非你知道你在做什么 </strong></p>
+<h3 id="复制监控："><a href="#复制监控：" class="headerlink" title="复制监控："></a>复制监控：</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SHOW</span> <span class="keyword">MASTER</span> <span class="keyword">STATUS</span>;</div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">BINLOG</span> ENVENT;</div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">SHOW</span> <span class="built_in">BINARY</span> <span class="keyword">LOGS</span>;</div><div class="line"></div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">SLAVE</span> <span class="keyword">STATUS</span>;</div><div class="line"><span class="keyword">SHOW</span> <span class="keyword">PROCESSLIST</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">查看从服务器是否落后于主服务器：</div><div class="line"><span class="symbol">Seconds_Behind_Master:</span> <span class="number">0</span></div><div class="line"></div><div class="line">如何确定主从节点数据是否一致：</div><div class="line">percona-tools提供的工具</div><div class="line"></div><div class="line">数据不一致如何修复：</div><div class="line">备份主服务器的数据，重新恢复到从服务器</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/87bc87f4/">MySQL主从复制架构示例演示</a></p>
+           <p><span>原文链接：</span><a href="/posts/87bc87f4/" title="MySQL主从复制架构示例演示">http://yort.xin/posts/87bc87f4/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag">#MySQL</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#示例演示模型："><span class="nav-number">1.</span> <span class="nav-text">示例演示模型：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主从配置过程"><span class="nav-number">1.1.</span> <span class="nav-text">主从配置过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主主配置过程："><span class="nav-number">1.2.</span> <span class="nav-text">主主配置过程：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置要点"><span class="nav-number">1.2.1.</span> <span class="nav-text">配置要点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#半同步复制配置"><span class="nav-number">1.3.</span> <span class="nav-text">半同步复制配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制过滤器"><span class="nav-number">1.4.</span> <span class="nav-text">复制过滤器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-主节点仅向二进制日志中记录特定数据库或特定表的相关事件"><span class="nav-number">1.4.1.</span> <span class="nav-text">(1)主节点仅向二进制日志中记录特定数据库或特定表的相关事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表"><span class="nav-number">1.4.2.</span> <span class="nav-text">(2)从服务器SQL线程在replay中继日志的事件时，仅读取特定数据库或特定表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于SSL证书进行复制"><span class="nav-number">1.5.</span> <span class="nav-text">基于SSL证书进行复制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL复制的监控和维护"><span class="nav-number">1.6.</span> <span class="nav-text">MySQL复制的监控和维护</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#日志清理："><span class="nav-number">1.6.1.</span> <span class="nav-text">日志清理：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制监控："><span class="nav-number">1.6.2.</span> <span class="nav-text">复制监控：</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

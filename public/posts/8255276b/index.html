@@ -1,0 +1,1287 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="备份的本质就是将数据集另存一个副本，但是原数据会不停的发生变化，所以利用备份只能回复到数据变化之前的数据。那变化之后的呢？所以制定一个好的备份策略很重要">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL备份">
+<meta property="og:url" content="http://yort.xin/posts/8255276b/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="备份的本质就是将数据集另存一个副本，但是原数据会不停的发生变化，所以利用备份只能回复到数据变化之前的数据。那变化之后的呢？所以制定一个好的备份策略很重要">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.410Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL备份">
+<meta name="twitter:description" content="备份的本质就是将数据集另存一个副本，但是原数据会不停的发生变化，所以利用备份只能回复到数据变化之前的数据。那变化之后的呢？所以制定一个好的备份策略很重要">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/8255276b/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> MySQL备份 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MySQL备份
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-17T00:00:00+08:00" content="2016-07-17">
+              2016-07-17
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>备份的本质就是将数据集另存一个副本，但是原数据会不停的发生变化，所以利用备份只能回复到数据变化之前的数据。那变化之后的呢？所以制定一个好的备份策略很重要</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="一、备份的目的"><a href="#一、备份的目的" class="headerlink" title="一、备份的目的"></a>一、备份的目的</h1><ul>
+<li>做灾难恢复：对损坏的数据进行恢复和还原</li>
+<li>需求改变：因需求改变而需要把数据还原到改变以前</li>
+<li>测试：测试新功能是否可用</li>
+</ul>
+<h1 id="二、备份需要考虑的问题"><a href="#二、备份需要考虑的问题" class="headerlink" title="二、备份需要考虑的问题"></a>二、备份需要考虑的问题</h1><ul>
+<li>可以容忍丢失多长时间的数据；</li>
+<li>恢复数据要在多长时间内完； </li>
+<li>恢复的时候是否需要持续提供服务；</li>
+<li>恢复的对象，是整个库，多个表，还是单个库，单个表。</li>
+</ul>
+<h1 id="三、备份的类型"><a href="#三、备份的类型" class="headerlink" title="三、备份的类型"></a>三、备份的类型</h1><h2 id="1、根据是否需要数据库离线"><a href="#1、根据是否需要数据库离线" class="headerlink" title="1、根据是否需要数据库离线"></a>1、根据是否需要数据库离线</h2><ul>
+<li>冷备（cold backup）：需要关mysql服务，读写请求均不允许状态下进行；线上服务读写操作均不可执行</li>
+<li>温备（warm backup）： 服务在线，但仅支持读请求，不允许写请求；</li>
+<li>热备（hot backup）：备份的同时，业务不受影响。线上服务读写均可执行</li>
+</ul>
+<blockquote>
+<p>实际上，热备份最复杂，备份难度最大，因为热备份要考虑备份的同时新数据产生的变化导致备份<br>数据前后时间戳不一致，这样会导致备份失效，温备份就避免备份时数据会发生改变，因为对数据<br>库的所有执行了读锁，不能写入数据，数据也就不会发生变化，但对业务的影响也是很明显的，而<br>冷备，在备份时整个业务都需终止，基本是不可取的</p>
+</blockquote>
+<p><strong>注：</strong></p>
+<blockquote>
+<ul>
+<li>这种类型的备份，取决于业务的需求，而不是备份工具</li>
+<li>MyISAM不支持热备，InnoDB支持热备，但是需要专门的工具</li>
+</ul>
+</blockquote>
+<h2 id="2、根据要备份的数据集合的范围"><a href="#2、根据要备份的数据集合的范围" class="headerlink" title="2、根据要备份的数据集合的范围"></a>2、根据要备份的数据集合的范围</h2><ul>
+<li>完全备份：full backup，备份整个数据集</li>
+<li>部分备份：只备份数据子集（如数据库的某张表）</li>
+<li>增量备份: incremental backup 上次完全备份或增量备份以来改变了的数据，不能单独使用，要借助完全备份，备份的频率取决于数据的更新频率。<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">备份模型如下：</div><div class="line">——–&gt;|<span class="string">———&gt;</span>|<span class="string">———-&gt;</span></div><div class="line">完整备份   差异备份1   差异备份2</div><div class="line">还原：先还原完全备份数据，再恢复每一个增量备份的数据</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>增量备份的优点是占用磁盘空间少，但恢复数据比较麻烦</strong></p>
+<ul>
+<li>差异备份：differential backup 上次完全备份以来改变了的数据。</li>
+</ul>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">备份模型如下：</div><div class="line">——–&gt; 完全备份</div><div class="line">     	<span class="string">|——–&gt; 第一次差异备份</span></div><div class="line">     	<span class="string">|—————–&gt; 第二次差异备份</span></div><div class="line"></div><div class="line">还原：先还原完全备份数据，再还原差异备份的数据</div></pre></td></tr></table></figure>
+<p><strong>差异备份占用磁盘空间多，但恢复数据较为方便</strong><br><strong>建议的恢复策略：</strong></p>
+<blockquote>
+<ul>
+<li>完全+增量+二进制日志</li>
+<li>完全+差异+二进制日志</li>
+</ul>
+</blockquote>
+<h2 id="3、根据备份数据或文件"><a href="#3、根据备份数据或文件" class="headerlink" title="3、根据备份数据或文件"></a>3、根据备份数据或文件</h2><h3 id="物理备份：直接备份数据文件"><a href="#物理备份：直接备份数据文件" class="headerlink" title="物理备份：直接备份数据文件"></a>物理备份：直接备份数据文件</h3><blockquote>
+<p>物理备份时文件系统上的数据文件归档复制，简单易用，无需第额外三方工具，备份的数据量较大<br>时，建议使用物理，备份而逻辑备份一般需要借助额外的备份工具进行，通过mysql协议连接服务<br>器将数据抽取出来</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">优点：</div><div class="line">	备份和恢复操作都比较简单，能够跨mysql的版本，</div><div class="line">	恢复速度快，属于文件系统级别的</div><div class="line">建议：</div><div class="line">	不要假设备份一定可用，要测试</div><div class="line"><span class="meta">	mysql&gt;</span><span class="bash">check tables；检测表是否可用</span></div></pre></td></tr></table></figure>
+<h3 id="逻辑备份-备份表中的数据和代码"><a href="#逻辑备份-备份表中的数据和代码" class="headerlink" title="逻辑备份: 备份表中的数据和代码"></a>逻辑备份: 备份表中的数据和代码</h3><blockquote>
+<p>逻辑备份与存储引擎无关<br>通过从数据库导出数据进行备份（需要相关备份工具）</p>
+</blockquote>
+<figure class="highlight cos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">优点：</div><div class="line">	恢复简单、</div><div class="line">	备份的结果为<span class="keyword">ASCII</span>文件，可以编辑</div><div class="line">	与存储引擎无关</div><div class="line">	可以通过网络备份和恢复</div><div class="line">缺点：</div><div class="line">	备份或恢复都需要mysql服务器进程参与</div><div class="line">	备份结果占据更多的空间，</div><div class="line">	浮点数可能会丢失精度</div><div class="line">	还原之后，索引需要重建</div></pre></td></tr></table></figure>
+<h4 id="备份时需要考虑的因素："><a href="#备份时需要考虑的因素：" class="headerlink" title="备份时需要考虑的因素："></a>备份时需要考虑的因素：</h4><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">持锁多久</div><div class="line">– 能够接收业务中断的时间</div><div class="line">备份过程的时长</div><div class="line">– 预计备份所要消耗的时间，是否能在对业务影响最小的时间段内完成备份操作</div><div class="line">备份负载</div><div class="line">– 备份会加大磁盘IO压力，可能会导致业务中断，所以备份尽量避免在服务的高负载的时间段</div><div class="line">恢复过程的时长</div><div class="line">– 当数据损坏时，能够接收多大的恢复时长（分分钟几百万上下），若要尽量缩短数据恢复时间</div><div class="line">应该在平时就需要演练数据恢复的过程，一是确保备份的数据可用，二是熟悉恢复流程，可能需多</div><div class="line">个部门的协调，因为在巨大的压力下（若数据丢失时），人很可能是大脑一片空白，很可能会误操</div><div class="line">作，要是再把备份的数据删掉，那就真的需要跑路了</div></pre></td></tr></table></figure>
+<h1 id="四、备份的对象"><a href="#四、备份的对象" class="headerlink" title="四、备份的对象"></a>四、备份的对象</h1><blockquote>
+<p>1、 数据；<br>2、配置文件；<br>3、代码：存储过程、存储函数、触发器、事件调度器<br>4、os相关的配置文件<br>5、复制相关的配置<br>6、二进制日志、innodb事物日志文件</p>
+</blockquote>
+<h1 id="五、备份的方案和工具"><a href="#五、备份的方案和工具" class="headerlink" title="五、备份的方案和工具"></a>五、备份的方案和工具</h1><h2 id="备份方案："><a href="#备份方案：" class="headerlink" title="备份方案："></a>备份方案：</h2><blockquote>
+<p>数据集：完全+增量（常用备份方式）<br>备份手段：物理，逻辑</p>
+</blockquote>
+<p><strong> 注意：热备份和冷备份于备份方式（物理，逻辑）是两个话题 </strong></p>
+<h2 id="备份工具："><a href="#备份工具：" class="headerlink" title="备份工具："></a>备份工具：</h2><h3 id="逻辑备份工具：mysqldump"><a href="#逻辑备份工具：mysqldump" class="headerlink" title="逻辑备份工具：mysqldump"></a>逻辑备份工具：mysqldump</h3><ul>
+<li>适用所有存储引擎</li>
+<li>温备份、完全备份、部分备份，对innodb支持热备份</li>
+</ul>
+<h3 id="物理备份：cp-tar等复制归档工具"><a href="#物理备份：cp-tar等复制归档工具" class="headerlink" title="物理备份：cp,tar等复制归档工具"></a>物理备份：cp,tar等复制归档工具</h3><ul>
+<li>适用所有存储引擎</li>
+<li>冷备份，完全备份，部分备份</li>
+</ul>
+<p>lvm2的快照：几乎热备，需借助cp等文件管理工具进行备份<br>mysqlhotcopy: 几乎冷备，仅适用于MyISAM引擎<br>xtrabackup: </p>
+<h1 id="备份工具的选择："><a href="#备份工具的选择：" class="headerlink" title="备份工具的选择："></a>备份工具的选择：</h1><blockquote>
+<p>mysqldump+复制binlog：<br>mysqldump：完全备份；<br>复制binlog中指定时间范围的event：增量备份；</p>
+<p>lvm2快照+复制binlog：<br>lvm2快照：使用cp或tar等做物理备份；完全备份；<br>复制binlog中指定时间范围的event：增量备份；</p>
+<p>xtrabackup：<br>由Percona提供的支持对InnoDB做热备(物理备份)的工具；<br>完全备份、增量备份；</p>
+<p>逻辑备份工具：mysqldump, mysqldumper(实现并行逻辑备份), phpmyadmin</p>
+<p>逻辑备份是将schema和数据存储在一起；是巨大的SQL语句，其将拉取出来的数据定义成INSERT语句，也就是每表要插入的数据；其同时又是一个巨大的备份文件，因为备份的数据都是存储在单个文件中</p>
+</blockquote>
+<p>schema：表结构（表的相关属性定义）</p>
+<h2 id="mysqldump使用方法"><a href="#mysqldump使用方法" class="headerlink" title="mysqldump使用方法"></a>mysqldump使用方法</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">mysqldump [options] [db_name [tbl_name …]]</div><div class="line">option:</div><div class="line">-A，–all-databases: 备份所有数据库</div><div class="line">-B，–databases db_name: 备份指定的数据库</div><div class="line">-E: 备份指定数据相关的所有event<span class="built_in"> scheduler</span></div><div class="line">-R: 备份指定数据相关的所有存储过程和存储函数</div><div class="line">–triggers：备份表相关的触发器</div><div class="line">–<span class="attribute">master-data</span>=# （#为数字，如下）</div><div class="line">1：记录为CHANGE MASTER <span class="keyword">TO</span> 语句，此语句不被注释（功用为扮演为从服务器）</div><div class="line">2：基于为注释的CHANGE MASTER <span class="keyword">TO</span>语句 （建议使用此种方式）</div><div class="line"></div><div class="line">–<span class="attribute">master-data</span>=2的作用：</div><div class="line">备份时，在导出的数据文件中添加一条注释信息，此注释信息为执行“备份一刻”所使用的</div><div class="line">二进制日志文件及其记录的当前事务起始位置（作用是用于时间点还原，还原日志文件记</div><div class="line">录的事务起始位置之后所发生事件）</div><div class="line"></div><div class="line">提醒：时间点还原使用二进制日志文件可能不止一个</div><div class="line"></div><div class="line">–flush-logs: 锁定表后滚动二进制日志</div><div class="line">– 主要用于表锁定后滚动二进制日志，然后备份二进制日志文件</div><div class="line"></div><div class="line">–lock-all-tables: 锁定所有库的所有表（温备）</div><div class="line">– 用于使用完全备份时施加全局读锁</div><div class="line"></div><div class="line">–lock-tables: 对于每个单独的数据库，在启动备份前锁定其所有表（温备）</div><div class="line">– 用备份单独指定的某个或某些个数据库时执行读锁</div><div class="line"></div><div class="line">–single-transaction：在备份时启动一个事务（热备） </div><div class="line">– 适用于事务型存储引擎的热备份选项（InnoDB适用）</div></pre></td></tr></table></figure>
+<h3 id="主要有三种备份模式："><a href="#主要有三种备份模式：" class="headerlink" title="主要有三种备份模式："></a>主要有三种备份模式：</h3><h4 id="备份指定数据库或数据库的表（可以是多张表）"><a href="#备份指定数据库或数据库的表（可以是多张表）" class="headerlink" title="备份指定数据库或数据库的表（可以是多张表）"></a>备份指定数据库或数据库的表（可以是多张表）</h4><figure class="highlight accesslog"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shell&gt; mysqldump <span class="string">[options]</span> db_name <span class="string">[tbl_name ...]</span></div></pre></td></tr></table></figure>
+<p><strong> 注意：不会自动生成CREATE DATABASE的语句（即导入时需要手动创建数据库） </strong></p>
+<h4 id="备份指定的数据库（可以指定多个数据库）"><a href="#备份指定的数据库（可以指定多个数据库）" class="headerlink" title="备份指定的数据库（可以指定多个数据库）"></a>备份指定的数据库（可以指定多个数据库）</h4><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">shell</span><span class="bash">&gt; mysqldump [options] --databases db_name ...</span></div></pre></td></tr></table></figure>
+<h4 id="备份所有数据库，全库备份"><a href="#备份所有数据库，全库备份" class="headerlink" title="备份所有数据库，全库备份"></a>备份所有数据库，全库备份</h4><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">shell</span>&gt; mysqldump [<span class="keyword">options</span>] --<span class="keyword">all</span>-databases</div></pre></td></tr></table></figure>
+<h2 id="备份示例："><a href="#备份示例：" class="headerlink" title="备份示例："></a>备份示例：</h2><h3 id="备份指定数据库："><a href="#备份指定数据库：" class="headerlink" title="备份指定数据库："></a>备份指定数据库：</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqldump -uroot -hlocalhost -p <span class="params">--databases</span> ops &gt; <span class="string">/root/backup.sql</span> <span class="comment"># 备份指定数据库</span></div></pre></td></tr></table></figure>
+<h3 id="备份指定数据库的某张表"><a href="#备份指定数据库的某张表" class="headerlink" title="备份指定数据库的某张表"></a>备份指定数据库的某张表</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqldump -uroot -hloaclhost -p ops students &gt; <span class="regexp">/root/</span>backup.sql <span class="comment"># 备份指定数据库的某张表</span></div></pre></td></tr></table></figure>
+<h3 id="备份所有数据库"><a href="#备份所有数据库" class="headerlink" title="备份所有数据库"></a>备份所有数据库</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqldump -uroot -hlocalhost -p <span class="params">--all-databases</span> &gt; <span class="string">/root/backup.sql</span>  <span class="comment"># 备份所有数据库</span></div></pre></td></tr></table></figure>
+<p><strong> 注意：二进制日志文件至关重要，建议存储在与存储数据不同的磁盘上，并且要做磁盘冗余，如果<br> 条件允许，事物日志也应该放在非数据且有冗余的磁盘上 </strong></p>
+<blockquote>
+<p>备份思路：每周执行一次完整备份，每天执行一次增量备份（备份二进制日志），完整备份和增量备份的频率需依照数据的数据变化速度调整</p>
+</blockquote>
+<h2 id="备份恢复示例："><a href="#备份恢复示例：" class="headerlink" title="备份恢复示例："></a>备份恢复示例：</h2><p> 完整备份+增量备份（二进制日志）</p>
+<h3 id="1-完全备份：-温备"><a href="#1-完全备份：-温备" class="headerlink" title="(1)完全备份：(温备)"></a>(1)完全备份：(温备)</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysqldump <span class="params">--all-databases</span> <span class="params">--lock-all-tables</span> <span class="params">--master-data=2</span> &gt; <span class="string">/backups/alldb.sql</span></div></pre></td></tr></table></figure>
+<h3 id="2-数据还原"><a href="#2-数据还原" class="headerlink" title="(2)数据还原"></a>(2)数据还原</h3><h4 id="1、导入备份数据："><a href="#1、导入备份数据：" class="headerlink" title="1、导入备份数据："></a>1、导入备份数据：</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql &lt; <span class="regexp">/root/</span>alldb.sql</div></pre></td></tr></table></figure>
+<h4 id="2、时间点还原"><a href="#2、时间点还原" class="headerlink" title="2、时间点还原"></a>2、时间点还原</h4><p>查询备份数据获取事件位置，信息如下：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CHANGE MASTER <span class="keyword">TO</span> <span class="attribute">MASTER_LOG_FILE</span>=<span class="string">'bin_log.000005'</span>, <span class="attribute">MASTER_LOG_POS</span>=245;</div><div class="line"></div><div class="line">使用mysqlbinlog抽取指定位置之后的事件：</div><div class="line">shell&gt; mysqlbinlog <span class="attribute">--start-position</span>=254 bin_log.000005&gt; /backups/binlog.sql</div></pre></td></tr></table></figure></p>
+<p><strong> 注意：指定的位置往后所发生的事件记录于二进制文件可能不止一个，多以肯能需要导入多个二进制日志文件进行时间点恢复 </strong></p>
+<p>使用mysqlbinlog抽取指定位置之后的事件：<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">shell</span><span class="bash">&gt; mysqlbinlog --start-position=254 bin_log.000005&gt; /backups/binlog.sql</span></div></pre></td></tr></table></figure></p>
+<p><strong> 注意：指定的位置往后所发生的事件记录于二进制文件可能不止一个，多以肯能需要导入多个二进制日志文件进行时间点恢复 </strong></p>
+<h4 id="3、导入到数据库中"><a href="#3、导入到数据库中" class="headerlink" title="3、导入到数据库中"></a>3、导入到数据库中</h4><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">shell</span><span class="bash">&gt; mysql &lt; binlog.sql</span></div></pre></td></tr></table></figure>
+<h3 id="二进制日志备份还原要点："><a href="#二进制日志备份还原要点：" class="headerlink" title="二进制日志备份还原要点："></a>二进制日志备份还原要点：</h3><blockquote>
+<ul>
+<li>前最好先执行FLUSH LOGS滚动日志</li>
+<li>使用二进制日志文件还原时，要先禁用二进制日志记录，再执行还原操作，还原后再启用</li>
+</ul>
+</blockquote>
+<p>可以基于脚本实现自动备份<br>注意尝试使用mysqldump实现热备份</p>
+<h2 id="基于lvm2的备份"><a href="#基于lvm2的备份" class="headerlink" title="基于lvm2的备份"></a>基于lvm2的备份</h2><blockquote>
+<p>前提，创建好逻辑卷格式化后挂载使用</p>
+</blockquote>
+<h3 id="1-请求锁定所有表"><a href="#1-请求锁定所有表" class="headerlink" title="(1)请求锁定所有表"></a>(1)请求锁定所有表</h3><figure class="highlight cos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; FLUSH TABLES WITH <span class="keyword">READ</span> <span class="keyword">LOCK</span><span class="comment">;</span></div><div class="line">– 注意：如果有写操作事务在进行，可能需要等待很长时间</div></pre></td></tr></table></figure>
+<h3 id="2-记录二进制日志文件及事件位置"><a href="#2-记录二进制日志文件及事件位置" class="headerlink" title="(2)记录二进制日志文件及事件位置"></a>(2)记录二进制日志文件及事件位置</h3><p>滚动日志：（不滚问题也不大）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">mysql&gt;</span><span class="bash"> FLUSH LOGS;</span></div><div class="line"><span class="meta">shell&gt;</span><span class="bash"> mysql -e <span class="string">"FLUSH LOGS"</span></span></div></pre></td></tr></table></figure></p>
+<p>导出二进制日志列表<br><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">shell</span><span class="bash">&gt; mysql -e <span class="string">"SHOW LOGS STATUS"</span> &gt; PATH</span></div></pre></td></tr></table></figure></p>
+<h3 id="3-创建快照卷"><a href="#3-创建快照卷" class="headerlink" title="(3)创建快照卷"></a>(3)创建快照卷</h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lvcreate -L <span class="built_in">SIZE</span> -s -p r -n <span class="keyword">NAME</span> /YOUR_LV_PATH</div></pre></td></tr></table></figure>
+<h3 id="4-释放全局锁"><a href="#4-释放全局锁" class="headerlink" title="(4)释放全局锁"></a>(4)释放全局锁</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">mysql&gt;</span><span class="bash"> UBLOCK TABLES;</span></div></pre></td></tr></table></figure>
+<h3 id="5-挂载快照卷，执行数据备份"><a href="#5-挂载快照卷，执行数据备份" class="headerlink" title="(5)挂载快照卷，执行数据备份"></a>(5)挂载快照卷，执行数据备份</h3><p>mount &amp;&amp; cp</p>
+<h3 id="6-完成备份，删除快照卷"><a href="#6-完成备份，删除快照卷" class="headerlink" title="(6)完成备份，删除快照卷"></a>(6)完成备份，删除快照卷</h3><p>rm命令</p>
+<h3 id="7-制定好策略，通过源卷备份二进制日志"><a href="#7-制定好策略，通过源卷备份二进制日志" class="headerlink" title="(7)制定好策略，通过源卷备份二进制日志"></a>(7)制定好策略，通过源卷备份二进制日志</h3><p>cp binlog</p>
+<p><strong> 注意：二进制文件备份要在原卷实行，不需要快照，在执行flush logs之后就应该执行备份操作 </strong><br><strong> 注意：物理物质的文件，回复时要确保属主属组时mysql （cp使用-a选项） </strong></p>
+<h2 id="xtrabackup备份"><a href="#xtrabackup备份" class="headerlink" title="xtrabackup备份"></a>xtrabackup备份</h2><blockquote>
+<p>perconna出品,www.perconna.com<br>innobackupex为xtrabackup的前端工具,可理解为简装版的xtrabackup<br>提醒：在实际的应用场景中，可能会需要创建授权专门的备份用户</p>
+</blockquote>
+<h3 id="InnoDB表空间管理简单概念"><a href="#InnoDB表空间管理简单概念" class="headerlink" title="InnoDB表空间管理简单概念"></a>InnoDB表空间管理简单概念</h3><blockquote>
+<p>innoDB以表空间管理数据库，其管理方式是将表空间分页管理的，可以理解为block，每个block叫<br>做一个innodb页（通常为16k大小），每个innodb页有一个日志序列号，称为LSN，数据页面发生变<br>化时，日志序列号将滚动提升</p>
+</blockquote>
+<h3 id="xtrabackup的备份工作原理或要点"><a href="#xtrabackup的备份工作原理或要点" class="headerlink" title="xtrabackup的备份工作原理或要点"></a>xtrabackup的备份工作原理或要点</h3><ul>
+<li>xtrabackup的备份基于innoDB页进行，通过识别LSN的变化判断页面数据是否发生改变；</li>
+<li>完全备份，就是备份表空间的所有数据块，即innoDB页；</li>
+<li>增量备份，仅备份序列号发生改变的数据块；</li>
+<li>备份的是数据和事务日志文件</li>
+</ul>
+<h3 id="备份恢复要点"><a href="#备份恢复要点" class="headerlink" title="备份恢复要点"></a>备份恢复要点</h3><ul>
+<li><p>如果只做完全备份的恢复，没有增量备份，恢复数据时，完全备份整合应该将事务日志中尚未提<br>交的事务同步到数据中，未提交的事务进行回滚</p>
+</li>
+<li><p>如果是完全备份+增量备份恢复，恢复数据时，完全备份整合应该将事务日志中未提交的事务同<br>步至数据中（redo only），切记不可回滚未提交的事务，最后再整合增量备份</p>
+</li>
+<li><p>要做时间点还原，二进制日志必备份恢复不可少</p>
+</li>
+</ul>
+<h3 id="完全备份和恢复"><a href="#完全备份和恢复" class="headerlink" title="完全备份和恢复"></a>完全备份和恢复</h3><blockquote>
+<p>前提：<br>1.确保表示类型是InnoDB，只有innodb支持热备和增量备份<br>2.确保inndb_file_per_table = ON (很重要)</p>
+</blockquote>
+<h4 id="完全备份"><a href="#完全备份" class="headerlink" title="完全备份"></a>完全备份</h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">innobackupex <span class="attribute">--user</span>=DBUSER <span class="attribute">--password</span>=DBPASSWD /SAVE/<span class="keyword">TO</span>/SOMEWHERE</div></pre></td></tr></table></figure>
+<h4 id="完全备份恢复"><a href="#完全备份恢复" class="headerlink" title="完全备份恢复"></a>完全备份恢复</h4><p><strong> 注意：要在需要恢复数据的服务端执行以下操作 </strong></p>
+<h5 id="整理备份"><a href="#整理备份" class="headerlink" title="整理备份"></a>整理备份</h5><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">innobackpex –<span class="built_in">apply</span>-<span class="built_in">log</span> /BACKUP_PATH</div></pre></td></tr></table></figure>
+<p>确保有complete OK信息输出，表示整理备份可用</p>
+<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><p><strong> 注意：不需要启动mysql </strong><br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">innobackupex –<span class="keyword">copy</span>-<span class="keyword">back</span> /PATH/TO/BACKUP_DIR</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>通过备份目录下的xtrabackup_checkpoints可查看备份的信息（如备份类型）</p>
+</blockquote>
+<h2 id="增量备份和恢复"><a href="#增量备份和恢复" class="headerlink" title="增量备份和恢复"></a>增量备份和恢复</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">innobackupex</span> –incremental /SAVE_TO_SOMEWHERE –incremental-<span class="keyword">basedir=BASEDIR</span></div><div class="line">–incremental-<span class="keyword">basedir= </span>基于谁做增量</div></pre></td></tr></table></figure>
+<blockquote>
+<p>增量和差异区别只在于: 是始终基于完全备份来备份数据，还是以最近的完全备份或增量备份来</p>
+</blockquote>
+<h3 id="整合完全备份"><a href="#整合完全备份" class="headerlink" title="整合完全备份"></a>整合完全备份</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">innobackupex –apply-<span class="built_in">log</span> –<span class="keyword">redo</span>-<span class="keyword">only</span> BACKUP_PATH（完全备份）</div></pre></td></tr></table></figure>
+<p><strong> 注意：恢复的操作只需要提交，而不要回滚 </strong></p>
+<h3 id="整合每一个增量备份："><a href="#整合每一个增量备份：" class="headerlink" title="整合每一个增量备份："></a>整合每一个增量备份：</h3><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">innobackupex –apply-<span class="built_in">log</span> –<span class="keyword">redo</span>-<span class="keyword">only</span> BACKUP_PATH –incremental-</div><div class="line">dir=INCREMENTAL_DIR1 （增量备份<span class="number">1</span>）</div><div class="line"></div><div class="line">innobackupex –apply-<span class="built_in">log</span> –<span class="keyword">redo</span>-<span class="keyword">only</span> BACKUP_PATH –incremental-</div><div class="line">dir=INCREMENTAL_DIR2（增量备份<span class="number">2</span>）</div></pre></td></tr></table></figure>
+<p><strong> 注意：增量备份整合一定要使用绝对路径 </strong></p>
+<h3 id="恢复-1"><a href="#恢复-1" class="headerlink" title="恢复"></a>恢复</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">innobackupex –<span class="keyword">copy</span>-<span class="keyword">back</span> /PATH/TO/BACKUP_DIR（完全备份）</div></pre></td></tr></table></figure>
+<h2 id="导入或导出单张表"><a href="#导入或导出单张表" class="headerlink" title="导入或导出单张表"></a>导入或导出单张表</h2><h3 id="1-导出表"><a href="#1-导出表" class="headerlink" title="1.导出表"></a>1.导出表</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">innobackuppex –apply-log –<span class="builtin-name">export</span> /path/<span class="keyword">to</span>/backup</div><div class="line"><span class="comment"># 会在表空间生成一个以.exp结尾的文件，可用于导入到其他服务器</span></div></pre></td></tr></table></figure>
+<h3 id="2-导入表（最好是在不同服务上进行）"><a href="#2-导入表（最好是在不同服务上进行）" class="headerlink" title="2.导入表（最好是在不同服务上进行）"></a>2.导入表（最好是在不同服务上进行）</h3><h4 id="先要创建表"><a href="#先要创建表" class="headerlink" title="先要创建表"></a>先要创建表</h4><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; CREATE <span class="keyword">TABLE</span> testtable <span class="comment">(...) ENGINE=InnoDB</span>;</div></pre></td></tr></table></figure>
+<h4 id="再清空表空间"><a href="#再清空表空间" class="headerlink" title="再清空表空间"></a>再清空表空间</h4><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; ALTER <span class="keyword">TABLE</span> DATABASE.<span class="keyword">TABLE</span> <span class="comment">DISCARD TABLESPACE</span>;</div></pre></td></tr></table></figure>
+<h4 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h4><blockquote>
+<p>将导出的表的.ibd文件盒.exp文件复制到当前服务器的数据库目录<br>确保属主和属组是mysql，然后执行导入命令</p>
+</blockquote>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql&gt; ALTER <span class="keyword">TABLE</span> mydatabase.mytable <span class="comment">IMPORT TABLESTACE</span>;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/8255276b/">MySQL备份</a></p>
+           <p><span>原文链接：</span><a href="/posts/8255276b/" title="MySQL备份">http://yort.xin/posts/8255276b/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag">#MySQL</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、备份的目的"><span class="nav-number">1.</span> <span class="nav-text">一、备份的目的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、备份需要考虑的问题"><span class="nav-number">2.</span> <span class="nav-text">二、备份需要考虑的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、备份的类型"><span class="nav-number">3.</span> <span class="nav-text">三、备份的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、根据是否需要数据库离线"><span class="nav-number">3.1.</span> <span class="nav-text">1、根据是否需要数据库离线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、根据要备份的数据集合的范围"><span class="nav-number">3.2.</span> <span class="nav-text">2、根据要备份的数据集合的范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、根据备份数据或文件"><span class="nav-number">3.3.</span> <span class="nav-text">3、根据备份数据或文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#物理备份：直接备份数据文件"><span class="nav-number">3.3.1.</span> <span class="nav-text">物理备份：直接备份数据文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑备份-备份表中的数据和代码"><span class="nav-number">3.3.2.</span> <span class="nav-text">逻辑备份: 备份表中的数据和代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#备份时需要考虑的因素："><span class="nav-number">3.3.2.1.</span> <span class="nav-text">备份时需要考虑的因素：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、备份的对象"><span class="nav-number">4.</span> <span class="nav-text">四、备份的对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、备份的方案和工具"><span class="nav-number">5.</span> <span class="nav-text">五、备份的方案和工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#备份方案："><span class="nav-number">5.1.</span> <span class="nav-text">备份方案：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#备份工具："><span class="nav-number">5.2.</span> <span class="nav-text">备份工具：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#逻辑备份工具：mysqldump"><span class="nav-number">5.2.1.</span> <span class="nav-text">逻辑备份工具：mysqldump</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#物理备份：cp-tar等复制归档工具"><span class="nav-number">5.2.2.</span> <span class="nav-text">物理备份：cp,tar等复制归档工具</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#备份工具的选择："><span class="nav-number">6.</span> <span class="nav-text">备份工具的选择：</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mysqldump使用方法"><span class="nav-number">6.1.</span> <span class="nav-text">mysqldump使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要有三种备份模式："><span class="nav-number">6.1.1.</span> <span class="nav-text">主要有三种备份模式：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#备份指定数据库或数据库的表（可以是多张表）"><span class="nav-number">6.1.1.1.</span> <span class="nav-text">备份指定数据库或数据库的表（可以是多张表）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#备份指定的数据库（可以指定多个数据库）"><span class="nav-number">6.1.1.2.</span> <span class="nav-text">备份指定的数据库（可以指定多个数据库）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#备份所有数据库，全库备份"><span class="nav-number">6.1.1.3.</span> <span class="nav-text">备份所有数据库，全库备份</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#备份示例："><span class="nav-number">6.2.</span> <span class="nav-text">备份示例：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#备份指定数据库："><span class="nav-number">6.2.1.</span> <span class="nav-text">备份指定数据库：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备份指定数据库的某张表"><span class="nav-number">6.2.2.</span> <span class="nav-text">备份指定数据库的某张表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备份所有数据库"><span class="nav-number">6.2.3.</span> <span class="nav-text">备份所有数据库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#备份恢复示例："><span class="nav-number">6.3.</span> <span class="nav-text">备份恢复示例：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-完全备份：-温备"><span class="nav-number">6.3.1.</span> <span class="nav-text">(1)完全备份：(温备)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-数据还原"><span class="nav-number">6.3.2.</span> <span class="nav-text">(2)数据还原</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、导入备份数据："><span class="nav-number">6.3.2.1.</span> <span class="nav-text">1、导入备份数据：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、时间点还原"><span class="nav-number">6.3.2.2.</span> <span class="nav-text">2、时间点还原</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、导入到数据库中"><span class="nav-number">6.3.2.3.</span> <span class="nav-text">3、导入到数据库中</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制日志备份还原要点："><span class="nav-number">6.3.3.</span> <span class="nav-text">二进制日志备份还原要点：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于lvm2的备份"><span class="nav-number">6.4.</span> <span class="nav-text">基于lvm2的备份</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-请求锁定所有表"><span class="nav-number">6.4.1.</span> <span class="nav-text">(1)请求锁定所有表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-记录二进制日志文件及事件位置"><span class="nav-number">6.4.2.</span> <span class="nav-text">(2)记录二进制日志文件及事件位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-创建快照卷"><span class="nav-number">6.4.3.</span> <span class="nav-text">(3)创建快照卷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-释放全局锁"><span class="nav-number">6.4.4.</span> <span class="nav-text">(4)释放全局锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-挂载快照卷，执行数据备份"><span class="nav-number">6.4.5.</span> <span class="nav-text">(5)挂载快照卷，执行数据备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-完成备份，删除快照卷"><span class="nav-number">6.4.6.</span> <span class="nav-text">(6)完成备份，删除快照卷</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-制定好策略，通过源卷备份二进制日志"><span class="nav-number">6.4.7.</span> <span class="nav-text">(7)制定好策略，通过源卷备份二进制日志</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xtrabackup备份"><span class="nav-number">6.5.</span> <span class="nav-text">xtrabackup备份</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InnoDB表空间管理简单概念"><span class="nav-number">6.5.1.</span> <span class="nav-text">InnoDB表空间管理简单概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xtrabackup的备份工作原理或要点"><span class="nav-number">6.5.2.</span> <span class="nav-text">xtrabackup的备份工作原理或要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#备份恢复要点"><span class="nav-number">6.5.3.</span> <span class="nav-text">备份恢复要点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完全备份和恢复"><span class="nav-number">6.5.4.</span> <span class="nav-text">完全备份和恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#完全备份"><span class="nav-number">6.5.4.1.</span> <span class="nav-text">完全备份</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完全备份恢复"><span class="nav-number">6.5.4.2.</span> <span class="nav-text">完全备份恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#整理备份"><span class="nav-number">6.5.4.2.1.</span> <span class="nav-text">整理备份</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#恢复"><span class="nav-number">6.5.4.3.</span> <span class="nav-text">恢复</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增量备份和恢复"><span class="nav-number">6.6.</span> <span class="nav-text">增量备份和恢复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整合完全备份"><span class="nav-number">6.6.1.</span> <span class="nav-text">整合完全备份</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#整合每一个增量备份："><span class="nav-number">6.6.2.</span> <span class="nav-text">整合每一个增量备份：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#恢复-1"><span class="nav-number">6.6.3.</span> <span class="nav-text">恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导入或导出单张表"><span class="nav-number">6.7.</span> <span class="nav-text">导入或导出单张表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-导出表"><span class="nav-number">6.7.1.</span> <span class="nav-text">1.导出表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-导入表（最好是在不同服务上进行）"><span class="nav-number">6.7.2.</span> <span class="nav-text">2.导入表（最好是在不同服务上进行）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#先要创建表"><span class="nav-number">6.7.2.1.</span> <span class="nav-text">先要创建表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#再清空表空间"><span class="nav-number">6.7.2.2.</span> <span class="nav-text">再清空表空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#导入表"><span class="nav-number">6.7.2.3.</span> <span class="nav-text">导入表</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

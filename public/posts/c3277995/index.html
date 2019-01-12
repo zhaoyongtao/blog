@@ -1,0 +1,1180 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="web," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="需求1234CentOS-7平台上搭建LAMP，其中php作为独立的服务工作；(1) 三者分离于三台主机；(2) 一个虚拟主机用于提供phpMyAdmin；另一个虚拟主机用于提供wordpress；(3) 安装xcache，为php提供加速；">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LAMP--CentOS-7平台三机FastCGI模型">
+<meta property="og:url" content="http://yort.xin/posts/c3277995/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="需求1234CentOS-7平台上搭建LAMP，其中php作为独立的服务工作；(1) 三者分离于三台主机；(2) 一个虚拟主机用于提供phpMyAdmin；另一个虚拟主机用于提供wordpress；(3) 安装xcache，为php提供加速；">
+<meta property="og:image" content="http://7xltax.com1.z0.glb.clouddn.com/538b2805-1156-4c78-8efa-ec3405ade4b7.png">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LAMP--CentOS-7平台三机FastCGI模型">
+<meta name="twitter:description" content="需求1234CentOS-7平台上搭建LAMP，其中php作为独立的服务工作；(1) 三者分离于三台主机；(2) 一个虚拟主机用于提供phpMyAdmin；另一个虚拟主机用于提供wordpress；(3) 安装xcache，为php提供加速；">
+<meta name="twitter:image" content="http://7xltax.com1.z0.glb.clouddn.com/538b2805-1156-4c78-8efa-ec3405ade4b7.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/c3277995/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> LAMP--CentOS-7平台三机FastCGI模型 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                LAMP--CentOS-7平台三机FastCGI模型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-23T13:27:02+08:00" content="2016-06-23">
+              2016-06-23
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实践与总结/" itemprop="url" rel="index">
+                    <span itemprop="name">实践与总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CentOS<span class="number">-7</span>平台上搭建LAMP，其中php作为独立的服务工作；</div><div class="line">(<span class="number">1</span>) 三者分离于三台主机；</div><div class="line">(<span class="number">2</span>) 一个虚拟主机用于提供phpMyAdmin；另一个虚拟主机用于提供wordpress；</div><div class="line">(<span class="number">3</span>) 安装xcache，为php提供加速；</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><ul>
+<li>由于<code>CentOS-7</code>平台提供了以上各应用的<code>rpm</code>安装包，且均包含了各应用的新特性，所以各应用程序可以直接使用<code>yum</code>源安装，而无需通过编译源码来安装。</li>
+<li><code>xcache</code>为<code>EPEL</code>源中提供的应用程序，因此需要配置启用<code>EPEL</code>源。</li>
+<li>因为<code>php</code>要作为独立的服务单独运行于一台服务器上，因此不在是安装<code>php</code>，而是要安装<code>php-fpm</code>了。</li>
+<li><code>httpd</code>与<code>php</code>之间需要通过<code>FastCGI</code>协议来连接，<code>httpd</code>其实是作为作为反向代理来工作的，<code>httpd</code>中就需要加载<code>mod_proxy</code>和<code>mod_proxy_fcgi</code>模块了。</li>
+</ul>
+<h1 id="规划准备"><a href="#规划准备" class="headerlink" title="规划准备"></a>规划准备</h1><ul>
+<li>准备两台<code>CentOS-7</code>主机，均为最小化安装。为避免安全设置影响实验结果，将<code>iptables</code>和<code>SELinux</code>均设置为关闭状态。</li>
+<li><code>HostA</code>作为前端<code>Web</code>服务器，<code>IP</code>地址为: <code>172.18.71.201</code>。</li>
+<li><code>HostB</code>作为中间<code>App</code>服务器，<code>IP</code>地址为: <code>172.18.71.202</code>。</li>
+<li><code>HostC</code>作为后端<code>DB</code>服务器，<code>IP</code>地址为: <code>172.18.71.203</code>。</li>
+<li>需要配置<code>DNS</code>服务，或者修改主机<code>hosts</code>文件来实现名称解析。</li>
+<li>两台主机均需要配置好<code>yum</code>源，除发行版<code>base</code>源外还需要<code>EPEL</code>源。</li>
+</ul>
+<ul>
+<li>配置名称解析和<code>yum</code>源不在本文介绍范围内，请参考其他资料。各程序安装包不提供，请自行下载。*</li>
+</ul>
+<p>如图所示：<br><img src="http://7xltax.com1.z0.glb.clouddn.com/538b2805-1156-4c78-8efa-ec3405ade4b7.png" alt="CentOS-7-fastcgi"></p>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>配置时一般习惯按照从后端到前端的顺序来进行，便于测试验证前一步配置，思路上也比较清晰，容易梳理。所以首先配置后端<code>DB</code>服务器<code>HostC</code>，然后配置中间<code>App</code>服务器<code>HostB</code>，最后配置后端<code>Web</code>服务器<code>HostA</code>。</p>
+<h2 id="HostC"><a href="#HostC" class="headerlink" title="HostC"></a>HostC</h2><p>安装<code>mariadb</code><br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># yum instal -y mariadb-server</span></div></pre></td></tr></table></figure></p>
+<p>在默认配置基础上增加一些配置，包括设置默认字符集、默认字符排序、默认存储引擎、独立表空间、不做域名反解。<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="section">[root@localhost ~]</span><span class="comment"># vim /etc/my.cnf.d/client.cnf</span></div><div class="line"><span class="section">[client]</span></div><div class="line"><span class="attr">default-character-set</span>=utf8</div><div class="line"><span class="section">[root@localhost ~]</span><span class="comment"># vim /etc/my.cnf.d/mysql-clients.cnf</span></div><div class="line"><span class="section">[mysql]</span></div><div class="line"><span class="attr">default-character-set</span>=utf8</div><div class="line"><span class="section">[root@localhost ~]</span><span class="comment"># vim /etc/my.cnf.d/server.cnf</span></div><div class="line"><span class="section">[mysqld]</span></div><div class="line"><span class="attr">character-set-server</span>=utf8</div><div class="line"><span class="attr">collation-server</span>=utf8_general_ci</div><div class="line"><span class="attr">default-storage-engine</span>=InnoDB</div><div class="line"><span class="attr">innodb-file-per-table</span>=<span class="literal">TRUE</span></div><div class="line"><span class="attr">skip-name-resolve</span>=<span class="literal">TRUE</span></div></pre></td></tr></table></figure></p>
+<p>启动<code>mariadb</code><br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># systemctl start mariadb</span></div></pre></td></tr></table></figure></p>
+<p>初始化安全设置，主要这是设置<code>root</code>用户口令，删除匿名用户，不允许<code>root</code>远程登录，删除<code>test</code>数据库和访问<code>test</code>数据库的相关权限设置，重载权限表。<br><strong> 注：这里如果设置允许<code>root</code>远程登录，后面也还是要再次显式授权才可以。</strong><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# mysql_secure_installation</div><div class="line"><span class="builtin-name">Set</span> root password? [Y/n] y</div><div class="line">New password:</div><div class="line">Re-enter new password:</div><div class="line"><span class="builtin-name">Remove</span> anonymous users? [Y/n] y</div><div class="line"> <span class="built_in">..</span>. Success!</div><div class="line"> Disallow root login remotely? [Y/n] y</div><div class="line">  <span class="built_in">..</span>. skipping.</div><div class="line">  <span class="builtin-name">Remove</span> test database <span class="keyword">and</span> access <span class="keyword">to</span> it? [Y/n] y</div><div class="line"> - Dropping test database<span class="built_in">..</span>.</div><div class="line"> <span class="built_in">..</span>. Success!</div><div class="line"> - Removing privileges on test database<span class="built_in">..</span>.</div><div class="line"> <span class="built_in">..</span>. Success!</div><div class="line"> Reload privilege tables now? [Y/n] y</div><div class="line"> <span class="built_in">..</span>. Success!</div></pre></td></tr></table></figure></p>
+<p>登录<code>mariadb</code>，做以下设置。<br><figure class="highlight nsis"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># mysql -u root -p</span></div><div class="line"><span class="comment"># 授权root可从172.18.71.0/24网段内的主机登录操作所有数据库。</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; grant <span class="literal">all</span> privileges <span class="literal">on</span> *.* to <span class="string">'root'</span>@<span class="string">'172.18.71.%'</span> identified by <span class="string">'magedu'</span><span class="comment">;</span></div><div class="line"><span class="comment"># 给wordpress创建数据wpdb。</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; create database wpdb<span class="comment">;</span></div><div class="line"><span class="comment"># 给wordpress创建用户wp。</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; create <span class="literal">user</span> <span class="string">'wp'</span>@<span class="string">'172.18.71.%'</span> identified by <span class="string">'magedu'</span><span class="comment">;</span></div><div class="line"><span class="comment"># 授权wp可从172.18.71.0/24网段内的主机登录操作wpdb数据库。</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; grant <span class="literal">all</span> privileges <span class="literal">on</span> wpdb.* to <span class="string">'wp'</span>@<span class="string">'172.18.71.%'</span> identified by <span class="string">'magedu'</span><span class="comment">;</span></div><div class="line"><span class="comment"># 重载权限表</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; flush privileges<span class="comment">;</span></div><div class="line"><span class="comment"># 退出</span></div><div class="line">MariaDB [(<span class="literal">none</span>)]&gt; \q</div></pre></td></tr></table></figure></p>
+<p>这样<code>HostC</code>就配置完成了，再来配置<code>HostB</code>。</p>
+<h2 id="HostB"><a href="#HostB" class="headerlink" title="HostB"></a>HostB</h2><p>正式配置<code>HostB</code>之前，应首先验证以下<code>HostC</code>的配置，即测试一下能否从<code>HostB</code>上连接<code>HostC</code>的数据库。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta"># 安装mariadb的客户端</span></div><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># yum install -y mariadb</span></div><div class="line"><span class="meta"># 测试连接HostB数据库</span></div><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># mysql -u root -h 172.18.71.203 -p</span></div></pre></td></tr></table></figure></p>
+<p>安装<code>php-fpm</code>应用<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># yum install -y php-fpm php-mysql php-mbstring</span></div></pre></td></tr></table></figure></p>
+<p>修改<code>php-fpm</code>的连接池配置文件<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># vim /etc/php-fpm.d/www.conf</span></div><div class="line"><span class="comment"># 监听在本机的外部可访问地址上</span></div><div class="line">listen = 172.18.71.202:9000</div><div class="line"><span class="comment"># 仅允许前端Web服务器连接</span></div><div class="line">listen.allowed_clients = 172.18.71.201</div></pre></td></tr></table></figure></p>
+<p>创建<code>session</code>存放目录，并修改其权限。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># mkdir /var/lib/php/session</span></div><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># chown -R apache:apache /var/lib/php/session</span></div></pre></td></tr></table></figure></p>
+<p>部署<code>php</code>程序代码<code>phpMyAdmin</code>和<code>wordpress</code>。<br><strong>  注：由于<code>php-fpm</code>是独立工作的服务，对于访问<code>php</code>页面的请求，前端的<code>httpd</code>仅作为反向代理将请求转发至<code>php-fpm</code>服务器上，由<code>php-fpm</code>找到对应的<code>php</code>程序代码文件进行解释执行，然后将结果返回给前端。所以需要将<code>php</code>程序代码放在<code>php-fpm</code>服务器上。</strong></p>
+<p>建立<code>php</code>程序相应的存放目录。<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="meta"># mkdir -pv /htdocs/www.twoyang.&#123;com,net&#125;</span></div><div class="line"><span class="symbol">mkdir:</span> created directory ‘/htdocs’</div><div class="line"><span class="symbol">mkdir:</span> created directory ‘<span class="meta-keyword">/htdocs/</span>www.twoyang.com’</div><div class="line"><span class="symbol">mkdir:</span> created directory ‘<span class="meta-keyword">/htdocs/</span>www.twoyang.net’</div></pre></td></tr></table></figure></p>
+<p>将<code>phpMyAdmin</code>安装包放置在<code>/htdocs/www.twoyang.com</code>的目录下，并修改配置文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># cd /htdocs/www.twoyang.com</span></div><div class="line">[root@localhost www.twoyang.com]<span class="comment"># unzip phpMyAdmin-4.4.14.1-all-languages.zip</span></div><div class="line">[root@localhost www.twoyang.com]<span class="comment"># ln -sv phpMyAdmin-4.4.14.1-all-languages pma</span></div><div class="line">‘pma’ -&gt; ‘phpMyAdmin-4.4.14.1-all-languages’</div><div class="line">[root@localhost www.twoyang.com]<span class="comment"># cd pma</span></div><div class="line">[root@localhost pma]<span class="comment"># cp config.sample.inc.php config.inc.php</span></div><div class="line">[root@localhost pma]<span class="comment"># openssl rand -base64 20</span></div><div class="line">0fkgcykLDfyRgG71FOjE9W6LKa8=</div><div class="line">[root@localhost pma]<span class="comment"># vim config.inc.php</span></div><div class="line"><span class="variable">$cfg</span>[<span class="string">'blowfish_secret'</span>] = <span class="string">'0fkgcykLDfyRgG71FOjE9W6LKa8'</span>; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */</div><div class="line"><span class="variable">$cfg</span>[<span class="string">'Servers'</span>][<span class="variable">$i</span>][<span class="string">'host'</span>] = <span class="string">'172.18.71.203'</span>;</div></pre></td></tr></table></figure></p>
+<p>将<code>wordpress</code>安装包放置在<code>/htdocs/www.twoyang.com</code>的目录下，并修改配置文件。<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># cd /htdocs/www.twoyang.net</span></div><div class="line">[root@localhost www.twoyang.net]<span class="comment"># unzip wordpress-4.3.1-zh_CN.zip</span></div><div class="line">[root@localhost www.twoyang.net]<span class="comment"># ln -sv wordpress wp</span></div><div class="line">‘wp’<span class="function"> -&gt;</span> ‘wordpress’</div><div class="line">[root@localhost www.twoyang.net]<span class="comment"># cd wp</span></div><div class="line">[root@localhost wp]<span class="comment"># cp wp-config-sample.php wp-config.php</span></div><div class="line">[root@localhost wp]<span class="comment"># vim wp-config.php</span></div><div class="line"></div><div class="line"><span class="comment">/** WordPress数据库的名称 */</span></div><div class="line">define(<span class="string">'DB_NAME'</span>, <span class="string">'wpdb'</span>);</div><div class="line"></div><div class="line"><span class="comment">/** MySQL数据库用户名 */</span></div><div class="line">define(<span class="string">'DB_USER'</span>, <span class="string">'wp'</span>);</div><div class="line"></div><div class="line"><span class="comment">/** MySQL数据库密码 */</span></div><div class="line">define(<span class="string">'DB_PASSWORD'</span>, <span class="string">'magedu'</span>);</div><div class="line"></div><div class="line"><span class="comment">/** MySQL主机 */</span></div><div class="line">define(<span class="string">'DB_HOST'</span>, <span class="string">'172.18.71.203'</span>);</div></pre></td></tr></table></figure></p>
+<p>启动<code>php-fpm</code>服务<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># systemctl start php-fpm</span></div></pre></td></tr></table></figure></p>
+<p>查看<code>php-fpm</code>服务是否监听在指定套接字上<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root<span class="variable">@localhost</span> ~]<span class="comment"># ss -tnl | grep 9000</span></div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>    <span class="number">172.18</span>.<span class="number">71.202</span><span class="symbol">:</span><span class="number">9000</span>                     *<span class="symbol">:*</span></div></pre></td></tr></table></figure></p>
+<h2 id="HostA"><a href="#HostA" class="headerlink" title="HostA"></a>HostA</h2><p>安装<code>httpd</code><br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># yum install -y httpd</span></div></pre></td></tr></table></figure></p>
+<p>修改主配置文件<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="meta"># vim /etc/httpd/conf/httpd.conf</span></div><div class="line"><span class="meta"># 设置服务器名，其实这项不设置也可以，但是启动服务时会有警告。</span></div><div class="line">ServerName www.twoyang.net</div><div class="line"><span class="meta"># 由于准备使用虚拟主机，需要把MainServer的DocumentRoot关掉。</span></div><div class="line"><span class="meta">#DocumentRoot <span class="string">"/var/www/html"</span></span></div><div class="line"><span class="meta"># 另外需要增加php类型的主页和MIME</span></div><div class="line"><span class="params">&lt;IfModule dir_module&gt;</span></div><div class="line">    DirectoryIndex index.php index.html</div><div class="line"><span class="params">&lt;/IfModule&gt;</span></div><div class="line"><span class="params">&lt;IfModule mime_module&gt;</span></div><div class="line">    AddType application/x-httpd-php .php</div><div class="line"><span class="params">&lt;/IfModule&gt;</span></div></pre></td></tr></table></figure></p>
+<p>移除欢迎页面配置文件<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># mv /etc/httpd/conf.d/welcome.conf&#123;,.bak&#125;</span></div></pre></td></tr></table></figure></p>
+<p>新建虚拟主机配置文件<code>/etc/httpd/conf.d/vhosts.conf</code><br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="meta"># vim /etc/httpd/conf.d/vhosts.conf</span></div><div class="line"><span class="params">&lt;VirtualHost <span class="number">172.18</span><span class="number">.71</span><span class="number">.201</span>:<span class="number">80</span>&gt;</span></div><div class="line">    ServerName www.twoyang.com</div><div class="line">    DocumentRoot <span class="string">"/htdocs/www.twoyang.com/pma"</span></div><div class="line">    <span class="params">&lt;Directory "/htdocs/www.twoyang.com/pma"&gt;</span></div><div class="line">        OPTIONS FollowSymLinks</div><div class="line">        AllowOverride None</div><div class="line">        Require all granted</div><div class="line">    <span class="params">&lt;/Directory&gt;</span></div><div class="line">    <span class="meta"># 由于正向代理和反向代理不能同时存在，这里关闭正向代理。</span></div><div class="line">    ProxyRequests Off</div><div class="line">    <span class="meta"># 将直接访问/的url请求，通过fcgi协议指向后端php-fpm服务器对应目录的index.php。</span></div><div class="line">    ProxyPassMatch ^/$ fcgi:<span class="comment">//172.18.71.202:9000/htdocs/www.twoyang.com/pma/index.php</span></div><div class="line">    <span class="meta"># 将访问以.php结尾的url请求，通过fcgi协议指向后端php-fpm服务器对应目录的对应文件。</span></div><div class="line">    ProxyPassMatch ^/(.*\.php)$ fcgi:<span class="comment">//172.18.71.202:9000/htdocs/www.twoyang.com/pma/$1</span></div><div class="line"><span class="params">&lt;/VirtualHost&gt;</span></div><div class="line"></div><div class="line"><span class="params">&lt;VirtualHost <span class="number">172.18</span><span class="number">.71</span><span class="number">.201</span>:<span class="number">80</span>&gt;</span></div><div class="line">    ServerName www.twoyang.net</div><div class="line">    DocumentRoot <span class="string">"/htdocs/www.twoyang.net/wp"</span></div><div class="line">    <span class="params">&lt;Directory "/htdocs/www.twoyang.net/wp"&gt;</span></div><div class="line">        OPTIONS FollowSymLinks</div><div class="line">        AllowOverride None</div><div class="line">        Require all granted</div><div class="line">    <span class="params">&lt;/Directory&gt;</span></div><div class="line">    ProxyRequests Off</div><div class="line">    ProxyPassMatch ^/$ fcgi:<span class="comment">//172.18.71.202:9000/htdocs/www.twoyang.net/wp/index.php</span></div><div class="line">    ProxyPassMatch ^/(.*\.php)$ fcgi:<span class="comment">//172.18.71.202:9000/htdocs/www.twoyang.net/wp/$1</span></div><div class="line"><span class="params">&lt;/VirtualHost&gt;</span></div></pre></td></tr></table></figure></p>
+<p>建立虚拟主机<code>DocumentRoot</code>对应的目录。<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="meta"># mkdir -pv /htdocs/www.twoyang.&#123;com,net&#125;</span></div><div class="line"><span class="symbol">mkdir:</span> created directory ‘/htdocs’</div><div class="line"><span class="symbol">mkdir:</span> created directory ‘<span class="meta-keyword">/htdocs/</span>www.twoyang.com/’</div><div class="line"><span class="symbol">mkdir:</span> created directory ‘<span class="meta-keyword">/htdocs/</span>www.twoyang.net/’</div></pre></td></tr></table></figure></p>
+<p>将<code>phpMyAdmin</code>安装包放置在虚拟主机<code>www.twoyang.com</code>的<code>DocumentRoot</code>目录下。<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]# cd /htdocs/www.twoyang.com</div><div class="line">[root@localhost www.twoyang.com]# unzip phpMyAdmin<span class="number">-4.4</span><span class="number">.14</span><span class="number">.1</span>-all-languages.zip</div><div class="line">[root@localhost www.twoyang.com]# ln -sv phpMyAdmin<span class="number">-4.4</span><span class="number">.14</span><span class="number">.1</span>-all-languages pma</div><div class="line">‘pma’ -&gt; ‘phpMyAdmin<span class="number">-4.4</span><span class="number">.14</span><span class="number">.1</span>-all-languages’</div></pre></td></tr></table></figure></p>
+<p>将<code>wordpress</code>安装包放置在虚拟主机<code>www.twoyang.net</code>的<code>DocumentRoot</code>目录下。<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root<span class="variable">@localhost</span> ~]<span class="comment"># cd /htdocs/www.twoyang.net</span></div><div class="line">[root<span class="variable">@localhost</span> www.twoyang.net]<span class="comment"># unzip wordpress-4.3.1-zh_CN.zip</span></div><div class="line">[root<span class="variable">@localhost</span> www.twoyang.net]<span class="comment"># ln -sv wordpress wp</span></div><div class="line">‘wp’ -&gt; ‘wordpress’</div></pre></td></tr></table></figure></p>
+<p><strong> 注: 这里将<code>phpMyAdmin</code>和<code>wordpress</code>安装包在<code>HostA</code>上重新部署一次，是因为<code>httpd</code>仅将有关<code>php</code>的请求转发至<code>php-fpm</code>服务器去处理。而事实上一个完整页面当中还存在图片等静态内容，这些内容是不会转发的，还是要在本地的<code>DocumentRoot</code>目录中去找。</strong></p>
+<p>这么做以后，在<code>HostA</code>上的虚拟机<code>DocumentRoot</code>目录就会存在无用的<code>php</code>程序代码文件占用磁盘，可以将其删除。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># cd /htdocs/www.twoyang.com/pma</span></div><div class="line">[root<span class="symbol">@localhost</span> pma]<span class="meta"># find . -name <span class="string">"*.php"</span> | xargs rm -rf</span></div><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># cd /htdocs/www.twoyang.com/wp</span></div><div class="line">[root<span class="symbol">@localhost</span> wp]<span class="meta"># find . -name <span class="string">"*.php"</span> | xargs rm -rf</span></div></pre></td></tr></table></figure></p>
+<p>你可以跳过在<code>HostA</code>上部署<code>phpMyAdmin</code>和<code>wordpress</code>安装包的步骤来验证以上结论，可预期的结果是一些页面当中的图片链接无法显示。</p>
+<p>启动<code>httpd</code>服务，修改一下<code>/htdocs</code>目录的属主和属组，以免出现权限问题。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># chown -R apache:apache /htdocs</span></div></pre></td></tr></table></figure></p>
+<p>这时便可以启动<code>httpd</code>服务，测试访问<code>phpMyAdmin</code>和<code>wordpress</code>了。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># systemctl start httpd</span></div></pre></td></tr></table></figure></p>
+<h2 id="xcache"><a href="#xcache" class="headerlink" title="xcache"></a>xcache</h2><p>但是这个时候还是没有安装<code>xcache</code>的，可以用<code>ab</code>测试一下并发访问时服务器响应情况。<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@localhost <span class="symbol">~]# ab -n 1000 -c 100 http</span>:<span class="comment">//www.twoyang.com/</span></div></pre></td></tr></table></figure></p>
+<p>这时在<code>HostB</code>上安装<code>xcache</code>和<code>php-cli</code>（后者提供<code>php</code>命令行工具，可查看当前加载的<code>php</code>模块有哪些）。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># yum install -y php-xcache php-cli</span></div></pre></td></tr></table></figure></p>
+<p>修改<code>xcache</code>配置文件，打开<code>xcache.cacher</code>开关。<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root<span class="symbol">@localhost</span> ~]<span class="meta"># vim /etc/php.d/xcache.ini</span></div><div class="line">xcache.cacher = On</div></pre></td></tr></table></figure></p>
+<p>重启服务<br><strong>注意因为此时<code>php</code>是作为独立服务来工作的，因此需要重启<code>HostB</code>上的<code>php-fpm</code>服务。</strong><br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="meta"># systemctl restart php-fpm</span></div><div class="line">[root@localhost ~]<span class="meta"># php -m | grep XCache</span></div><div class="line"><span class="built_in">XCache</span></div><div class="line"><span class="built_in">XCache</span> Cacher</div><div class="line"><span class="built_in">XCache</span> Coverager</div><div class="line"><span class="built_in">XCache</span> Optimizer</div><div class="line"><span class="built_in">XCache</span></div><div class="line"><span class="built_in">XCache</span> Cacher</div><div class="line"><span class="built_in">XCache</span> Coverager</div><div class="line"><span class="built_in">XCache</span> Optimizer</div></pre></td></tr></table></figure></p>
+<p>再次使用<code>ab</code>测试<br><figure class="highlight 1c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@localhost <span class="symbol">~]# ab -n 1000 -c 100 http</span>:<span class="comment">//www.twoyang.com/</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注：本文转载自:<a href="twoyang.net">twoyang.net</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/c3277995/">LAMP--CentOS-7平台三机FastCGI模型</a></p>
+           <p><span>原文链接：</span><a href="/posts/c3277995/" title="LAMP--CentOS-7平台三机FastCGI模型">http://yort.xin/posts/c3277995/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag">#web</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解析"><span class="nav-number">2.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#规划准备"><span class="nav-number">3.</span> <span class="nav-text">规划准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#HostC"><span class="nav-number">4.1.</span> <span class="nav-text">HostC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HostB"><span class="nav-number">4.2.</span> <span class="nav-text">HostB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HostA"><span class="nav-number">4.3.</span> <span class="nav-text">HostA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xcache"><span class="nav-number">4.4.</span> <span class="nav-text">xcache</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

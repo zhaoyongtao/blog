@@ -1,0 +1,1153 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="安全," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="我们必须明白：最小的权限+最少的服务=最大的安全所以，无论是配置任何服务器，我们都必须把不用的服务关闭、把系统权限设置到最小话，这样才能保证服务器最大的安全。下面是CentOS服务器安全设置，供大家参考。">
+<meta name="keywords" content="安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS Linux服务器安全设置">
+<meta property="og:url" content="http://yort.xin/posts/6d1e2a65/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="我们必须明白：最小的权限+最少的服务=最大的安全所以，无论是配置任何服务器，我们都必须把不用的服务关闭、把系统权限设置到最小话，这样才能保证服务器最大的安全。下面是CentOS服务器安全设置，供大家参考。">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.405Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS Linux服务器安全设置">
+<meta name="twitter:description" content="我们必须明白：最小的权限+最少的服务=最大的安全所以，无论是配置任何服务器，我们都必须把不用的服务关闭、把系统权限设置到最小话，这样才能保证服务器最大的安全。下面是CentOS服务器安全设置，供大家参考。">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/6d1e2a65/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> CentOS Linux服务器安全设置 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CentOS Linux服务器安全设置
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-08T16:43:00+08:00" content="2016-07-08">
+              2016-07-08
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>我们必须明白：最小的权限+最少的服务=最大的安全<br>所以，无论是配置任何服务器，我们都必须把不用的服务关闭、把系统权限设置到最小话，这样才能保证服务器最大的安全。下面是CentOS服务器安全设置，供大家参考。</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="一、注释掉系统不需要的用户和用户组"><a href="#一、注释掉系统不需要的用户和用户组" class="headerlink" title="一、注释掉系统不需要的用户和用户组"></a>一、注释掉系统不需要的用户和用户组</h1><blockquote>
+<p>注意：不建议直接删除，当你需要某个用户时，自己重新添加会很麻烦。</p>
+</blockquote>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"> <span class="selector-tag">cp</span>  /<span class="selector-tag">etc</span>/<span class="selector-tag">passwd</span>  /<span class="selector-tag">etc</span>/<span class="selector-tag">passwdbak</span>   #修改之前先备份</div><div class="line"> <span class="selector-tag">vi</span> /<span class="selector-tag">etc</span>/<span class="selector-tag">passwd</span>  #编辑用户，在前面加上#注释掉此行 </div><div class="line"></div><div class="line"><span class="selector-id">#adm</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:3</span><span class="selector-pseudo">:4</span><span class="selector-pseudo">:adm</span>:/<span class="selector-tag">var</span>/<span class="selector-tag">adm</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#lp</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:4</span><span class="selector-pseudo">:7</span><span class="selector-pseudo">:lp</span>:/<span class="selector-tag">var</span>/<span class="selector-tag">spool</span>/<span class="selector-tag">lpd</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#sync</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:5</span><span class="selector-pseudo">:0</span><span class="selector-pseudo">:sync</span>:/<span class="selector-tag">sbin</span>:/<span class="selector-tag">bin</span>/<span class="selector-tag">sync</span></div><div class="line"><span class="selector-id">#shutdown</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:6</span><span class="selector-pseudo">:0</span><span class="selector-pseudo">:shutdown</span>:/<span class="selector-tag">sbin</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">shutdown</span></div><div class="line"><span class="selector-id">#halt</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:7</span><span class="selector-pseudo">:0</span><span class="selector-pseudo">:halt</span>:/<span class="selector-tag">sbin</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">halt</span></div><div class="line"><span class="selector-id">#uucp</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:10</span><span class="selector-pseudo">:14</span><span class="selector-pseudo">:uucp</span>:/<span class="selector-tag">var</span>/<span class="selector-tag">spool</span>/<span class="selector-tag">uucp</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#operator</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:11</span><span class="selector-pseudo">:0</span><span class="selector-pseudo">:operator</span>:/<span class="selector-tag">root</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#games</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:12</span><span class="selector-pseudo">:100</span><span class="selector-pseudo">:games</span>:/<span class="selector-tag">usr</span>/<span class="selector-tag">games</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#gopher</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:13</span><span class="selector-pseudo">:30</span><span class="selector-pseudo">:gopher</span>:/<span class="selector-tag">var</span>/<span class="selector-tag">gopher</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span></div><div class="line"><span class="selector-id">#ftp</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:14</span><span class="selector-pseudo">:50</span><span class="selector-pseudo">:FTP</span> <span class="selector-tag">User</span>:/<span class="selector-tag">var</span>/<span class="selector-tag">ftp</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">nologin</span>    #注释掉<span class="selector-tag">ftp</span>匿名账号</div><div class="line"></div><div class="line"></div><div class="line"><span class="selector-tag">cp</span> /<span class="selector-tag">etc</span>/<span class="selector-tag">group</span>   /<span class="selector-tag">etc</span>/<span class="selector-tag">groupbak</span>   #修改之前先备份</div><div class="line"><span class="selector-tag">vi</span> /<span class="selector-tag">etc</span>/<span class="selector-tag">group</span>  #编辑用户组，在前面加上#注释掉此行</div><div class="line"><span class="selector-id">#adm</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:4</span><span class="selector-pseudo">:root</span>,<span class="selector-tag">adm</span>,<span class="selector-tag">daemon</span></div><div class="line"><span class="selector-id">#lp</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:7</span><span class="selector-pseudo">:daemon</span>,<span class="selector-tag">lp</span></div><div class="line"><span class="selector-id">#uucp</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:14</span><span class="selector-pseudo">:uucp</span></div><div class="line"><span class="selector-id">#games</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:20</span>:</div><div class="line"><span class="selector-id">#dip</span><span class="selector-pseudo">:x</span><span class="selector-pseudo">:40</span>:</div></pre></td></tr></table></figure>
+<h1 id="二、关闭系统不需要的服务"><a href="#二、关闭系统不需要的服务" class="headerlink" title="二、关闭系统不需要的服务"></a>二、关闭系统不需要的服务</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">service acpid stop  chkconfig acpid off   #停止服务，取消开机启动  #电源进阶设定，常用在 Laptop 上<span class="built_in"></span></div><div class="line">service autofs stop  chkconfig autofs off  #停用自动挂载档桉系统与週边装置<span class="built_in"></span></div><div class="line">service bluetooth stop  chkconfig  bluetooth  off   #停用Bluetooth蓝芽<span class="built_in"></span></div><div class="line">service cpuspeed stop  chkconfig  cpuspeed  off   #停用控制CPU速度主要用来省电<span class="built_in"></span></div><div class="line">service cups stop   chkconfig cups off    #停用 Common UNIX Printing<span class="built_in"> System </span>使系统支援印表机<span class="built_in"></span></div><div class="line">service ip6tables stop  chkconfig ip6tables off   #禁止IPv6</div><div class="line"></div><div class="line"></div><div class="line">如果要恢复某一个服务，可以执行下面操作<span class="built_in"></span></div><div class="line">service acpid start  </div><div class="line">chkconfig acpid on</div></pre></td></tr></table></figure>
+<h1 id="三、禁止非root用户执行-etc-rc-d-init-d-下的系统命令"><a href="#三、禁止非root用户执行-etc-rc-d-init-d-下的系统命令" class="headerlink" title="三、禁止非root用户执行/etc/rc.d/init.d/下的系统命令"></a>三、禁止非root用户执行/etc/rc.d/init.d/下的系统命令</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">chmod -R <span class="number">700</span> <span class="regexp">/etc/</span>rc.d<span class="regexp">/init.d/</span>*</div><div class="line">chmod -R <span class="number">777</span> <span class="regexp">/etc/</span>rc.d<span class="regexp">/init.d/</span>*    <span class="comment">#恢复默认设置</span></div></pre></td></tr></table></figure>
+<h1 id="四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限"><a href="#四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限" class="headerlink" title="四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限"></a>四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">chattr +i /etc/passwd</div><div class="line">chattr +i /etc/shadow</div><div class="line">chattr +i /etc<span class="built_in">/group</span></div><div class="line">chattr +i /etc/gshadow</div><div class="line">chattr +i /etc/services    #给系统服务端口列表文件加锁,防止未经许可的删除或添加服务</div><div class="line">lsattr  /etc/passwd   /etc/shadow  /etc<span class="built_in">/group </span> /etc/gshadow   /etc/services   #显示文件的属性</div><div class="line">  注意：执行以上权限修改之后，就无法添加删除用户了。</div><div class="line">如果再要添加删除用户，需要先取消上面的设置，等用户添加删除完成之后，再执行上面的操作</div><div class="line">chattr -i /etc/passwd     #取消权限锁定设置</div><div class="line">  chattr -i /etc/shadow</div><div class="line">  chattr -i /etc<span class="built_in">/group</span></div><div class="line">  chattr -i /etc/gshadow</div><div class="line">  chattr -i /etc/services   #取消系统服务端口列表文件加锁</div><div class="line">现在可以进行添加删除用户了，操作完之后再锁定目录文件</div></pre></td></tr></table></figure>
+<h1 id="五、限制不同文件的权限"><a href="#五、限制不同文件的权限" class="headerlink" title="五、限制不同文件的权限"></a>五、限制不同文件的权限</h1><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">chattr +a .bash_history           #避免删除.bash_history或者重定向到<span class="regexp">/dev/</span><span class="keyword">null</span></div><div class="line">chattr +i .bash_history</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/usr/</span>bin                恢复  chmod <span class="number">555</span> <span class="regexp">/usr/</span>bin</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/bin/</span>ping              恢复  chmod <span class="number">4755</span> <span class="regexp">/bin/</span>ping</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/usr/</span>bin<span class="regexp">/vim         恢复  chmod 755 /u</span>sr<span class="regexp">/bin/</span>vim</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/bin/</span>netstat          恢复  chmod <span class="number">755</span> <span class="regexp">/bin/</span>netstat</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/usr/</span>bin<span class="regexp">/tail          恢复  chmod 755 /u</span>sr<span class="regexp">/bin/</span>tail</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/usr/</span>bin<span class="regexp">/less         恢复  chmod 755 /u</span>sr<span class="regexp">/bin/</span>less</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/usr/</span>bin<span class="regexp">/head       恢复  chmod 755 /u</span>sr<span class="regexp">/bin/</span>head</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/bin/</span>cat                恢复  chmod <span class="number">755</span> <span class="regexp">/bin/</span>cat</div><div class="line">chmod <span class="number">700</span> <span class="regexp">/bin/u</span>name          恢复  chmod <span class="number">755</span> <span class="regexp">/bin/u</span>name</div><div class="line">chmod <span class="number">500</span> <span class="regexp">/bin/</span>ps                 恢复  chmod <span class="number">755</span> <span class="regexp">/bin/</span>ps</div></pre></td></tr></table></figure>
+<h1 id="六、禁止使用Ctrl-Alt-Del快捷键重启服务器"><a href="#六、禁止使用Ctrl-Alt-Del快捷键重启服务器" class="headerlink" title="六、禁止使用Ctrl+Alt+Del快捷键重启服务器"></a>六、禁止使用Ctrl+Alt+Del快捷键重启服务器</h1><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cp <span class="regexp">/etc/i</span>nittab  <span class="regexp">/etc/i</span>nittabbak</div><div class="line">vi <span class="regexp">/etc/i</span>nittab   </div><div class="line"><span class="comment">#ca::ctrlaltdel:/sbin/shutdown -t3 -r now  #注释掉此行</span></div></pre></td></tr></table></figure>
+<h1 id="七、使用yum-update更新系统时不升级内核，只更新软件包"><a href="#七、使用yum-update更新系统时不升级内核，只更新软件包" class="headerlink" title="七、使用yum update更新系统时不升级内核，只更新软件包"></a>七、使用yum update更新系统时不升级内核，只更新软件包</h1><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">由于系统与硬件的兼容性问题，有可能升级内核后导致服务器不能正常启动，这是非常可怕的，没有特别的需要，建议不要随意升级内核。</div><div class="line">cp <span class="regexp">/etc/yum</span>.conf    <span class="regexp">/etc/yum</span>.confbak</div><div class="line"><span class="number">1</span>、修改yum的配置文件 vi <span class="regexp">/etc/yum</span>.conf  在[main]的最后添加 <span class="keyword">exclude</span>=kernel*</div><div class="line"><span class="number">2</span>、直接在yum的命令后面加上如下的参数：</div><div class="line">yum --<span class="keyword">exclude</span>=kernel* update</div><div class="line">查看系统版本  cat <span class="regexp">/etc/i</span>ssue</div><div class="line">查看内核版本  uname -a</div></pre></td></tr></table></figure>
+<h1 id="八、关闭Centos自动更新"><a href="#八、关闭Centos自动更新" class="headerlink" title="八、关闭Centos自动更新"></a>八、关闭Centos自动更新</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">chkconfig --list yum-updatesd  #显示当前系统状态</div><div class="line">yum-updatesd    0:关闭  1:关闭  2:启用  3:启用  4:启用  5:启用  6:关闭<span class="built_in"></span></div><div class="line">service yum-updatesd stop      #关闭  开启参数为start</div><div class="line">停止 yum-updatesd：                                        [确定]<span class="built_in"></span></div><div class="line">service yum-updatesd status   #查看是否关闭</div><div class="line">yum-updatesd 已停</div><div class="line">chkconfig --level 35 yum-updatesd off  #禁止开启启动（系统模式为3、5）</div><div class="line">chkconfig yum-updatesd off  #禁止开启启动（所有启动模式全部禁止）</div><div class="line">chkconfig --list yum-updatesd  #显示当前系统状态</div><div class="line">yum-updatesd    0:关闭  1:关闭  2:启用  3:关闭  4:启用  5:关闭  6:关闭</div></pre></td></tr></table></figure>
+<h1 id="九、关闭多余的虚拟控制台"><a href="#九、关闭多余的虚拟控制台" class="headerlink" title="九、关闭多余的虚拟控制台"></a>九、关闭多余的虚拟控制台</h1><blockquote>
+<p>我们知道从控制台切换到 X 窗口，一般采用 Alt-F7 ，为什么呢？因为系统默认定义了 6 个虚拟控制台，所以 X 就成了第7个。实际上，很多人一般不会需要这么多虚拟控制台的，修改/etc/inittab ，注释掉那些你不需要的。</p>
+</blockquote>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">cp</span>  /<span class="selector-tag">etc</span>/<span class="selector-tag">inittab</span>  /<span class="selector-tag">etc</span>/<span class="selector-tag">inittabbak</span></div><div class="line"><span class="selector-tag">vi</span> /<span class="selector-tag">etc</span>/<span class="selector-tag">inittab</span></div><div class="line"># <span class="selector-tag">Run</span> <span class="selector-tag">gettys</span> <span class="selector-tag">in</span> <span class="selector-tag">standard</span> <span class="selector-tag">runlevels</span></div><div class="line"><span class="selector-tag">1</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty1</span></div><div class="line"><span class="selector-id">#2</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty2</span></div><div class="line"><span class="selector-id">#3</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty3</span></div><div class="line"><span class="selector-id">#4</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty4</span></div><div class="line"><span class="selector-id">#5</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty5</span></div><div class="line"><span class="selector-id">#6</span><span class="selector-pseudo">:2345</span><span class="selector-pseudo">:respawn</span>:/<span class="selector-tag">sbin</span>/<span class="selector-tag">mingetty</span> <span class="selector-tag">tty6</span></div></pre></td></tr></table></figure>
+<h1 id="十、删除MySQL历史记录"><a href="#十、删除MySQL历史记录" class="headerlink" title="十、删除MySQL历史记录"></a>十、删除MySQL历史记录</h1><blockquote>
+<p>用户登陆数据库后执行的SQL命令也会被MySQL记录在用户目录的.mysql_history文件里。<br>如果数据库用户用SQL语句修改了数据库密码，也会因.mysql_history文件而泄漏。<br>所以我们在shell登陆及备份的时候不要在-p后直接加密码，而是在提示后再输入数据库密码。<br>另外这两个文件我们也应该不让它记录我们的操作，以防万一。</p>
+</blockquote>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd</div><div class="line">cp <span class="selector-class">.bash_history</span>  <span class="selector-class">.bash_historybak</span>  #备份</div><div class="line">cp <span class="selector-class">.mysql_history</span> <span class="selector-class">.mysql_historybak</span></div><div class="line">rm <span class="selector-class">.bash_history</span> <span class="selector-class">.mysql_history</span></div><div class="line">ln -s /dev/null <span class="selector-class">.bash_history</span></div><div class="line">ln -s /dev/null .mysql_history</div></pre></td></tr></table></figure>
+<h1 id="十一、修改history命令记录"><a href="#十一、修改history命令记录" class="headerlink" title="十一、修改history命令记录"></a>十一、修改history命令记录</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cp /etc<span class="built_in">/profile </span>  /etc/profilebak</div><div class="line">vi /etc<span class="built_in">/profile</span></div><div class="line">找到 <span class="attribute">HISTSIZE</span>=1000 改为 <span class="attribute">HISTSIZE</span>=50</div></pre></td></tr></table></figure>
+<h1 id="十二、隐藏服务器系统信息"><a href="#十二、隐藏服务器系统信息" class="headerlink" title="十二、隐藏服务器系统信息"></a>十二、隐藏服务器系统信息</h1><blockquote>
+<p>在缺省情况下，当你登陆到linux系统，它会告诉你该linux发行版的名称、版本、内核版本、服务器的名称。<br>为了不让这些默认的信息泄露出来，我们要进行下面的操作，让它只显示一个”login:”提示符。<br>删除/etc/issue和/etc/issue.net这两个文件，或者把这2个文件改名，效果是一样的。</p>
+</blockquote>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mv  <span class="regexp">/etc/i</span>ssue <span class="regexp">/etc/i</span>ssuebak</div><div class="line">mv  <span class="regexp">/etc/i</span>ssue.net   <span class="regexp">/etc/i</span>ssue.netbak</div></pre></td></tr></table></figure>
+<h1 id="十三、优化Linux内核参数"><a href="#十三、优化Linux内核参数" class="headerlink" title="十三、优化Linux内核参数"></a>十三、优化Linux内核参数</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">cp /etc/sysctl<span class="selector-class">.conf</span>  /etc/sysctl<span class="selector-class">.confbak</span></div><div class="line">vi /etc/sysctl<span class="selector-class">.conf</span>    #在文件末尾添加以下内容</div><div class="line"></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.ip_forward</span> = <span class="number">1</span> #修改为<span class="number">1</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.somaxconn</span> = <span class="number">262144</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.netdev_max_backlog</span> = <span class="number">262144</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.wmem_default</span> = <span class="number">8388608</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.rmem_default</span> = <span class="number">8388608</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.rmem_max</span> = <span class="number">16777216</span></div><div class="line">net<span class="selector-class">.core</span><span class="selector-class">.wmem_max</span> = <span class="number">16777216</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.netfilter</span><span class="selector-class">.ip_conntrack_max</span> = <span class="number">131072</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.netfilter</span><span class="selector-class">.ip_conntrack_tcp_timeout_established</span> = <span class="number">180</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.route</span><span class="selector-class">.gc_timeout</span> = <span class="number">20</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.ip_conntrack_max</span> = <span class="number">819200</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.ip_local_port_range</span> = <span class="number">10024</span>  <span class="number">65535</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_retries2</span> = <span class="number">5</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_fin_timeout</span> = <span class="number">30</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_syn_retries</span> = <span class="number">1</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_synack_retries</span> = <span class="number">1</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_timestamps</span> = <span class="number">0</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_tw_recycle</span> = <span class="number">1</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_tw_len</span> = <span class="number">1</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_tw_reuse</span> = <span class="number">1</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_keepalive_time</span> = <span class="number">120</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_keepalive_probes</span> = <span class="number">3</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_keepalive_intvl</span> = <span class="number">15</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_max_tw_buckets</span> = <span class="number">36000</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_max_orphans</span> = <span class="number">3276800</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_max_syn_backlog</span> = <span class="number">262144</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_wmem</span> = <span class="number">8192</span> <span class="number">131072</span> <span class="number">16777216</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_rmem</span> = <span class="number">32768</span> <span class="number">131072</span> <span class="number">16777216</span></div><div class="line">net<span class="selector-class">.ipv4</span><span class="selector-class">.tcp_mem</span> = <span class="number">94500000</span> <span class="number">915000000</span> <span class="number">927000000</span></div><div class="line">/sbin/sysctl -<span class="selector-tag">p</span>   #使配置立即生效</div></pre></td></tr></table></figure>
+<h1 id="十四、CentOS-系统优化"><a href="#十四、CentOS-系统优化" class="headerlink" title="十四、CentOS 系统优化"></a>十四、CentOS 系统优化</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">cp  /etc<span class="built_in">/profile </span> /etc/profilebak2</div><div class="line">vi /etc<span class="built_in">/profile </span>     #在文件末尾添加以下内容</div><div class="line">ulimit -c unlimited</div><div class="line">ulimit -s unlimited</div><div class="line">ulimit -SHn 65535</div><div class="line">ulimit -S -c 0</div><div class="line"><span class="builtin-name">export</span> <span class="attribute">LC_ALL</span>=C</div><div class="line">source  /etc<span class="built_in">/profile </span>   #使配置立即生效</div><div class="line">ulimit -a    #显示当前的各种用户进程限制</div></pre></td></tr></table></figure>
+<h1 id="十五、服务器禁止ping"><a href="#十五、服务器禁止ping" class="headerlink" title="十五、服务器禁止ping"></a>十五、服务器禁止ping</h1><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cp  <span class="meta-keyword">/etc/</span>rc.d/rc.local  <span class="meta-keyword">/etc/</span>rc.d/rc.localbak</div><div class="line">vi  <span class="meta-keyword">/etc/</span>rc.d/rc.local        <span class="meta">#在文件末尾增加下面这一行</span></div><div class="line">echo <span class="number">1</span> &gt; <span class="meta-keyword">/proc/</span>sys<span class="meta-keyword">/net/</span>ipv4/icmp_echo_ignore_all</div><div class="line">参数<span class="number">0</span>表示允许   <span class="number">1</span>表示禁止</div></pre></td></tr></table></figure>
+<p>至此，CentOS Linux服务器安全设置基本完成，以上设置经过笔者实战测试（CentOS-5.5-x86_64）完全可用，更多的安全设置以及服务器优化，还请大家自行测试。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/6d1e2a65/">CentOS Linux服务器安全设置</a></p>
+           <p><span>原文链接：</span><a href="/posts/6d1e2a65/" title="CentOS Linux服务器安全设置">http://yort.xin/posts/6d1e2a65/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/安全/" rel="tag">#安全</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、注释掉系统不需要的用户和用户组"><span class="nav-number">1.</span> <span class="nav-text">一、注释掉系统不需要的用户和用户组</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、关闭系统不需要的服务"><span class="nav-number">2.</span> <span class="nav-text">二、关闭系统不需要的服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、禁止非root用户执行-etc-rc-d-init-d-下的系统命令"><span class="nav-number">3.</span> <span class="nav-text">三、禁止非root用户执行/etc/rc.d/init.d/下的系统命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限"><span class="nav-number">4.</span> <span class="nav-text">四、给下面的文件加上不可更改属性，从而防止非授权用户获得权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、限制不同文件的权限"><span class="nav-number">5.</span> <span class="nav-text">五、限制不同文件的权限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、禁止使用Ctrl-Alt-Del快捷键重启服务器"><span class="nav-number">6.</span> <span class="nav-text">六、禁止使用Ctrl+Alt+Del快捷键重启服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七、使用yum-update更新系统时不升级内核，只更新软件包"><span class="nav-number">7.</span> <span class="nav-text">七、使用yum update更新系统时不升级内核，只更新软件包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八、关闭Centos自动更新"><span class="nav-number">8.</span> <span class="nav-text">八、关闭Centos自动更新</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#九、关闭多余的虚拟控制台"><span class="nav-number">9.</span> <span class="nav-text">九、关闭多余的虚拟控制台</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十、删除MySQL历史记录"><span class="nav-number">10.</span> <span class="nav-text">十、删除MySQL历史记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十一、修改history命令记录"><span class="nav-number">11.</span> <span class="nav-text">十一、修改history命令记录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十二、隐藏服务器系统信息"><span class="nav-number">12.</span> <span class="nav-text">十二、隐藏服务器系统信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十三、优化Linux内核参数"><span class="nav-number">13.</span> <span class="nav-text">十三、优化Linux内核参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十四、CentOS-系统优化"><span class="nav-number">14.</span> <span class="nav-text">十四、CentOS 系统优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十五、服务器禁止ping"><span class="nav-number">15.</span> <span class="nav-text">十五、服务器禁止ping</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

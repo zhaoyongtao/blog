@@ -1,0 +1,13 @@
+## this is my blog
+
+博客搭载在github、coding和码云上  
+最近coding推出会员制度，未付费用户打开项目时会有5秒的广告
+码云虽是免费，但实在不相信了。
+
+以后还是转向GitHub比较好
+
+电脑重装了系统，再次打开不蒜子，统计竟然从头开始了，也是无语
+
+国外用户解析到github，国内用户解析到coding
+博客地址: http://zhaoyongtao.coding.me/   
+		  http://zhaoyongtao.github.io/

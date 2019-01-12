@@ -1,0 +1,1210 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="MySQL," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="一、MySQL主从基础概念 MySQL通常是服务系统中最容产生性能瓶颈的组件，对于繁忙的web服务来讲，数据库压力通常是最大的，需要承载大量的读写操作，因而，数据库服务器的性能至关重要，通常数据库服务器的硬件也是服务系统中要求最高的，抛开性能不讲，数据本身就是信息服务的命脉！数据管理，马虎不得。解决数据库服务器的性能瓶颈，除了纵向扩展（使用更好的硬件）之外，通常是对其做横向扩展，即增加多个服务器，">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL主从复制及架构介绍">
+<meta property="og:url" content="http://yort.xin/posts/a996e9ae/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="一、MySQL主从基础概念 MySQL通常是服务系统中最容产生性能瓶颈的组件，对于繁忙的web服务来讲，数据库压力通常是最大的，需要承载大量的读写操作，因而，数据库服务器的性能至关重要，通常数据库服务器的硬件也是服务系统中要求最高的，抛开性能不讲，数据本身就是信息服务的命脉！数据管理，马虎不得。解决数据库服务器的性能瓶颈，除了纵向扩展（使用更好的硬件）之外，通常是对其做横向扩展，即增加多个服务器，">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.407Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL主从复制及架构介绍">
+<meta name="twitter:description" content="一、MySQL主从基础概念 MySQL通常是服务系统中最容产生性能瓶颈的组件，对于繁忙的web服务来讲，数据库压力通常是最大的，需要承载大量的读写操作，因而，数据库服务器的性能至关重要，通常数据库服务器的硬件也是服务系统中要求最高的，抛开性能不讲，数据本身就是信息服务的命脉！数据管理，马虎不得。解决数据库服务器的性能瓶颈，除了纵向扩展（使用更好的硬件）之外，通常是对其做横向扩展，即增加多个服务器，">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/a996e9ae/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> MySQL主从复制及架构介绍 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MySQL主从复制及架构介绍
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-17T00:00:00+08:00" content="2016-07-17">
+              2016-07-17
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、MySQL主从基础概念"><a href="#一、MySQL主从基础概念" class="headerlink" title="一、MySQL主从基础概念"></a>一、MySQL主从基础概念</h1><blockquote>
+<p>MySQL通常是服务系统中最容产生性能瓶颈的组件，对于繁忙的web服务来讲，数据库压力通常是最大的，需要承载大量的读写操作，因而，数据库服务器的性能至关重要，通常数据库服务器的硬件也是服务系统中要求最高的，抛开性能不讲，数据本身就是信息服务的命脉！数据管理，马虎不得。<br>解决数据库服务器的性能瓶颈，除了纵向扩展（使用更好的硬件）之外，通常是对其做横向扩展，即增加多个服务器，构建DB集群，通常使用主从模式，数据的同步就是本文要学习的内容</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="复制概述"><a href="#复制概述" class="headerlink" title="复制概述"></a>复制概述</h2><blockquote>
+<p>Mysql内建的复制功能是构建大型，高性能应用程序的基础。将Mysql的数据分布到多个系统上去，这种分布的机制，是通过将Mysql的某一台主机的数据复制到其它主机（slaves）上，并重新执行一遍来实现的。复制过程中一个服务器充当主服务器，而一个或多个其它服务器充当从服务器。主服务器将更新写入二进制日志文件，并维护文件的一个索引以跟踪日志循环。这些日志可以记录发送到从服务器的更新。当一个从服务器连接主服务器时，它通知主服务器从服务器在日志中读取的最后一次成功更新的位置。从服务器接收从那时起发生的任何更新，然后封锁并等待主服务器通知新的更新。<br>请注意当你进行复制时，所有对复制中的表的更新必须在主服务器上进行。否则，你必须要小心，以避免用户对主服务器上的表进行的更新与对从服务器上的表所进行的更新之间的冲突。</p>
+</blockquote>
+<p><strong> 注：主从复制各节点时间要同步！ </strong></p>
+<h2 id="1-1-mysql支持的复制类型："><a href="#1-1-mysql支持的复制类型：" class="headerlink" title="1.1 mysql支持的复制类型："></a>1.1 mysql支持的复制类型：</h2><ol>
+<li><p>基于语句的复制：  在主服务器上执行的SQL语句，在从服务器上执行同样的语句。MySQL默认采用基于语句的复制，效率比较高。  </p>
+<blockquote>
+<p>一旦发现没法精确复制时，   会自动选着基于行的复制。    </p>
+</blockquote>
+</li>
+<li><p>基于行的复制：把改变的内容复制过去，而不是把命令在从服务器上执行一遍. 从mysql5.0开始支持</p>
+</li>
+<li>混合类型的复制: 默认采用基于语句的复制，一旦发现基于语句的无法精确的复制时，就会采用基于行的复制。</li>
+</ol>
+<h2 id="1-2-复制解决的问题"><a href="#1-2-复制解决的问题" class="headerlink" title="1.2 复制解决的问题"></a>1.2 复制解决的问题</h2><p> MySQL复制技术有以下一些特点：<br> (1)数据分布 (Data distribution ):每个节点有相同的的数据集<br> (2)负载平衡(load balancing):可由前端读写分离器（调度器）将读请求负载均衡至从节点<br> (3)备份(Backups):利用从节点实现数据备份<br> (4)高可用性和容错行(High availability and failover):任意单个节点宕机，都可以有其他节点提供服务</p>
+<h2 id="1-3-复制如何工作"><a href="#1-3-复制如何工作" class="headerlink" title="1.3 复制如何工作"></a>1.3 复制如何工作</h2><blockquote>
+<p>整体上来说，复制有3个步骤：</p>
+</blockquote>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="number">1</span>)master将改变记录到二进制日志(<span class="built_in">binary</span> <span class="built_in">log</span>)中（这些记录叫做二进制日志事件，<span class="built_in">binary</span> <span class="built_in">log</span> events）；</div><div class="line">(<span class="number">2</span>)slave将master的<span class="built_in">binary</span> <span class="built_in">log</span> events拷贝到它的中继日志(relay <span class="built_in">log</span>)；</div><div class="line">(<span class="number">3</span>)slave重做中继日志中的事件，将改变反映它自己的数据(数据重放)。</div></pre></td></tr></table></figure>
+<h1 id="复制过程"><a href="#复制过程" class="headerlink" title="复制过程"></a>复制过程</h1><p>主从复制需要启动专门的的线程来执行：<br>Master：主节点<br>Dump Thread：为每个Slave的I/O Thread启动一个dump线程，用于向其发送binary log<br>event（二进制日志事件）</p>
+<p>Slave：从节点<br>I/O Thread：到Master请求二进制日志事件，并保存于中继日志中<br>SQL Thread：从中继日志读取事件，在本地replay（重放），得到与Master一样的数据</p>
+<blockquote>
+<p>主从复制的特点：异步复制，导致延迟，从节点数据落后于主节点</p>
+</blockquote>
+<h1 id="主从复制面临的问题"><a href="#主从复制面临的问题" class="headerlink" title="主从复制面临的问题"></a>主从复制面临的问题</h1><ul>
+<li><p>主从数据不同步</p>
+<blockquote>
+<p>对于新的“写操作“，若将对新写入数据的“读请求”调度至从服务器，很可能会无法读取到数据；所以，调度器可能需要具备的功能：不将对新写入内容的读请求调度至从服务器，而是直接将读请求调度至主服务器</p>
+</blockquote>
+</li>
+<li><p>缓存命中率问题</p>
+<blockquote>
+<p>调度器后端有多个从服务器，若对同一内容的读请求，先后调度至不同的从服务器，则缓存无法命中，读性能也就无从提升；所以，主从集群之上应部署第三方的缓存服务器，如memcached或redis，将所有查询结果缓存于memcached或redis中，用户的每次读请求，都将先查询缓存，未命中则再到从服务器中查询</p>
+</blockquote>
+</li>
+<li><p>从服务器宕机</p>
+<blockquote>
+<p>若后端有多个从节点，读写分离器（调度器）则需要有健康状态检测功能，及时移除宕掉的服务器，又能够让恢复健康的节点重新上线</p>
+</blockquote>
+</li>
+<li><p>主服务器宕机</p>
+<blockquote>
+<p>若主节点只有一个（假设），则无法再执行写操作，此时需要挑选出从节点中数据较<br>新的节点，提升为主节点，若提升的主节点数据未完全与原来的主服务器同步，需要借助GTID（全局事务ID）来完成数据的同步，即对未提交事务进行提交以将数据同步于磁盘中</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="主从复制模型"><a href="#主从复制模型" class="headerlink" title="主从复制模型"></a>主从复制模型</h1><ul>
+<li>M/S：主从模型，一主可以多从</li>
+<li>M/M：双主（也叫主主）模型，两个节点互为主从 </li>
+<li>环状结构：多个节点互为主从（用之者甚少）</li>
+<li>级联复制，从服务器还可以再有从服务器</li>
+</ul>
+<h2 id="一主多从模型-Master-Slave-Slave"><a href="#一主多从模型-Master-Slave-Slave" class="headerlink" title="一主多从模型:Master - Slave - Slave"></a>一主多从模型:Master - Slave - Slave</h2><p><strong> 使用场景： </strong></p>
+<blockquote>
+<p>在实际应用场景中，MySQL复制90%以上都是一个Master复制到一个或者多个Slave的架构模式，主要用于读压力比较大的应用的数据库端廉价扩展解决方案。因为只要Master和Slave的压力不是太大（尤其是Slave端压力）的话，异步复制的延时一般都很少很少。尤其是自从Slave端的复制方式改成两个线程处理之后，更是减小了Slave端的延时问题。而带来的效益是，对于数据实时性要求不是特别Critical的应用，只需要通过廉价的pcserver来扩展Slave的数量，将读压力分散到多台Slave的机器上面，即可通过分散单台数据库服务器的读压力来解决数据库端的读性能瓶颈，毕竟在大多数数据库应用系统中的读压力还是要比写压力大很多。这在很大程度上解决了目前很多中小型网站的数据库压力瓶颈问题，甚至有些大型网站也在使用类似方案解决数据库瓶颈。</p>
+</blockquote>
+<h2 id="双主模型：Master-Master"><a href="#双主模型：Master-Master" class="headerlink" title="双主模型：Master - Master"></a>双主模型：Master - Master</h2><blockquote>
+<p>两个节点互为主从，每个节点的写操作都需要记录与二进制日志中，并发送给对方，以达到数据同步的目的，其中需要server id发挥作用<br>server id：<br>sever_id是记录于二进制日志中的server标识，标明日志事件中的写操作是在哪个server执行的，日志在从节点中重放会保留server id，所以，在双主模型中，若server接收到的日志包含server id为自己时，将不会对日志的事件进行重放</p>
+</blockquote>
+<p><strong> 场景：</strong></p>
+<blockquote>
+<p>假设1和2两个节点互为主从，其server_id就是对应的数字，server1写完后，将二进制日志发送给server2一份，server2在本地完成重放之后，其也要将二进制日志发送给server1，server1接收到二进制日志后发现日志包含的server_id是自己，则不会在本地重放，直接忽略</p>
+</blockquote>
+<p><strong> 提醒：双主模型可能会存在两个节点的数据不一致的问题，其场景是两个节点分别接收了“互斥”的写请求，造成了两个节点的数据不一致 </strong></p>
+<blockquote>
+<p>虽然可以使用配置auto_increment_increment=2和auto_increment_offset=1可以解决自动插入的问题，允许同时插入数据的话，数据还是会不一致的。</p>
+</blockquote>
+<p>例如：下面的两个命令同时执行：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">第一个主服务器：</div><div class="line">mysql&gt;update tbl <span class="builtin-name">set</span> <span class="attribute">col</span>=col+1;</div><div class="line">第二个主服务器：</div><div class="line">mysql&gt;update tbl <span class="builtin-name">set</span> <span class="attribute">col</span>=col*2;</div></pre></td></tr></table></figure></p>
+<p>结果是什么？一个服务器的值为4，而另外一个为3.并且根本没有replication的错误。<br>所以，个人建议主动-被动的双主模式，只让一台服务器写就行了，让它对外服务，<br>另外一台作为备用。只接受数据。</p>
+<p><strong> 双主模型的前端调度无需做读写分离，随意调度，双主模型相当于高可用实现，一般用作高容灾方案 </strong></p>
+<h2 id="一从多主复制模型-Slaves-Master-–-Master"><a href="#一从多主复制模型-Slaves-Master-–-Master" class="headerlink" title="一从多主复制模型 Slaves - Master – Master"></a>一从多主复制模型 Slaves - Master – Master</h2><p>一从多主的复制模型，其限制条件是，从节点仅能从多个主节点中复制不同的数据库内容，即多个主节点中必须不能有相同的数据库（仅在mysql5.6及mariadb10之后的版本可以实现）</p>
+<h3 id="适合业务场景："><a href="#适合业务场景：" class="headerlink" title="适合业务场景："></a>适合业务场景：</h3><p>公司几个主要的业务已经独立，放在不同的数据库服务器上面，但是有一个业务又需要关联多个业务库进行联合查询统计。这时候就需要将不同的业务库数据同步到一台从库进行统计。根据Mysql主从同步原理使用多从一从的方案解决。主库使用innodb引擎，从库开启多实例使用myisam引擎并将多个实例的数据同步到同一个目录<br><a href="http://www.tuicool.com/articles/nYBJju7" target="_blank" rel="external">详细实现步骤</a></p>
+<h2 id="级联复制模型-Master-–Slaves-Slaves"><a href="#级联复制模型-Master-–Slaves-Slaves" class="headerlink" title="级联复制模型 Master –Slaves - Slaves"></a>级联复制模型 Master –Slaves - Slaves</h2><p>###使用场景</p>
+<blockquote>
+<p>在有些应用场景中，可能读写压力差别比较大，读压力特别的大，一个Master可能需要上10台甚至更多的Slave才能够支撑读的压力。这时候，Master就会比较吃力了，因为仅仅连上来的SlaveIO线程就比较多了，这样写的压力稍微大一点的时候，Master端因为复制就会消耗较多的资源，很容易造成复制的延时。</p>
+</blockquote>
+<p>在主从模型下，从节点还可以再有从节点，即从节点中的某个节点（假设为“Slave_A”）是其他从节点的主节点，为避免过大的压力，Slave_A一般不处理客户端的读请求，仅负责从主节点中复制二进制日志在本地完成重放，但其使用的表类型是black_hold，所以本地并没有保存数据，仅是将重放的写操作记录于二进制日志中，进而，其他从节点可以到Slave_A复制日志文件来同步数据<br><a href="http://www.cnblogs.com/ggjucheng/archive/2012/11/13/2768879.html" target="_blank" rel="external">参考</a></p>
+<h2 id="半同步复制模型："><a href="#半同步复制模型：" class="headerlink" title="半同步复制模型："></a>半同步复制模型：</h2><blockquote>
+<p>主服务器需要等待一个从节点完成数据复制，才能对客户端返回OK，此模型下，主节点和完全同步的从节点一般需要在同一机房内，需要有足够稳定，足够大的带宽支持，其他节点可以跨网络分布</p>
+</blockquote>
+<h2 id="复制过滤器："><a href="#复制过滤器：" class="headerlink" title="复制过滤器："></a>复制过滤器：</h2><blockquote>
+<p>仅复制部分数据库内容，其实现方案有两种：<br>(1)主节点只保存特定数据库的事件到二进制日志文件中，从节点复制重放<br>(2)从节点复制所有数据库相关的事件，但在中继日志中过滤事件，选择特定的事件进行重放</p>
+</blockquote>
+<h1 id="复制结构中应该注意的问题"><a href="#复制结构中应该注意的问题" class="headerlink" title="复制结构中应该注意的问题"></a>复制结构中应该注意的问题</h1><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">1、限制从服务器为只读</div><div class="line">在从服务器设置<span class="attribute">read_only</span>=ON,对拥有SUPER权限的用户无效</div><div class="line"></div><div class="line">阻止所有用户：</div><div class="line">mysql&gt; FLUSH TABLES WITH READ LOCK;</div><div class="line">执行后不释放锁，断开与数据库的连接</div><div class="line"></div><div class="line">限制从服务器只读的作用是避免有数据写入导致主从数据不同步</div><div class="line"></div><div class="line">2、保证主从复制的事务安全</div><div class="line">在master节点启用的参数：</div><div class="line"><span class="attribute">sync_binlog</span>=ON</div><div class="line">当事务提交时，将binlog内存缓冲区中记录的事件刷新到磁盘中</div><div class="line"></div><div class="line">InnoDB引擎需启用的参数：</div><div class="line"><span class="attribute">innodb_flush_logs_at_trx_commit</span>=ON </div><div class="line">刷写日志，提交事务时，立即将内存中的事务相关的数据保存到事务日志文件中</div><div class="line"><span class="attribute">innodb_suport_xa</span>=ON</div><div class="line">分布式事务，分布式提交事务</div><div class="line"></div><div class="line">在slave节点启用的参数：</div><div class="line"><span class="attribute">skip_slave_start</span>=ON (需要在配置文件中定义)</div><div class="line"></div><div class="line">取消复制进程随数据库启动而启动，此项很可能会导致主从数据不一致</div><div class="line"></div><div class="line">3、其他需要注意的参数：按需启用</div><div class="line">主节点：</div><div class="line">sync_master_info </div><div class="line">是否立即将主服务器信息同步给从服务器</div><div class="line">slave节点：</div><div class="line">sync_relay_log</div><div class="line">是否立即将中继日志从内存刷写到磁盘中</div><div class="line">sync_relay_log_info</div><div class="line">是否立即将此文件中保存的信息立即从内存刷写到磁盘中</div></pre></td></tr></table></figure>
+<p><strong> 注意：以上一个同步选项开启必然会增大IO压力，具体情况，具体应用 </strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/a996e9ae/">MySQL主从复制及架构介绍</a></p>
+           <p><span>原文链接：</span><a href="/posts/a996e9ae/" title="MySQL主从复制及架构介绍">http://yort.xin/posts/a996e9ae/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag">#MySQL</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、MySQL主从基础概念"><span class="nav-number">1.</span> <span class="nav-text">一、MySQL主从基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#复制概述"><span class="nav-number">1.1.</span> <span class="nav-text">复制概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-mysql支持的复制类型："><span class="nav-number">1.2.</span> <span class="nav-text">1.1 mysql支持的复制类型：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-复制解决的问题"><span class="nav-number">1.3.</span> <span class="nav-text">1.2 复制解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-复制如何工作"><span class="nav-number">1.4.</span> <span class="nav-text">1.3 复制如何工作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复制过程"><span class="nav-number">2.</span> <span class="nav-text">复制过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主从复制面临的问题"><span class="nav-number">3.</span> <span class="nav-text">主从复制面临的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主从复制模型"><span class="nav-number">4.</span> <span class="nav-text">主从复制模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一主多从模型-Master-Slave-Slave"><span class="nav-number">4.1.</span> <span class="nav-text">一主多从模型:Master - Slave - Slave</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#双主模型：Master-Master"><span class="nav-number">4.2.</span> <span class="nav-text">双主模型：Master - Master</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一从多主复制模型-Slaves-Master-–-Master"><span class="nav-number">4.3.</span> <span class="nav-text">一从多主复制模型 Slaves - Master – Master</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#适合业务场景："><span class="nav-number">4.3.1.</span> <span class="nav-text">适合业务场景：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#级联复制模型-Master-–Slaves-Slaves"><span class="nav-number">4.4.</span> <span class="nav-text">级联复制模型 Master –Slaves - Slaves</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#半同步复制模型："><span class="nav-number">4.5.</span> <span class="nav-text">半同步复制模型：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复制过滤器："><span class="nav-number">4.6.</span> <span class="nav-text">复制过滤器：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#复制结构中应该注意的问题"><span class="nav-number">5.</span> <span class="nav-text">复制结构中应该注意的问题</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

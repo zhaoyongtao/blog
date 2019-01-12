@@ -1,0 +1,1186 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="技术与干货," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="ansible简介ansible是新出现的 自动化 运维工具 ， 基于Python研发 。 糅合了众多老牌运维工具的优点实现了批量操作系统配置、批量程序的部署、批量运行命令等功能。 仅需在管理工作站上安装 ansible 程序配置被管控主机的 IP 信息，被管控的主机无客户端。 ansible 应用程序存在于 epel( 第三方社区 ) 源，依赖于很多 python 组件">
+<meta name="keywords" content="技术与干货">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ansible教程">
+<meta property="og:url" content="http://yort.xin/posts/d2b5ca2e/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="ansible简介ansible是新出现的 自动化 运维工具 ， 基于Python研发 。 糅合了众多老牌运维工具的优点实现了批量操作系统配置、批量程序的部署、批量运行命令等功能。 仅需在管理工作站上安装 ansible 程序配置被管控主机的 IP 信息，被管控的主机无客户端。 ansible 应用程序存在于 epel( 第三方社区 ) 源，依赖于很多 python 组件">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-jiagou.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible2.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible3.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-useradd.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-ssh.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-host.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yum.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yum2.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-raw.jpg">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml1.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml1.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml2.png">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.402Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ansible教程">
+<meta name="twitter:description" content="ansible简介ansible是新出现的 自动化 运维工具 ， 基于Python研发 。 糅合了众多老牌运维工具的优点实现了批量操作系统配置、批量程序的部署、批量运行命令等功能。 仅需在管理工作站上安装 ansible 程序配置被管控主机的 IP 信息，被管控的主机无客户端。 ansible 应用程序存在于 epel( 第三方社区 ) 源，依赖于很多 python 组件">
+<meta name="twitter:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-jiagou.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/d2b5ca2e/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> ansible教程 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ansible教程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-03T16:02:32+08:00" content="2016-07-03">
+              2016-07-03
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="ansible简介"><a href="#ansible简介" class="headerlink" title="ansible简介"></a>ansible简介</h1><p>ansible是新出现的 自动化 运维工具 ， 基于Python研发 。 糅合了众多老牌运维工具的优点实现了批量操作系统配置、批量程序的部署、批量运行命令等功能。 仅需在管理工作站上安装 ansible 程序配置被管控主机的 IP 信息，被管控的主机无客户端。 ansible 应用程序存在于 epel( 第三方社区 ) 源，依赖于很多 python 组件<br><a id="more"></a></p>
+<h1 id="ansible-特性"><a href="#ansible-特性" class="headerlink" title="ansible 特性"></a>ansible 特性</h1><ul>
+<li><p>模块化 设计 ，调用特定的模块来完成特定任务 ，本身是核心组件，短小精悍 ；</p>
+</li>
+<li><p>基于Python语言实现，由Paramiko (python 的一个可并发连接 ssh 主机功能库 ) , PyYAML和Jinja2 ( 模板化 ) 三个关键模块实现；</p>
+</li>
+<li><p>部署简单，agentless 无客户端工具；</p>
+</li>
+<li><p>主从模式 工作；</p>
+</li>
+<li><p>支持自定义模块 功能；</p>
+</li>
+<li><p>支持playbook 剧本，连续任务按先后设置顺序完成；</p>
+</li>
+<li><p>期望每个命令具有 幂等性：</p>
+</li>
+</ul>
+<h1 id="ansible-架构"><a href="#ansible-架构" class="headerlink" title="ansible 架构"></a>ansible 架构</h1><ul>
+<li><p>ansible core ： ansible 自身核心模块</p>
+</li>
+<li><p>host inventory： 主机库，定义可管控的主机列表</p>
+</li>
+<li><p>connection plugins： 连接插件，一般默认基于 ssh 协议连接</p>
+</li>
+<li><p>modules：core modules ( 自带模块 ) 、 custom modules ( 自定义模块 )</p>
+</li>
+<li><p>playbooks ：剧本，按照所设定编排的顺序执行完成安排任务</p>
+</li>
+</ul>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-jiagou.png" alt="ansible架构图"></p>
+<h1 id="ansible的基本使用"><a href="#ansible的基本使用" class="headerlink" title="ansible的基本使用"></a>ansible的基本使用</h1><blockquote>
+<p>安装软件yum install ansible -y # 对应的软件在 epel 仓库中也可自己手动编译<br>源码地址 <a href="https://pypi.python.org/packages/source/a/ansible/ansible-1.5.tar.gz" target="_blank" rel="external">https://pypi.python.org/packages/source/a/ansible/ansible-1.5.tar.gz</a> </p>
+</blockquote>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible2.png" alt="ansible的配置文件"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">定义Host Inventory  </div><div class="line"><span class="comment"># vim /etc/ansible/hosts  </span></div><div class="line">[webhosts]  </div><div class="line">172.16.10.22 ansible_ssh_user=root ansible_ssh_pass=guoting </div><div class="line">172.16.10.33 ansible_ssh_user=root ansible_ssh_pass=guoting </div><div class="line">解释  </div><div class="line"><span class="comment">#ansible_ssh_user=root 是ssh登陆用户  </span></div><div class="line"><span class="comment">#ansible_ssh_pass=guoting 是ssh登陆密码3、测试各个模块  </span></div><div class="line"><span class="comment"># 注意每个模块的用法可以使用 ansible-doc MOD 来查看例如ansible-doc copy  </span></div><div class="line">   </div><div class="line">ansible命令最常用的用法  </div><div class="line">ansible &lt;Host-partten&gt; -m MOE -a <span class="string">'MOD_ARV'</span>所支持的模块可以使用ansible-doc -l来查看</div></pre></td></tr></table></figure>
+<h2 id="ansible示例"><a href="#ansible示例" class="headerlink" title="ansible示例"></a>ansible示例</h2><h3 id="1、查看时间信息。command、shell模块"><a href="#1、查看时间信息。command、shell模块" class="headerlink" title="1、查看时间信息。command、shell模块"></a>1、查看时间信息。command、shell模块</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible3.png" alt="演示1"></p>
+<h3 id="2、在控制端添加添加用户。user模块"><a href="#2、在控制端添加添加用户。user模块" class="headerlink" title="2、在控制端添加添加用户。user模块"></a>2、在控制端添加添加用户。user模块</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-useradd.png" alt=""></p>
+<h3 id="3、实现ssh秘钥认证。shell、copy模块"><a href="#3、实现ssh秘钥认证。shell、copy模块" class="headerlink" title="3、实现ssh秘钥认证。shell、copy模块"></a>3、实现ssh秘钥认证。shell、copy模块</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-ssh.png" alt=""></p>
+<p>此时就可以实现基于ssh秘钥通信了此时/etc/ansible/hosts可以修改如下</p>
+<figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">###### /etc/ansible/hosts  </div><div class="line">[webhosts]  </div><div class="line"><span class="number">172.16</span><span class="number">.10</span><span class="number">.22</span>  </div><div class="line"><span class="number">172.16</span><span class="number">.10</span><span class="number">.33</span></div></pre></td></tr></table></figure>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-host.png" alt=""></p>
+<h3 id="4、安装软件和启动服务。yum、service模块"><a href="#4、安装软件和启动服务。yum、service模块" class="headerlink" title="4、安装软件和启动服务。yum、service模块"></a>4、安装软件和启动服务。yum、service模块</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yum.png" alt=""></p>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yum2.png" alt=""></p>
+<h3 id="5、支持管道的命令。raw模块，类似于shell模块"><a href="#5、支持管道的命令。raw模块，类似于shell模块" class="headerlink" title="5、支持管道的命令。raw模块，类似于shell模块"></a>5、支持管道的命令。raw模块，类似于shell模块</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-raw.jpg" alt=""></p>
+<h1 id="YAML语言介绍"><a href="#YAML语言介绍" class="headerlink" title="YAML语言介绍"></a>YAML语言介绍</h1><h2 id="YAML简介"><a href="#YAML简介" class="headerlink" title="YAML简介"></a>YAML简介</h2><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">YAML是一个可读性高的用来表达资料序列的格式。YAML参考了其他多种语言包括XML、C语言、Python、Perl以及电子邮件格式RFC2822等。Clark Evans在2001年在首次发表了这种语言另外Ingy dtNet与Oren Ben-Kiki也是这语言的共同设计者。  </div><div class="line">YAML Ain't Markup Language即YAML不是XML。不过在开发的这种语言时YAML的意思其实是<span class="string">"Yet Another Markup Language"</span>仍是一种标记语言。</div><div class="line"><span class="section">其特性:  </span></div><div class="line">	YAML的可读性好  </div><div class="line">	YAML和脚本语言的交互性好  </div><div class="line">	YAML使用实现语言的数据类型  </div><div class="line">	YAML有一个一致的信息模型  </div><div class="line">	YAML易于实现  </div><div class="line">	YAML可以基于流来处理  </div><div class="line">	YAML表达能力强扩展性好  </div><div class="line">   </div><div class="line"><span class="section">更多的内容及规范参见http://www.yaml.org。  </span></div><div class="line">   </div><div class="line"><span class="comment">##########################YAML语法  </span></div><div class="line">   </div><div class="line">YAML的语法和其他高阶语言类似并且可以简单表达清单、散列表、标量等数据结构。其结构Structure通过空格来展示序列Sequence里的项用<span class="string">"-"</span>来代表  </div><div class="line"><span class="section">Map里的键值对用":"分隔。YAML文件扩展名通常为.yaml或者.yml。下面是一个示例。  </span></div><div class="line">   </div><div class="line"><span class="section">name: John Smith  </span></div><div class="line"><span class="section">age: 41gender: Male  </span></div><div class="line"><span class="section">spouse:  </span></div><div class="line"><span class="section">name: Jane Smith  </span></div><div class="line"><span class="section">age: 37  </span></div><div class="line"><span class="section">gender: Female  </span></div><div class="line"><span class="section">children:  </span></div><div class="line">- name: Jimmy Smith  </div><div class="line"><span class="section">age: 17  </span></div><div class="line"><span class="section">gender: Male  </span></div><div class="line">- name: Jenny Smith  </div><div class="line">age 13  </div><div class="line"><span class="section">gender: Female  </span></div><div class="line">   </div><div class="line">YAML 2 个重要的结构组成部分list和directory  </div><div class="line"><span class="comment">################################# list  </span></div><div class="line">   </div><div class="line">列表的所有元素均使用“-”打头例如  </div><div class="line"><span class="comment"># A list of tasty fruits  </span></div><div class="line">- Apple  </div><div class="line">- Orange  </div><div class="line">- Strawberry  </div><div class="line">- Mango  </div><div class="line">   </div><div class="line"><span class="comment">##############################dictionary  </span></div><div class="line">   </div><div class="line">字典通过key与valuef进行标识例如  </div><div class="line">---  </div><div class="line"><span class="comment"># An employee record  </span></div><div class="line"><span class="section">name: Example Developer  </span></div><div class="line"><span class="section">job: Developer  </span></div><div class="line"><span class="section">skill: Elite  </span></div><div class="line">   </div><div class="line"><span class="section">也可以将key:value放置于&#123;&#125;中进行表示例如  </span></div><div class="line">---  </div><div class="line"><span class="comment"># An employee record  </span></div><div class="line"><span class="section">&#123;name: Example Developer, job: Developer, skill: Elite&#125;  </span></div><div class="line">   </div><div class="line">多个映射关系组成一个字典一个列表可以包含多个字典。</div></pre></td></tr></table></figure>
+<h3 id="2、ymal中的变量"><a href="#2、ymal中的变量" class="headerlink" title="2、ymal中的变量"></a>2、ymal中的变量</h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">################################## 变量命名  </div><div class="line">变量名仅能由字母、数字和下划线组成且只能以字母开头。  </div><div class="line">   </div><div class="line">################################## facts  </div><div class="line">facts是由正在通信的远程目标主机发回的信息这些信息被保存在ansible变量中。要获取指定的远程主机所支持的所有facts可使用如下命令进行  </div><div class="line"># ansible hostname -m setup 这个命令可以获得被监控端主机的各种信息将这些信息得到后保存到变量中。  </div><div class="line">   </div><div class="line">################################ 自定义变量  </div><div class="line">在 yaml 中可以使用vars关键字来定义变量  </div><div class="line">vars:  </div><div class="line">var_name: value  </div><div class="line">   </div><div class="line">############################# 变量的引用  </div><div class="line">&#123;&#123; var_name &#125;&#125;  </div><div class="line">   </div><div class="line">   </div><div class="line">########################### 特殊的变量迭代  </div><div class="line">当有需要重复性执行的任务时可以使用迭代机制。其使用格式为将需要迭代的内容定义为item变量引用并通过with_items语句来指明迭代的元素列表即可。  </div><div class="line">   </div><div class="line">#######################################示例  </div><div class="line">例如在被控端添加 <span class="number">2</span> 个用户  </div><div class="line">   </div><div class="line">方式<span class="number">1</span>一般做法  </div><div class="line">- name: add user testuser1  </div><div class="line">user: name=testuser1 state=present groups=wheel </div><div class="line">- name: add user testuser2  </div><div class="line">user: name=testuser2 state=present groups=wheel </div><div class="line">   </div><div class="line">方式<span class="number">2</span>使用变量方式  </div><div class="line">- name: add several users  </div><div class="line">vars:  </div><div class="line">user1: testuser1  </div><div class="line">user2: testuser2  </div><div class="line">user: name=&#123;&#123; user1 &#125;&#125; state=present groups=wheel </div><div class="line">user: name=&#123;&#123; user2 &#125;&#125; state=present groups=wheel </div><div class="line">   </div><div class="line">方式<span class="number">3</span>使用迭代方式  </div><div class="line">- name: add several users  </div><div class="line">user: name=&#123;&#123; item &#125;&#125; state=present groups=wheel </div><div class="line">with_items:   </div><div class="line">- testuser1   </div><div class="line">- testuser2  </div><div class="line">事实上with_items中可以使用元素还可为hashes例如  </div><div class="line">- name: add several users  </div><div class="line">user: name=&#123;&#123; item.name &#125;&#125; state=present groups=&#123;&#123; item.groups &#125;&#125;  </div><div class="line">with_items:  </div><div class="line">- &#123; name: <span class="string">'testuser1'</span>, groups: <span class="string">'wheel'</span> &#125;  </div><div class="line">- &#123; name: <span class="string">'testuser2'</span>, groups: <span class="string">'root'</span> &#125;</div></pre></td></tr></table></figure>
+<h3 id="3、Inentory文件的格式"><a href="#3、Inentory文件的格式" class="headerlink" title="3、Inentory文件的格式"></a>3、Inentory文件的格式</h3><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">inventory文件遵循INI文件风格中括号中的字符为组名。可以将同一个主机同时归并到多个不同的组中此外当如若目标主机使用了非默认的SSH端口还可以在主机名称之后使用冒号加端口号来标明。  </div><div class="line">   </div><div class="line">[webservers]  </div><div class="line">www1.magedu.com:<span class="number">2222</span>  </div><div class="line">www2.magedu.com  </div><div class="line">[dbservers]  </div><div class="line">db1.magedu.com  </div><div class="line">db2.magedu.com  </div><div class="line">db3.magedu.com  </div><div class="line">   </div><div class="line">如果主机名称遵循相似的命名模式还可以使用列表的方式标识各主机例如  </div><div class="line">[webservers]  </div><div class="line">www[<span class="number">01</span>:<span class="number">50</span>].example.com  </div><div class="line">[databases]  </div><div class="line">db-[a:f].example.com  </div><div class="line">   </div><div class="line">#################### 主机变量  </div><div class="line">可以在inventory中定义主机时为其添加主机变量以便于在playbook中使用。例如  </div><div class="line">[webservers]  </div><div class="line">www1.magedu.com http_port=<span class="number">80</span> maxRequestsPerChild=<span class="number">808</span> </div><div class="line">www2.magedu.com http_port=<span class="number">303</span> maxRequestsPerChild=<span class="number">909</span> </div><div class="line">   </div><div class="line">################### 组变量  </div><div class="line">组变量是指赋予给指定组内所有主机上的在playbook中可用的变量。例如  </div><div class="line">   </div><div class="line">[webservers]  </div><div class="line">www1.magedu.com  </div><div class="line">www2.magedu.com  </div><div class="line">   </div><div class="line">[webservers:vars]  </div><div class="line">ntpntp_server=ntp.magedu.com  </div><div class="line">nfsnfs_server=nfs.magedu.com  </div><div class="line">   </div><div class="line">################## 组嵌套  </div><div class="line">inventory中组还可以包含其它的组并且也可以向组中的主机指定变量。不过这些变量只能在ansible-playbook中使用而ansible不支持。例如  </div><div class="line">   </div><div class="line">[apache]  </div><div class="line">httpd1.magedu.com  </div><div class="line">httpd2.magedu.com  </div><div class="line">   </div><div class="line">[nginx]  </div><div class="line">ngx1.magedu.com  </div><div class="line">ngx2.magedu.com  </div><div class="line">   </div><div class="line">[webservers:children]  </div><div class="line">apache  </div><div class="line">nginx  </div><div class="line">   </div><div class="line">[webservers:vars]  </div><div class="line">ntpntp_server=ntp.magedu.com  </div><div class="line">   </div><div class="line">######################### inventory参数  </div><div class="line">   </div><div class="line">ansible基于ssh连接inventory中指定的远程主机时还可以通过参数指定其交互方式常用的参数如下所示  </div><div class="line">ansible_ssh_host # 要连接的主机名  </div><div class="line">ansible_ssh_port # 端口号默认是<span class="number">22</span>  </div><div class="line">ansible_ssh_user # ssh连接时默认使用的用户名  </div><div class="line">ansible_ssh_pass # ssh连接时的密码  </div><div class="line">ansible_sudo_pass # 使用sudo连接用户是的密码  </div><div class="line">ansible_ssh_private_key_file # 秘钥文件如果不想使用ssh-agent管理时可以使用此选项  </div><div class="line">ansible_shell_type # shell的类型默认sh  </div><div class="line">#########################################################################################  </div><div class="line">ansible的循环机制还有更多的高级功能具体请参见官方文档http:<span class="comment">//docs.ansible.com/playbooks_loops.html。</span></div></pre></td></tr></table></figure>
+<h3 id="4、playbooks"><a href="#4、playbooks" class="headerlink" title="4、playbooks"></a>4、playbooks</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">playbook是由一个或多个“play”组成的列表。play的主要功能在于将事先归并为一组的主机装扮成事先通过ansible中的task定义好的角色。  </div><div class="line">从根本上来讲所谓task无非是调用ansible的一个module。将多个play组织在一个playbook中即可以让它们联同起来按事先编排的机制同唱一台大戏。  </div><div class="line">   </div><div class="line"><span class="comment">###########################playbook基础组件  </span></div><div class="line">1、Hosts和Users  </div><div class="line">   </div><div class="line">playbook中的每一个play的目的都是为了让某个或某些主机以某个指定的用户身份执行任务。  </div><div class="line">hosts用于指定要执行指定任务的主机其可以是一个或多个由冒号分隔主机组。  </div><div class="line">remote_user则用于指定远程主机上的执行任务的用户。  </div><div class="line">   </div><div class="line">不过remote_user也可用于各task中。也可以通过指定其通过sudo的方式在远程主机上执行任务其可用于play全局或某任务。  </div><div class="line">此外甚至可以在sudo时使用sudo_user指定sudo时切换的用户。  </div><div class="line">   </div><div class="line">- hosts: webnodes  </div><div class="line">remote_user: mageedu  </div><div class="line">tasks:  </div><div class="line">- name: test<span class="built_in"> connection </span>ping:  </div><div class="line">remote_user: mageedu sudo: <span class="literal">yes</span>  </div><div class="line">   </div><div class="line">2、任务列表和action  </div><div class="line">play的主体部分是task list。task list中的各任务按次序逐个在hosts中指定的所有主机上执行即在所有主机上完成第一个任务后再开始第二个。  </div><div class="line">在运行自下而下某playbook时如果中途发生错误所有已执行任务都将回滚因此在更正playbook后重新执行一次即可。  </div><div class="line">task的目的是使用指定的参数执行模块而在模块参数中可以使用变量。模块执行是幂等的这意味着多次执行是安全的因为其结果均一致。  </div><div class="line">每个task都应该有其name用于playbook的执行结果输出建议其内容尽可能清晰地描述任务执行步骤。如果未提供name则action的结果将用于输出。  </div><div class="line">   </div><div class="line">定义task的可以使用“action: module options”或“module: options”的格式推荐使用后者以实现向后兼容。  </div><div class="line">如果action一行的内容过多也中使用在行首使用几个空白字符进行换行。  </div><div class="line">   </div><div class="line">tasks:  </div><div class="line">- name: make sure apache is running  </div><div class="line">service: <span class="attribute">name</span>=httpd <span class="attribute">state</span>=running </div><div class="line">   </div><div class="line">在众多模块中只有command和shell模块仅需要给定一个列表而无需使用“<span class="attribute">key</span>=value”格式例如  </div><div class="line">tasks:  </div><div class="line">- name: <span class="builtin-name">disable</span> selinux  </div><div class="line">command: /sbin/setenforce 0如果命令或脚本的退出码不为零可以使用如下方式替代  </div><div class="line">tasks:  </div><div class="line">- name: <span class="builtin-name">run</span> this command <span class="keyword">and</span> ignore the result  </div><div class="line">shell: /usr/bin/somecommand || /bin/<span class="literal">true</span>  </div><div class="line">或者使用ignore_errors来忽略错误信息  </div><div class="line">tasks:  </div><div class="line">- name: <span class="builtin-name">run</span> this command <span class="keyword">and</span> ignore the result  </div><div class="line">shell: /usr/bin/somecommand  </div><div class="line">ignore_errors: <span class="literal">True</span>   </div><div class="line">   </div><div class="line">3、handlers  </div><div class="line">   </div><div class="line">用于当关注的资源发生变化时采取一定的操作。  </div><div class="line">   </div><div class="line">“notify”这个action可用于在每个play的最后被触发这样可以避免多次有改变发生时每次都执行指定的操作取而代之仅在所有的变化发生完成后一次性地执行指定操作。在notify中列出的操作称为handler也即notify中调用handler中定义的操作。  </div><div class="line">   </div><div class="line">- name: template configuration file  </div><div class="line">template: <span class="attribute">src</span>=template.j2 <span class="attribute">dest</span>=/etc/foo.conf  </div><div class="line">notify:  </div><div class="line">- restart memcached  </div><div class="line">- restart apache   </div><div class="line">   </div><div class="line">handler是task列表这些task与前述的task并没有本质上的不同。  </div><div class="line">   </div><div class="line">handlers:  </div><div class="line">- name: restart memcached  </div><div class="line">service: <span class="attribute">name</span>=memcached <span class="attribute">state</span>=restarted </div><div class="line">- name: restart apache  </div><div class="line">service: <span class="attribute">name</span>=apache <span class="attribute">state</span>=restarted</div></pre></td></tr></table></figure>
+<h3 id="5、tags"><a href="#5、tags" class="headerlink" title="5、tags"></a>5、tags</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">tags用于让用户选择运行或路过playbook中的部分代码。ansible具有幂等性因此会自动跳过没有变化的部分即便如此有些代码为测试其确实没有发生变化的时间依然会非常地长。此时如果确信其没有变化就可以通过tags跳过此些代码片断。  </div><div class="line">   </div><div class="line">示例基于playbooks实现web服务的部署  </div><div class="line">1、提供好Inventory文件  </div><div class="line"><span class="comment"># /etc/ansible/hosts基于秘钥认证  </span></div><div class="line">[webhosts]  </div><div class="line">172.16.10.22  </div><div class="line">172.16.10.33  </div><div class="line">   </div><div class="line">2、编辑 palybooks 剧本  </div><div class="line"><span class="comment"># vim /root/web.yaml  </span></div><div class="line">- name: web<span class="built_in"> service </span> </div><div class="line">remote_user: root  </div><div class="line">hosts: webhosts  </div><div class="line">vars:  </div><div class="line">packages: httpd  </div><div class="line">tasks:  </div><div class="line">- name: install httpd yum: name=&#123;&#123; packages &#125;&#125; <span class="attribute">state</span>=present </div><div class="line">tags: install  </div><div class="line">- name: configuration httpd  </div><div class="line">copy: <span class="attribute">src</span>=/root/httpd.conf <span class="attribute">dest</span>=/etc/httpd/conf/httpd.conf  </div><div class="line">tags: conf  </div><div class="line">notify:  </div><div class="line">- restart httpd  </div><div class="line">- name:<span class="built_in"> service </span>httpd start  </div><div class="line">service: <span class="attribute">name</span>=httpd <span class="attribute">enabled</span>=<span class="literal">no</span> <span class="attribute">state</span>=started </div><div class="line">tags: start  </div><div class="line">- name: <span class="builtin-name">add</span> centos <span class="keyword">and</span> hadoop<span class="built_in"> user </span> </div><div class="line">user: name=&#123;&#123; item &#125;&#125; <span class="attribute">state</span>=absent </div><div class="line">tags: adduser  </div><div class="line">with_items:  </div><div class="line">- centos  </div><div class="line">- hadoop  </div><div class="line">handlers:  </div><div class="line">- name: restart httpd  </div><div class="line">service: <span class="attribute">name</span>=httpd <span class="attribute">state</span>=restarted </div><div class="line">   </div><div class="line">3、准备好配置文件  </div><div class="line">将web的配置放到指定目录 <span class="attribute">src</span>=/root/httpd.conf  </div><div class="line">   </div><div class="line">4、开始部署  </div><div class="line">ansible-playbooks /root/web.yml</div></pre></td></tr></table></figure>
+<h3 id="结果示例"><a href="#结果示例" class="headerlink" title="结果示例"></a>结果示例</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml1.png" alt="结果"></p>
+<h3 id="查看端口"><a href="#查看端口" class="headerlink" title="查看端口"></a>查看端口</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml1.png" alt="端口"></p>
+<h3 id="此时如果配置文件发生变化"><a href="#此时如果配置文件发生变化" class="headerlink" title="此时如果配置文件发生变化"></a>此时如果配置文件发生变化</h3><p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-03-ansible-yaml2.png" alt=""></p>
+<h3 id="至此基本使用配置完成"><a href="#至此基本使用配置完成" class="headerlink" title="至此基本使用配置完成"></a>至此基本使用配置完成</h3>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/d2b5ca2e/">ansible教程</a></p>
+           <p><span>原文链接：</span><a href="/posts/d2b5ca2e/" title="ansible教程">http://yort.xin/posts/d2b5ca2e/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/技术与干货/" rel="tag">#技术与干货</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ansible简介"><span class="nav-number">1.</span> <span class="nav-text">ansible简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ansible-特性"><span class="nav-number">2.</span> <span class="nav-text">ansible 特性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ansible-架构"><span class="nav-number">3.</span> <span class="nav-text">ansible 架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ansible的基本使用"><span class="nav-number">4.</span> <span class="nav-text">ansible的基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ansible示例"><span class="nav-number">4.1.</span> <span class="nav-text">ansible示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、查看时间信息。command、shell模块"><span class="nav-number">4.1.1.</span> <span class="nav-text">1、查看时间信息。command、shell模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、在控制端添加添加用户。user模块"><span class="nav-number">4.1.2.</span> <span class="nav-text">2、在控制端添加添加用户。user模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、实现ssh秘钥认证。shell、copy模块"><span class="nav-number">4.1.3.</span> <span class="nav-text">3、实现ssh秘钥认证。shell、copy模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、安装软件和启动服务。yum、service模块"><span class="nav-number">4.1.4.</span> <span class="nav-text">4、安装软件和启动服务。yum、service模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、支持管道的命令。raw模块，类似于shell模块"><span class="nav-number">4.1.5.</span> <span class="nav-text">5、支持管道的命令。raw模块，类似于shell模块</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#YAML语言介绍"><span class="nav-number">5.</span> <span class="nav-text">YAML语言介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML简介"><span class="nav-number">5.1.</span> <span class="nav-text">YAML简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2、ymal中的变量"><span class="nav-number">5.1.1.</span> <span class="nav-text">2、ymal中的变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、Inentory文件的格式"><span class="nav-number">5.1.2.</span> <span class="nav-text">3、Inentory文件的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、playbooks"><span class="nav-number">5.1.3.</span> <span class="nav-text">4、playbooks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、tags"><span class="nav-number">5.1.4.</span> <span class="nav-text">5、tags</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果示例"><span class="nav-number">5.1.5.</span> <span class="nav-text">结果示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看端口"><span class="nav-number">5.1.6.</span> <span class="nav-text">查看端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#此时如果配置文件发生变化"><span class="nav-number">5.1.7.</span> <span class="nav-text">此时如果配置文件发生变化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#至此基本使用配置完成"><span class="nav-number">5.1.8.</span> <span class="nav-text">至此基本使用配置完成</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,1167 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="实践与总结," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="KVM虚拟Mac OS X Sierra 大致可行的方法有两种：  123456第一种，重新编译内核、编译qemu、编译kvm、kvm-mod，加上OS X的支持。详情：http://www.tuicool.com/articles/JBzANrU在使用此种方法编译kvm时，报错，无法安装，文件内容都与作者标识的不一致。才疏学浅，未能成功。。。第二种,GitHub上有OSX-KVM项目，相对来说较">
+<meta name="keywords" content="实践与总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVM虚拟Mac OS X Sierra">
+<meta property="og:url" content="http://yort.xin/posts/638d5663/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="KVM虚拟Mac OS X Sierra 大致可行的方法有两种：  123456第一种，重新编译内核、编译qemu、编译kvm、kvm-mod，加上OS X的支持。详情：http://www.tuicool.com/articles/JBzANrU在使用此种方法编译kvm时，报错，无法安装，文件内容都与作者标识的不一致。才疏学浅，未能成功。。。第二种,GitHub上有OSX-KVM项目，相对来说较">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/731252/17645877/5136b1ac-61b2-11e6-8d90-29f5cc11ae01.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/731252/17645881/513b6918-61b2-11e6-91f2-026d953cbe0b.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/731252/17645878/51373d48-61b2-11e6-8740-69c86bf92d31.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/731252/17645879/513ae704-61b2-11e6-9a54-109c37132783.png">
+<meta property="og:image" content="https://cloud.githubusercontent.com/assets/731252/17645876/5136ad6a-61b2-11e6-84cd-cb7851119292.png">
+<meta property="og:updated_time" content="2017-07-28T13:22:32.164Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="KVM虚拟Mac OS X Sierra">
+<meta name="twitter:description" content="KVM虚拟Mac OS X Sierra 大致可行的方法有两种：  123456第一种，重新编译内核、编译qemu、编译kvm、kvm-mod，加上OS X的支持。详情：http://www.tuicool.com/articles/JBzANrU在使用此种方法编译kvm时，报错，无法安装，文件内容都与作者标识的不一致。才疏学浅，未能成功。。。第二种,GitHub上有OSX-KVM项目，相对来说较">
+<meta name="twitter:image" content="https://cloud.githubusercontent.com/assets/731252/17645877/5136b1ac-61b2-11e6-8d90-29f5cc11ae01.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/638d5663/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> KVM虚拟Mac OS X Sierra | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                KVM虚拟Mac OS X Sierra
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-04-12T00:00:00+08:00" content="2017-04-12">
+              2017-04-12
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-07-28T21:22:32+08:00" content="2017-07-28">
+              2017-07-28
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实践与总结/" itemprop="url" rel="index">
+                    <span itemprop="name">实践与总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="KVM虚拟Mac-OS-X-Sierra"><a href="#KVM虚拟Mac-OS-X-Sierra" class="headerlink" title="KVM虚拟Mac OS X Sierra"></a>KVM虚拟Mac OS X Sierra</h1><blockquote>
+<p>大致可行的方法有两种：</p>
+</blockquote>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">第一种，重新编译内核、编译qemu、编译kvm、kvm-mod，加上OS X的支持。</div><div class="line">详情：http:<span class="regexp">//</span>www.tuicool.com<span class="regexp">/articles/</span>JBzANrU</div><div class="line">在使用此种方法编译kvm时，报错，无法安装，文件内容都与作者标识的不一致。才疏学浅，未能成功。。。</div><div class="line"></div><div class="line">第二种,GitHub上有OSX-KVM项目，相对来说较为简单，本次采用此种方法。</div><div class="line">具体请参考：https:<span class="regexp">//gi</span>thub.com<span class="regexp">/kholia/</span>OSX-KVM</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>本文所需文件：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">在<span class="selector-tag">Mac</span>下制作的<span class="selector-tag">Install_macOS_Sierra_OS_X_10</span><span class="selector-class">.12</span><span class="selector-class">.iso</span></div><div class="line">引导文件<span class="selector-tag">enoch_rev2839_boot</span></div><div class="line">创建的磁盘<span class="selector-tag">mac_hdd</span><span class="selector-class">.img</span></div><div class="line"><span class="selector-tag">qemu</span>配置文件<span class="selector-tag">OSX_KVM</span><span class="selector-class">.xml</span></div></pre></td></tr></table></figure></p>
+<p>链接：<a href="http://pan.baidu.com/s/1qYbe12W" target="_blank" rel="external">http://pan.baidu.com/s/1qYbe12W</a> 密码：6znh</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">物理机系统说明：</div><div class="line"></div><div class="line">作者在以下系统中测试过:</div><div class="line">Ubuntu 15.10 running on i5-6500 CPU.</div><div class="line">Ubuntu 16.10 running on i7-3960X CPU.</div><div class="line">Fedora 24 running on i5-6500 + i7-6600U CPU.</div><div class="line"></div><div class="line">QEMU版本：2.4.1, 2.5, 2.6.1, <span class="keyword">and</span> 2.8.</div><div class="line"></div><div class="line">AMD CPU有问题。AMD FX-8350 可以工作，但是Phenom II X3 720不工作</div><div class="line">需要开启  Intel VT-x/AMD-v虚拟化技术</div><div class="line"></div><div class="line">本次使用环境：</div><div class="line">Ubuntu<span class="built_in"> Server </span>16.04 LTS  </div><div class="line">QEMU:2.5.0</div></pre></td></tr></table></figure>
+<h2 id="安装qemu和virt-manager"><a href="#安装qemu和virt-manager" class="headerlink" title="安装qemu和virt-manager"></a>安装qemu和virt-manager</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="builtin-name">get</span> install qemu uml-utilities virt-manager</div></pre></td></tr></table></figure>
+<h2 id="安装桥接网络管理管理工具"><a href="#安装桥接网络管理管理工具" class="headerlink" title="安装桥接网络管理管理工具"></a>安装桥接网络管理管理工具</h2><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-<span class="builtin-name">get</span> install bridge-utils</div></pre></td></tr></table></figure>
+<h2 id="配置桥接网络"><a href="#配置桥接网络" class="headerlink" title="配置桥接网络"></a>配置桥接网络</h2><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">root@fin75:</span>~# vim /etc/network/interface</div><div class="line"># This file describes the network interfaces available on your system</div><div class="line"># <span class="keyword">and</span> how to activate them. For more information, see interfaces(<span class="number">5</span>).</div><div class="line"></div><div class="line">source /etc/network/interfaces.d/*</div><div class="line"></div><div class="line"># The loopback network interface</div><div class="line">auto lo</div><div class="line">iface lo inet loopback</div><div class="line"></div><div class="line">auto br0</div><div class="line">iface br0 inet static</div><div class="line">    address <span class="number">172.16</span><span class="meta">.0</span><span class="meta">.75</span></div><div class="line">    network <span class="number">172.16</span><span class="meta">.0</span><span class="meta">.0</span></div><div class="line">    netmask <span class="number">255.255</span><span class="meta">.255</span><span class="meta">.0</span></div><div class="line">    broadcast <span class="number">172.16</span><span class="meta">.0</span><span class="meta">.255</span></div><div class="line">    gateway <span class="number">172.16</span><span class="meta">.0</span><span class="meta">.1</span></div><div class="line">    dns-nameservers <span class="number">223.5</span><span class="meta">.5</span><span class="meta">.5</span></div><div class="line">    bridge_ports eno1</div><div class="line">    bridge_stp off</div><div class="line">    bridge_fd <span class="number">0</span></div><div class="line">    bridge_maxwait <span class="number">0</span></div><div class="line">	post-<span class="meta">up</span> <span class="built_in">ip</span> link set br0 address aa:2b:3c:<span class="number">4d</span>:5e:6f</div><div class="line"><span class="symbol"></span></div><div class="line">root@fin75:~# reboot</div></pre></td></tr></table></figure>
+<p>注意：virbr0是安装kvm时系统建立的，为NAT网络专用，跟我们要使用的桥接完全不同</p>
+<blockquote>
+<p>按照官方文档直接重启服务会失败，重启物理机就可以了。</p>
+</blockquote>
+<p>参考：<a href="https://help.ubuntu.com/community/KVM/Networking" target="_blank" rel="external">https://help.ubuntu.com/community/KVM/Networking</a></p>
+<h2 id="创建磁盘文件"><a href="#创建磁盘文件" class="headerlink" title="创建磁盘文件"></a>创建磁盘文件</h2><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">qemu-<span class="selector-tag">img</span> create -f qcow2 /u01/mac_hdd<span class="selector-class">.img</span> <span class="number">200</span>G</div></pre></td></tr></table></figure>
+<blockquote>
+<p>安装方法可以使用boot-macOS.sh/boot.sh，或者使用macOS-libvirt.xml<br>本次使用libvirt文件的方式</p>
+</blockquote>
+<h2 id="修改libvirt文件"><a href="#修改libvirt文件" class="headerlink" title="修改libvirt文件"></a>修改libvirt文件</h2><figure class="highlight vala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#只需修改这几处即可。</span></div><div class="line"></div><div class="line"><span class="meta">#引导文件位置</span></div><div class="line">&lt;kernel&gt;/u01/boot/enoch_rev2839_boot&lt;/kernel&gt; </div><div class="line"></div><div class="line"><span class="meta">#磁盘文件位置</span></div><div class="line">&lt;source file=<span class="string">'/u01/mac_hdd.img'</span>/&gt; </div><div class="line"></div><div class="line"><span class="meta">#ISO镜像位置</span></div><div class="line">&lt;qemu:arg value=<span class="string">'id=MacDVD,if=none,snapshot=on,file=/opt/Install_macOS_Sierra_OS_X_10.12.iso'</span>/&gt;</div><div class="line"></div><div class="line"><span class="meta">#如果有多台OS X系统，还需修改</span></div><div class="line"></div><div class="line">&lt;uuid&gt;c757b31e<span class="number">-115</span>f<span class="number">-4</span>d1a-b574<span class="number">-0</span>ae7b3cc8a58&lt;/uuid&gt;</div><div class="line"></div><div class="line"><span class="meta">#kvm中合理的Mac地址为52:54:00开头</span></div><div class="line">&lt;mac address=<span class="string">'52:54:00:3d:f8:25'</span>/&gt; </div><div class="line"></div><div class="line"><span class="meta">#可在shell中执行以下命令获取合理的Mac地址：</span></div><div class="line">MACADDR=<span class="string">"52:54:00:$(dd if=/dev/urandom bs=512 count=1 2&gt;/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\).*$/\1:\2:\3/')"</span>; echo $MACADDR</div><div class="line"></div><div class="line"><span class="meta">#vnc中的port需更改为与第一个虚拟机不同</span></div><div class="line">&lt;graphics type=<span class="string">'vnc'</span> port=<span class="string">'5900'</span> autoport=<span class="string">'no'</span> listen=<span class="string">'127.0.0.1'</span> keymap=<span class="string">'en-us'</span>&gt;</div></pre></td></tr></table></figure>
+<h2 id="重新定义libvirt文件"><a href="#重新定义libvirt文件" class="headerlink" title="重新定义libvirt文件"></a>重新定义libvirt文件</h2><figure class="highlight puppet"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">virsh <span class="keyword">define</span> /<span class="section">somepath</span>/OSX-KVM/macOS-libvirt.xml </div><div class="line"></div><div class="line"><span class="comment">#定义后，在/etc/libvirt/qemu/目录下会有macOS-libvirt.xml文件，以后修改后只需重新定义此文件即可</span></div></pre></td></tr></table></figure>
+<h2 id="安装OS-X"><a href="#安装OS-X" class="headerlink" title="安装OS X"></a>安装OS X</h2><p>在virt-manager中启动OSX</p>
+<p>步骤：<br><img src="https://cloud.githubusercontent.com/assets/731252/17645877/5136b1ac-61b2-11e6-8d90-29f5cc11ae01.png" alt=""></p>
+<p>选择磁盘工具<br><img src="https://cloud.githubusercontent.com/assets/731252/17645881/513b6918-61b2-11e6-91f2-026d953cbe0b.png" alt=""></p>
+<p>格式化KVM磁盘<br><img src="https://cloud.githubusercontent.com/assets/731252/17645878/51373d48-61b2-11e6-8740-69c86bf92d31.png" alt=""></p>
+<p><img src="https://cloud.githubusercontent.com/assets/731252/17645879/513ae704-61b2-11e6-9a54-109c37132783.png" alt=""></p>
+<p>退出磁盘工具，打开终端<br><img src="https://cloud.githubusercontent.com/assets/731252/17645876/5136ad6a-61b2-11e6-84cd-cb7851119292.png" alt=""><br>输入命令，拷贝安装文件：<br><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp -av <span class="string">/Extra</span> <span class="string">/Volumes/KVMDisk</span></div></pre></td></tr></table></figure></p>
+<p>退出终端，启动安装即可！</p>
+<p>#错误合集</p>
+<h2 id="virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启"><a href="#virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启" class="headerlink" title="virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启"></a>virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启</h2><p>解决办法：开启ignore_msrs<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">echo <span class="number">1</span> &gt; <span class="regexp">/sys/m</span>odule<span class="regexp">/kvm/</span>parameters<span class="regexp">/ignore_msrs</span></div></pre></td></tr></table></figure></p>
+<p>开机执行<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">vim <span class="regexp">/etc/</span>rc.local</div><div class="line">echo <span class="number">1</span> &gt; <span class="regexp">/sys/m</span>odule<span class="regexp">/kvm/</span>parameters<span class="regexp">/ignore_msrs</span></div></pre></td></tr></table></figure></p>
+<h2 id="启动域时出错"><a href="#启动域时出错" class="headerlink" title="启动域时出错:"></a>启动域时出错:</h2><p>internal error: process exited while connecting to monitor: 2017-04-05 T06\:\25:53.648209Z qemu-system-x86_64: -drive id=MacDVD,if=none,snapshot=on,file=/opt/Install_macOS_Sierra_OS_X_10.12.iso: Could not open ‘/opt/Install_macOS_Sierra_OS_X_10.12.iso’: Permission denied</p>
+<p>#解决办法<br>kvm需要selinux装载安全模块，默认的Ubuntu server没有安装selinux</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="symbol">sudo</span> apt-<span class="meta">get</span> install <span class="keyword">selinux</span></div><div class="line">#设置<span class="keyword">selinux=permissive</span></div><div class="line"><span class="symbol">reboot</span></div></pre></td></tr></table></figure>
+<h2 id="virt-manager显示乱码"><a href="#virt-manager显示乱码" class="headerlink" title="virt-manager显示乱码"></a>virt-manager显示乱码</h2><figure class="highlight cmake"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sudo apt <span class="keyword">install</span> font-manager </div><div class="line">sudo apt <span class="keyword">install</span> fonts-arphic-ukai </div><div class="line">sudo apt <span class="keyword">install</span> ttf-wqy-zenhei xfonts-wqy ttf-wqy-microhei </div><div class="line">sudo apt <span class="keyword">install</span> fonts-cwtex-fs </div><div class="line">sudo apt <span class="keyword">install</span> ttf-hanazono </div><div class="line">sudo apt <span class="keyword">install</span> ttf-mscorefonts-installer</div></pre></td></tr></table></figure>
+<h1 id="Ubuntu虚拟Windows"><a href="#Ubuntu虚拟Windows" class="headerlink" title="Ubuntu虚拟Windows"></a>Ubuntu虚拟Windows</h1><p>需要将显示协议由<code>Spice</code>服务器更改为<code>VNC</code>服务器，并且将键映射改为：<code>en-us</code>，不然会出现键盘无法使用的情况</p>
+<p>需要将显卡由<code>QXL</code>改为<code>Cirrus</code>，不然kvm安装windows系统时会卡在Starting Windows画面<br><a href="http://serverfault.com/questions/776406/windows-7-setup-hangs-at-starting-windows-using-proxmox-4-2" target="_blank" rel="external">http://serverfault.com/questions/776406/windows-7-setup-hangs-at-starting-windows-using-proxmox-4-2</a></p>
+<p>需要将NIC网卡由<code>rtl8139</code>更改为<code>e1000</code>，不然会出现断网的情况</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://github.com/kholia/OSX-KVM" target="_blank" rel="external">https://github.com/kholia/OSX-KVM</a><br><a href="http://www.tuicool.com/articles/JBzANrU" target="_blank" rel="external">http://www.tuicool.com/articles/JBzANrU</a><br><a href="http://www.jianshu.com/p/e95c458d78bd" target="_blank" rel="external">http://www.jianshu.com/p/e95c458d78bd</a><br><a href="https://blog.ostanin.org/2014/02/11/playing-with-mac-os-x-on-kvm/" target="_blank" rel="external">https://blog.ostanin.org/2014/02/11/playing-with-mac-os-x-on-kvm/</a><br><a href="http://www.cnblogs.com/huntaiji/p/3918941.html" target="_blank" rel="external">http://www.cnblogs.com/huntaiji/p/3918941.html</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></p>
+           <p><span>原文链接：</span><a href="/posts/638d5663/" title="KVM虚拟Mac OS X Sierra">http://yort.xin/posts/638d5663/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/实践与总结/" rel="tag">#实践与总结</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#KVM虚拟Mac-OS-X-Sierra"><span class="nav-number">1.</span> <span class="nav-text">KVM虚拟Mac OS X Sierra</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境准备"><span class="nav-number">1.1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装qemu和virt-manager"><span class="nav-number">1.2.</span> <span class="nav-text">安装qemu和virt-manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装桥接网络管理管理工具"><span class="nav-number">1.3.</span> <span class="nav-text">安装桥接网络管理管理工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置桥接网络"><span class="nav-number">1.4.</span> <span class="nav-text">配置桥接网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建磁盘文件"><span class="nav-number">1.5.</span> <span class="nav-text">创建磁盘文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改libvirt文件"><span class="nav-number">1.6.</span> <span class="nav-text">修改libvirt文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重新定义libvirt文件"><span class="nav-number">1.7.</span> <span class="nav-text">重新定义libvirt文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装OS-X"><span class="nav-number">1.8.</span> <span class="nav-text">安装OS X</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启"><span class="nav-number">1.9.</span> <span class="nav-text">virt-manager启动虚拟机，打不开安装界面，显示boot，无限重启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动域时出错"><span class="nav-number">1.10.</span> <span class="nav-text">启动域时出错:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#virt-manager显示乱码"><span class="nav-number">1.11.</span> <span class="nav-text">virt-manager显示乱码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ubuntu虚拟Windows"><span class="nav-number">2.</span> <span class="nav-text">Ubuntu虚拟Windows</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,1170 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="一、循环设计在上一节，我们已经讨论了Python基本的语法。这一节，我们将接触更加灵活的循环方式。 1、range()在Python中，for循环后的in跟随一个序列的话，循环每次使用的序列元素，而不是序列的下标。之前我们已经使用过 range() 来控制for循环。现在，我们继续开发range的功能，以实现下标对循环的控制：123S = &apos;abcdefghijk&apos;for i in range(0">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python进阶">
+<meta property="og:url" content="http://yort.xin/posts/37f2eeef/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="一、循环设计在上一节，我们已经讨论了Python基本的语法。这一节，我们将接触更加灵活的循环方式。 1、range()在Python中，for循环后的in跟随一个序列的话，循环每次使用的序列元素，而不是序列的下标。之前我们已经使用过 range() 来控制for循环。现在，我们继续开发range的功能，以实现下标对循环的控制：123S = &apos;abcdefghijk&apos;for i in range(0">
+<meta property="og:updated_time" content="2017-07-30T08:41:50.242Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python进阶">
+<meta name="twitter:description" content="一、循环设计在上一节，我们已经讨论了Python基本的语法。这一节，我们将接触更加灵活的循环方式。 1、range()在Python中，for循环后的in跟随一个序列的话，循环每次使用的序列元素，而不是序列的下标。之前我们已经使用过 range() 来控制for循环。现在，我们继续开发range的功能，以实现下标对循环的控制：123S = &apos;abcdefghijk&apos;for i in range(0">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/37f2eeef/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> Python进阶 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python进阶
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-08T00:00:00+08:00" content="2017-01-08">
+              2017-01-08
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-07-30T16:41:50+08:00" content="2017-07-30">
+              2017-07-30
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/技术与干货/" itemprop="url" rel="index">
+                    <span itemprop="name">技术与干货</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、循环设计"><a href="#一、循环设计" class="headerlink" title="一、循环设计"></a>一、循环设计</h1><p>在上一节，我们已经讨论了Python基本的语法。这一节，我们将接触更加灵活的循环方式。</p>
+<h2 id="1、range"><a href="#1、range" class="headerlink" title="1、range()"></a>1、range()</h2><p>在Python中，for循环后的in跟随一个序列的话，循环每次使用的序列元素，而不是序列的下标。<br>之前我们已经使用过 range() 来控制for循环。现在，我们继续开发range的功能，以实现下标对循环的控制：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">S = <span class="string">'abcdefghijk'</span></div><div class="line"><span class="keyword">for</span> i in <span class="keyword">range</span>(<span class="number">0</span>,<span class="built_in">len</span>(S),<span class="number">2</span>):</div><div class="line">    <span class="built_in">print</span>(S[i])</div></pre></td></tr></table></figure></p>
+<p>在该例子中，我们利用 len() 函数和 range() 函数，用 i 作为 S 序列的下标来控制循环。在range函数中，分别定义上限，下限和每次循环的步长。这就和C语言中的for循环相类似了。<br><a id="more"></a></p>
+<h2 id="2、enumerate"><a href="#2、enumerate" class="headerlink" title="2、enumerate()"></a>2、enumerate()</h2><p>利用enumerate()函数，可以在每次循环中同时得到下标和元素：<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">S = <span class="string">'abcdefghijk'</span></div><div class="line">for (<span class="built_in">index</span>,<span class="built_in">char</span>) <span class="keyword">in</span> enumerate(S):</div><div class="line">    <span class="built_in">print</span>(<span class="built_in">index</span>)</div><div class="line">    <span class="built_in">print</span>(<span class="built_in">char</span>)</div></pre></td></tr></table></figure></p>
+<p>实际上，enumerate()在每次循环中，返回的是一个包含两个元素的定值表(tuple)，两个元素分别赋予index和char。</p>
+<h2 id="3、zip"><a href="#3、zip" class="headerlink" title="3、zip()"></a>3、zip()</h2><p>如果你多个等长的序列，然后想要每次循环时从各个序列分别取出一个元素，可以利用zip()方便地实现：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ta = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</div><div class="line">tb = [<span class="number">9</span>,<span class="number">8</span>,<span class="number">7</span>]</div><div class="line">tc = [<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>]</div><div class="line"><span class="keyword">for</span> (<span class="selector-tag">a</span>,<span class="selector-tag">b</span>,c) <span class="keyword">in</span> zip(ta,tb,tc):</div><div class="line">    print(<span class="selector-tag">a</span>,<span class="selector-tag">b</span>,c)</div></pre></td></tr></table></figure></p>
+<p>每次循环时，从各个序列分别从左到右取出一个元素，合并成一个tuple，然后tuple的元素赋予给a,b,c 。<br>zip()函数的功能，就是从多个列表中，依次各取出一个元素。每次取出的(来自不同列表的)元素合成一个元组，合并成的元组放入zip()返回的列表中。zip()函数起到了聚合列表的功能。<br>我们可以分解聚合后的列表，如下:<br><figure class="highlight makefile"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ta = [1,2,3]</div><div class="line">tb = [9,8,7]</div><div class="line"></div><div class="line"><span class="comment"># cluster</span></div><div class="line">zipped = zip(ta,tb)</div><div class="line">print(zipped)</div><div class="line"></div><div class="line"><span class="comment"># decompose</span></div><div class="line">na, nb = zip(*zipped)</div><div class="line">print(na, nb)</div></pre></td></tr></table></figure></p>
+<h1 id="二、循环对象"><a href="#二、循环对象" class="headerlink" title="二、循环对象"></a>二、循环对象</h1><p>这一讲的主要目的是为了大家在读Python程序的时候对循环对象有一个基本概念。<br>循环对象的并不是随着Python的诞生就存在的，但它的发展迅速，特别是Python 3x的时代，循环对象正在成为循环的标准形式。</p>
+<h2 id="1、什么是循环对象"><a href="#1、什么是循环对象" class="headerlink" title="1、什么是循环对象"></a>1、什么是循环对象</h2><p>循环对象是这样一个对象，它包含有一个next()方法 ( <strong>next</strong>() 方法，在python 3x中 )， 这个方法的目的是进行到下一个结果，而在结束一系列结果之后，举出StopIteration错误。<br>当一个循环结构（比如for）调用循环对象时，它就会每次循环的时候调用next()方法，直到StopIteration出现，for循环接收到，就知道循环已经结束，停止调用next()。<br>假设我们有一个test.txt的文件:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">1234</span></div><div class="line">abcd</div><div class="line">efg</div></pre></td></tr></table></figure></p>
+<p>我们运行一下python命令行：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;</span>&gt;f = open(<span class="string">'test.txt'</span>)</div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;</span>&gt;f.next()</div><div class="line"></div><div class="line"><span class="meta">&gt;&gt;</span>&gt;f.next()</div><div class="line"></div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>不断输入<code>f.next()</code>，直到最后出现<code>StopIteration</code> 。<br>open()返回的实际上是一个循环对象，包含有next()方法。而该next()方法每次返回的就是新的一行的内容，到达文件结尾时举出StopIteration。这样，我们相当于手工进行了循环。<br>自动进行的话，就是：<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> <span class="keyword">line</span> <span class="keyword">in</span> <span class="keyword">open</span>('<span class="keyword">test</span>.txt'):</div><div class="line">    <span class="keyword">print</span>(<span class="keyword">line</span>)</div></pre></td></tr></table></figure></p>
+<p>在这里，for结构自动调用<code>next()</code>方法，将该方法的返回值赋予给line。循环直到出现<code>StopIteration</code>的时候结束。<br>相对于序列，用循环对象的好处在于：不用在循环还没有开始的时候，就生成好要使用的元素。所使用的元素可以在循环过程中逐次生成。这样，节省了空间，提高了效率，编程更灵活。</p>
+<h2 id="2、迭代器"><a href="#2、迭代器" class="headerlink" title="2、迭代器"></a>2、迭代器</h2><p>从技术上来说，循环对象和for循环调用之间还有一个中间层，就是要将循环对象转换成迭代器(iterator)。这一转换是通过使用iter()函数实现的。但从逻辑层面上，常常可以忽略这一层，所以循环对象和迭代器常常相互指代对方。</p>
+<h2 id="3、生成器"><a href="#3、生成器" class="headerlink" title="3、生成器"></a>3、生成器</h2><p>生成器(generator)的主要目的是构成一个用户自定义的循环对象。<br>生成器的编写方法和函数定义类似，只是在return的地方改为yield。生成器中可以有多个yield。当生成器遇到一个yield时，会暂停运行生成器，返回<code>yield</code>后面的值。当再次调用生成器的时候，会从刚才暂停的地方继续运行，直到下一个yield。生成器自身又构成一个循环器，每次循环使用一个<code>yield</code>返回的值。<br>下面是一个生成器:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen</span><span class="params">()</span></span>:</div><div class="line">    a = <span class="number">100</span></div><div class="line">    <span class="keyword">yield</span> a</div><div class="line">    a = a*<span class="number">8</span></div><div class="line">    <span class="keyword">yield</span> a</div><div class="line">    <span class="keyword">yield</span> <span class="number">1000</span></div></pre></td></tr></table></figure></p>
+<p>该生成器共有三个<code>yield</code>， 如果用作循环器时，会进行三次循环。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> gen():</div><div class="line">    <span class="builtin-name">print</span>(i)</div></pre></td></tr></table></figure></p>
+<p>再考虑如下一个生成器:<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen</span><span class="params">()</span></span>:</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</div><div class="line">        <span class="keyword">yield</span> i</div></pre></td></tr></table></figure></p>
+<p>它又可以写成生成器表达式(Generator Expression)：<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">G = (x <span class="keyword">for</span> x <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">4</span>))</div></pre></td></tr></table></figure></p>
+<p>生成器表达式是生成器的一种简便的编写方式。读者可进一步查阅。</p>
+<h2 id="4、表推导"><a href="#4、表推导" class="headerlink" title="4、表推导"></a>4、表推导</h2><p>表推导(list comprehension)是快速生成表的方法。它的语法简单，很有实用价值。<br>假设我们生成表 L ：<br><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">L = []</div><div class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</div><div class="line">    L.<span class="built_in">append</span>(x**<span class="number">2</span>)</div></pre></td></tr></table></figure></p>
+<p>以上产生了表L，但实际上有快捷的写法，也就是表推导的方式:<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">L = [x**<span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> <span class="keyword">range</span>(<span class="number">10</span>)]</div></pre></td></tr></table></figure></p>
+<p>这与生成器表达式类似，只不过用的是中括号。<br>（表推导的机制实际上是利用循环对象，有兴趣可以查阅。）</p>
+<h1 id="三、函数对象"><a href="#三、函数对象" class="headerlink" title="三、函数对象"></a>三、函数对象</h1><p>秉承着一切皆对象的理念，我们再次回头来看函数(function)。函数也是一个对象，具有属性（可以使用dir()查询）。作为对象，它还可以赋值给其它对象名，或者作为参数传递。</p>
+<h2 id="1、lambda函数"><a href="#1、lambda函数" class="headerlink" title="1、lambda函数"></a>1、lambda函数</h2><p>在展开之前，我们先提一下lambda函数。可以利用lambda函数的语法，定义函数。lambda例子如下：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> = <span class="title">lambda</span> <span class="title">x</span>,<span class="title">y</span>: <span class="title">x</span> + <span class="title">y</span></span></div><div class="line">print(<span class="function"><span class="keyword">func</span><span class="params">(<span class="number">3</span>,<span class="number">4</span>)</span>)</span></div></pre></td></tr></table></figure></p>
+<p>lambda生成一个函数对象。该函数参数为x,y，返回值为x+y。函数对象赋给func。func的调用与正常函数无异。<br>以上定义可以写成以下形式：<br><figure class="highlight autoit"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def <span class="function"><span class="keyword">func</span><span class="params">(x, y)</span>:</span></div><div class="line">    <span class="keyword">return</span> x + y</div></pre></td></tr></table></figure></p>
+<h2 id="2、函数作为参数传递"><a href="#2、函数作为参数传递" class="headerlink" title="2、函数作为参数传递"></a>2、函数作为参数传递</h2><p>函数可以作为一个对象，进行参数传递。函数名(比如func)即该对象。比如说:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">(f, a, b)</span>:</span></div><div class="line">    print(<span class="string">'test'</span>)</div><div class="line">    print(f(a, b))</div><div class="line"></div><div class="line">test(func, <span class="number">3</span>, <span class="number">5</span>)</div></pre></td></tr></table></figure></p>
+<p>test函数的第一个参数f就是一个函数对象。将func传递给f，test中的f()就拥有了func()的功能。<br>我们因此可以提高程序的灵活性。可以使用上面的test函数，带入不同的函数参数。比如:<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">test((<span class="name">lambda</span> x,y: x**2 + y), <span class="number">6</span>, <span class="number">9</span>)</div></pre></td></tr></table></figure></p>
+<h2 id="3、map-函数"><a href="#3、map-函数" class="headerlink" title="3、map()函数"></a>3、map()函数</h2><p>map()是Python的内置函数。它的第一个参数是一个函数对象。<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re = map((<span class="name">lambda</span> x: x+3),[<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">6</span>])</div></pre></td></tr></table></figure></p>
+<p>这里，map()有两个参数，一个是lambda所定义的函数对象，一个是包含有多个元素的表。map()的功能是将函数对象依次作用于表的每一个元素，每次作用的结果储存于返回的表re中。map通过读入的函数(这里是lambda函数)来操作数据（这里“数据”是表中的每一个元素，“操作”是对每个数据加3）。<br>在Python 3.X中，map()的返回值是一个循环对象。可以利用list()函数，将该循环对象转换成表。<br>如果作为参数的函数对象有多个参数，可使用下面的方式，向map()传递函数参数的多个参数：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re = map((<span class="name">lambda</span> x,y: x+y),[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>],[<span class="number">6</span>,<span class="number">7</span>,<span class="number">9</span>])</div></pre></td></tr></table></figure></p>
+<p><code>map()</code>将每次从两个表中分别取出一个元素，带入lambda所定义的函数。</p>
+<h2 id="4、filter-函数"><a href="#4、filter-函数" class="headerlink" title="4、filter()函数"></a>4、filter()函数</h2><p>filter函数的第一个参数也是一个函数对象。它也是将作为参数的函数对象作用于多个元素。如果函数对象返回的是True，则该次的元素被储存于返回的表中。 filter通过读入的函数来筛选数据。同样，在Python 3.X中，filter返回的不是表，而是循环对象。<br>filter函数的使用如下例:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(a)</span>:</span></div><div class="line">    <span class="keyword">if</span> a &gt; <span class="number">100</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line">print(filter(func,[<span class="number">10</span>,<span class="number">56</span>,<span class="number">101</span>,<span class="number">500</span>])</div></pre></td></tr></table></figure></p>
+<h2 id="5、reduce-函数"><a href="#5、reduce-函数" class="headerlink" title="5、reduce()函数"></a>5、reduce()函数</h2><p>reduce函数的第一个参数也是函数，但有一个要求，就是这个函数自身能接收两个参数。reduce可以累进地将函数作用于各个参数。如下例：<br><figure class="highlight lisp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">print(<span class="name">reduce</span>((<span class="name">lambda</span> x,y: x+y),[<span class="number">1</span>,<span class="number">2</span>,<span class="number">5</span>,<span class="number">7</span>,<span class="number">9</span>])</div></pre></td></tr></table></figure></p>
+<p>reduce的第一个参数是lambda函数，它接收两个参数x,y, 返回x+y。<br>reduce将表中的前两个元素(1和2)传递给lambda函数，得到3。该返回值(3)将作为lambda函数的第一个参数，而表中的下一个元素(5)作为lambda函数的第二个参数，进行下一次的对lambda函数的调用，得到8。依次调用lambda函数，每次lambda函数的第一个参数是上一次运算结果，而第二个参数为表中的下一个元素，直到表中没有剩余元素。<br>上面例子，相当于(((1+2)+5)+7)+9<br>提醒： reduce()函数在3.0里面不能直接用的，它被定义在了functools包里面，需要引入包。</p>
+<h1 id="四、错误处理"><a href="#四、错误处理" class="headerlink" title="四、错误处理"></a>四、错误处理</h1><h2 id="1、异常处理"><a href="#1、异常处理" class="headerlink" title="1、异常处理"></a>1、异常处理</h2><p>在项目开发中，异常处理是不可或缺的。异常处理帮助人们debug，通过更加丰富的信息，让人们更容易找到bug的所在。异常处理还可以提高程序的容错性。<br>我们之前在讲循环对象的时候，曾提到一个StopIteration的异常，该异常是在循环对象穷尽所有元素时的报错。<br>我们以它为例，来说明基本的异常处理。<br>一个包含异常的程序:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">re = iter(range(<span class="number">5</span>))</div><div class="line"></div><div class="line"><span class="keyword">for</span> <span class="selector-tag">i</span> <span class="keyword">in</span> range(<span class="number">100</span>):</div><div class="line">    print(re.next())</div><div class="line"></div><div class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">'HaHaHaHa'</span>)</span></span></div></pre></td></tr></table></figure></p>
+<p>首先，我们定义了一个循环对象re，该循环对象将进行5次循环，每次使用序列的一个元素。<br>在随后的for循环中，我们手工调用next()函数。当循环进行到第6次的时候，re.next()不会再返回元素，而是抛出(raise)StopIteration的异常。整个程序将会中断。<br>我们可以修改以上异常程序，直到完美的没有bug。但另一方面，如果我们在写程序的时候，知道这里可能犯错以及可能的犯错类型，我们可以针对该异常类型定义好”应急预案”。<br><figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">re = iter(<span class="built_in">range</span>(<span class="number">5</span>))</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">for</span> i in <span class="built_in">range</span>(<span class="number">100</span>):</div><div class="line">        <span class="keyword">print</span>(re.<span class="keyword">next</span>()</div><div class="line">except StopIteration:</div><div class="line">    <span class="keyword">print</span>(<span class="string">'here is end '</span>,i)</div><div class="line"></div><div class="line"><span class="keyword">print</span>(<span class="string">'HaHaHaHa'</span>)</div></pre></td></tr></table></figure></p>
+<p>在try程序段中，我们放入容易犯错的部分。我们可以跟上except，来说明如果在try部分的语句发生StopIteration时，程序该做的事情。如果没有发生异常，则except部分被跳过。<br>随后，程序将继续运行，而不是彻底中断。<br>完整的语法结构如下：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">...</span></div><div class="line">except exception1:</div><div class="line">    <span class="keyword">...</span></div><div class="line">except exception2:</div><div class="line">    <span class="keyword">...</span></div><div class="line">except:</div><div class="line">    <span class="keyword">...</span></div><div class="line"><span class="keyword">else</span>:</div><div class="line">    <span class="keyword">...</span></div><div class="line">finally:</div><div class="line">    <span class="keyword">...</span></div></pre></td></tr></table></figure></p>
+<p>如果try中有异常发生时，将执行异常的归属，执行except。异常层层比较，看是否是exception1, exception2…，直到找到其归属，执行相应的except中的语句。如果except后面没有任何参数，那么表示所有的exception都交给这段程序处理。比如:<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">try:</div><div class="line">    <span class="builtin-name">print</span>(a<span class="number">*2</span>)</div><div class="line">except TypeError:</div><div class="line">    <span class="builtin-name">print</span>(<span class="string">"TypeError"</span>)</div><div class="line">except:</div><div class="line">    <span class="builtin-name">print</span>(<span class="string">"Not Type Error &amp; Error noted"</span>)</div></pre></td></tr></table></figure></p>
+<p>由于a没有定义，所以是NameError。异常最终被except:部分的程序捕捉。<br>如果无法将异常交给合适的对象，异常将继续向上层抛出，直到被捕捉或者造成主程序报错。比如下面的程序：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_func</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        m = <span class="number">1</span>/<span class="number">0</span></div><div class="line">    <span class="keyword">except</span> NameError:</div><div class="line">        print(<span class="string">"Catch NameError in the sub-function"</span>)</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    test_func()</div><div class="line"><span class="keyword">except</span> ZeroDivisionError:</div><div class="line">    print(<span class="string">"Catch error in the main program"</span>)</div></pre></td></tr></table></figure></p>
+<p>子程序的try…except…结构无法处理相应的除以0的错误，所以错误被抛给上层的主程序。<br>如果try中没有异常，那么except部分将跳过，执行else中的语句。<br>finally是无论是否有异常，最后都要做的一些事情。<br>流程如下:<br>  ● try-&gt;异常-&gt;except-&gt;finally<br>  ● try-&gt;无异常-&gt;else-&gt;finally</p>
+<h2 id="2、抛出异常"><a href="#2、抛出异常" class="headerlink" title="2、抛出异常"></a>2、抛出异常</h2><p>我们也可以自己写一个抛出异常的例子:<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">'Lalala'</span>)</span></span></div><div class="line">raise StopIteration</div><div class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">'Hahaha'</span>)</span></span></div></pre></td></tr></table></figure></p>
+<p>这个例子不具备任何实际意义。只是为了说明raise语句的作用。<br>StopIteration是一个类。抛出异常时，会自动有一个中间环节，就是生成StopIteration的一个对象。Python实际上抛出的，是这个对象。当然，也可以自行生成对象:<br><figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">raise</span> StopIteration()</div></pre></td></tr></table></figure></p>
+<h1 id="五、动态类型"><a href="#五、动态类型" class="headerlink" title="五、动态类型"></a>五、动态类型</h1><p>动态类型(dynamic typing)是Python另一个重要的核心概念。我们之前说过，Python的变量(variable)不需要声明，而在赋值时，变量可以重新赋值为任意值。这些都与动态类型的概念相关。</p>
+<h2 id="1、动态类型"><a href="#1、动态类型" class="headerlink" title="1、动态类型"></a>1、动态类型</h2><p>在我们接触的对象中，有一类特殊的对象，是用于存储数据的。常见的该类对象包括各种数字，字符串，表，词典。在C语言中，我们称这样一些数据结构为变量。而在Python中，这些是对象。<br>对象是储存在内存中的实体。但我们并不能直接接触到该对象。我们在程序中写的对象名，只是指向这一对象的引用(reference)。<br>引用和对象分离，是动态类型的核心。引用可以随时指向一个新的对象：<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">a</span> = <span class="number">3</span></div><div class="line"><span class="attr">a</span> = <span class="string">'at'</span></div></pre></td></tr></table></figure></p>
+<p>第一个语句中，3是储存在内存中的一个整数对象。通过赋值，引用a指向对象3。<br>第二个语句中，内存中建立对象‘at’，是一个字符串(string)。引用a指向了’at’。此时，对象3不再有引用指向它。Python会自动将没有引用指向的对象销毁(destruct)，释放相应内存。<br>(对于小的整数和短字符串，Python会缓存这些对象，而不是频繁的建立和销毁。)<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">a</span> = <span class="number">5</span></div><div class="line"><span class="selector-tag">b</span> = <span class="selector-tag">a</span></div><div class="line"><span class="selector-tag">a</span> = <span class="selector-tag">a</span> + <span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>再看这个例子。通过前两个句子，我们让a,b指向同一个整数对象5( b = a的含义是让引用b指向引用a所指的那一个对象)。但第三个句子实际上对引用a重新赋值，让a指向一个新的对象7。此时a,b分别指向不同的对象。我们看到，即使是多个引用指向同一个对象，如果一个引用值发生变化，那么实际上是让这个引用指向一个新的引用，并不影响其他的引用的指向。从效果上看，就是各个引用各自独立，互不影响。<br>其它数据对象也是如此:<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attr">L1</span> = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</div><div class="line"><span class="attr">L2</span> = L1</div><div class="line"><span class="attr">L1</span> = <span class="number">1</span></div></pre></td></tr></table></figure></p>
+<p>但注意以下情况:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">L1 = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</div><div class="line">L2 = L1</div><div class="line">L1[<span class="number">0</span>] = <span class="number">10</span></div><div class="line">print(L2)</div></pre></td></tr></table></figure></p>
+<p>在该情况下，我们不再对L1这一引用赋值，而是对L1所指向的表的元素赋值。结果是，L2也同时发生变化。<br>原因何在呢？因为L1，L2的指向没有发生变化，依然指向那个表。表实际上是包含了多个引用的对象（每个引用是一个元素，比如L1[0]，L1[1]…, 每个引用指向一个对象，比如1,2,3), 。而L1[0] = 10这一赋值操作，并不是改变L1的指向，而是对L1[0], 也就是表对象的一部份(一个元素)，进行操作，所以所有指向该对象的引用都受到影响。<br>（与之形成对比的是，我们之前的赋值操作都没有对对象自身发生作用，只是改变引用指向。）<br>列表可以通过引用其元素，改变对象自身(in-place change)。这种对象类型，称为可变数据对象(mutable object)，词典也是这样的数据类型。<br>而像之前的数字和字符串，不能改变对象本身，只能改变引用的指向，称为不可变数据对象(immutable object)。<br>我们之前学的元组(tuple)，尽管可以调用引用元素，但不可以赋值，因此不能改变对象自身，所以也算是immutable object。</p>
+<h2 id="2、从动态类型看函数的参数传递"><a href="#2、从动态类型看函数的参数传递" class="headerlink" title="2、从动态类型看函数的参数传递"></a>2、从动态类型看函数的参数传递</h2><p>函数的参数传递，本质上传递的是引用。比如说：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></div><div class="line">    x = <span class="number">100</span></div><div class="line">    print(x)</div><div class="line"></div><div class="line">a = <span class="number">1</span></div><div class="line">f(a)</div><div class="line">print(a)</div></pre></td></tr></table></figure></p>
+<p>参数x是一个新的引用，指向a所指的对象。如果参数是不可变(immutable)的对象，a和x引用之间相互独立。对参数x的操作不会影响引用a。这样的传递类似于C语言中的值传递。<br>如果传递的是可变(mutable)的对象，那么改变函数参数，有可能改变原对象。所有指向原对象的引用都会受影响，编程的时候要对此问题留心。比如说：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></div><div class="line">    x[<span class="number">0</span>] = <span class="number">100</span></div><div class="line">    print(x)</div><div class="line"></div><div class="line">a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</div><div class="line">f(a)</div><div class="line">print(a)</div></pre></td></tr></table></figure></p>
+<p>动态类型是Python的核心机制之一。可以在应用中慢慢熟悉。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/37f2eeef/">Python进阶</a></p>
+           <p><span>原文链接：</span><a href="/posts/37f2eeef/" title="Python进阶">http://yort.xin/posts/37f2eeef/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag">#Python</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、循环设计"><span class="nav-number">1.</span> <span class="nav-text">一、循环设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、range"><span class="nav-number">1.1.</span> <span class="nav-text">1、range()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、enumerate"><span class="nav-number">1.2.</span> <span class="nav-text">2、enumerate()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、zip"><span class="nav-number">1.3.</span> <span class="nav-text">3、zip()</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、循环对象"><span class="nav-number">2.</span> <span class="nav-text">二、循环对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、什么是循环对象"><span class="nav-number">2.1.</span> <span class="nav-text">1、什么是循环对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、迭代器"><span class="nav-number">2.2.</span> <span class="nav-text">2、迭代器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、生成器"><span class="nav-number">2.3.</span> <span class="nav-text">3、生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、表推导"><span class="nav-number">2.4.</span> <span class="nav-text">4、表推导</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、函数对象"><span class="nav-number">3.</span> <span class="nav-text">三、函数对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、lambda函数"><span class="nav-number">3.1.</span> <span class="nav-text">1、lambda函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、函数作为参数传递"><span class="nav-number">3.2.</span> <span class="nav-text">2、函数作为参数传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、map-函数"><span class="nav-number">3.3.</span> <span class="nav-text">3、map()函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4、filter-函数"><span class="nav-number">3.4.</span> <span class="nav-text">4、filter()函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、reduce-函数"><span class="nav-number">3.5.</span> <span class="nav-text">5、reduce()函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、错误处理"><span class="nav-number">4.</span> <span class="nav-text">四、错误处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、异常处理"><span class="nav-number">4.1.</span> <span class="nav-text">1、异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、抛出异常"><span class="nav-number">4.2.</span> <span class="nav-text">2、抛出异常</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、动态类型"><span class="nav-number">5.</span> <span class="nav-text">五、动态类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1、动态类型"><span class="nav-number">5.1.</span> <span class="nav-text">1、动态类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2、从动态类型看函数的参数传递"><span class="nav-number">5.2.</span> <span class="nav-text">2、从动态类型看函数的参数传递</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

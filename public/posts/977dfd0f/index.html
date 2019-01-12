@@ -1,0 +1,1156 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+  
+
+<link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="web," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Tomcat简介 Tomcat是一个免费开源的web服务器应用程序,使用java编程语言所编写，运行于jvm（java虚拟机）之上，轻量安全是其特性，适用于反访问量不大的中小型服务系统">
+<meta name="keywords" content="web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat安装配置与简单部署">
+<meta property="og:url" content="http://yort.xin/posts/977dfd0f/index.html">
+<meta property="og:site_name" content="Yort&#39;s Blog">
+<meta property="og:description" content="Tomcat简介 Tomcat是一个免费开源的web服务器应用程序,使用java编程语言所编写，运行于jvm（java虚拟机）之上，轻量安全是其特性，适用于反访问量不大的中小型服务系统">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat1.png">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat_2.gif">
+<meta property="og:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat3.png">
+<meta property="og:updated_time" content="2017-02-14T13:42:45.404Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tomcat安装配置与简单部署">
+<meta name="twitter:description" content="Tomcat简介 Tomcat是一个免费开源的web服务器应用程序,使用java编程语言所编写，运行于jvm（java虚拟机）之上，轻量安全是其特性，适用于反访问量不大的中小型服务系统">
+<meta name="twitter:image" content="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: undefined,
+      author: '博主'
+    }
+  };
+</script>
+
+
+
+
+  <link rel="canonical" href="http://yort.xin/posts/977dfd0f/"/>
+
+
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+
+<script>
+  (function(){
+    if(''){
+      if (prompt('请输入文章密码','') !== ''){
+        alert('密码错误！');
+        history.back();
+      }
+    }
+  })();
+</script>
+  <title> Tomcat安装配置与简单部署 | Yort's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Yort's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-book">
+          <a href="/book" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-book"></i> <br />
+            
+            书单
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      <!-- 自定义High一下的功能 -->
+      <li class="menu-item"> <a title="把这个链接拖到你的工具栏中,任何网页都可以High" href='javascript:(
+    /*
+     * Copyright (C) 2016 Never_yu (Neveryu.github.io) <React.dong.yu@gmail.com>
+     * Sina Weibo (http://weibo.com/Neveryu)
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *      http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function go() {
+
+
+    var songs = [
+                "http://v.65dj.com/wailian/84791c997d8c55023dad0d5690e48c28.mp3",
+                "http://7xoiki.com1.z0.glb.clouddn.com/Music-sunburst.mp3"
+    ];
+
+    
+    function c() {
+        var e = document.createElement("link");
+        e.setAttribute("type", "text/css");
+        e.setAttribute("rel", "stylesheet");
+        e.setAttribute("href", f);
+        e.setAttribute("class", l);
+        document.body.appendChild(e)
+    }
+ 
+    function h() {
+        var e = document.getElementsByClassName(l);
+        for (var t = 0; t < e.length; t++) {
+            document.body.removeChild(e[t])
+        }
+    }
+ 
+    function p() {
+        var e = document.createElement("div");
+        e.setAttribute("class", a);
+        document.body.appendChild(e);
+        setTimeout(function() {
+            document.body.removeChild(e)
+        }, 100)
+    }
+ 
+    function d(e) {
+        return {
+            height : e.offsetHeight,
+            width : e.offsetWidth
+        }
+    }
+ 
+    function v(i) {
+        var s = d(i);
+        return s.height > e && s.height < n && s.width > t && s.width < r
+    }
+ 
+    function m(e) {
+        var t = e;
+        var n = 0;
+        while (!!t) {
+            n += t.offsetTop;
+            t = t.offsetParent
+        }
+        return n
+    }
+ 
+    function g() {
+        var e = document.documentElement;
+        if (!!window.innerWidth) {
+            return window.innerHeight
+        } else if (e && !isNaN(e.clientHeight)) {
+            return e.clientHeight
+        }
+        return 0
+    }
+ 
+    function y() {
+        if (window.pageYOffset) {
+            return window.pageYOffset
+        }
+        return Math.max(document.documentElement.scrollTop, document.body.scrollTop)
+    }
+ 
+    function E(e) {
+        var t = m(e);
+        return t >= w && t <= b + w
+    }
+
+    function S() {
+        var e = document.getElementById("audio_element_id");
+        if(e != null){
+            var index = parseInt(e.getAttribute("curSongIndex"));
+            if(index > songs.length - 2) {
+                index = 0;
+            } else {
+                index++;
+            }
+            e.setAttribute("curSongIndex", index);
+            N();
+        }
+
+        e.src = i;
+        e.play()
+    }
+ 
+    function x(e) {
+        e.className += " " + s + " " + o
+    }
+ 
+    function T(e) {
+        e.className += " " + s + " " + u[Math.floor(Math.random() * u.length)]
+    }
+ 
+    function N() {
+        var e = document.getElementsByClassName(s);
+        var t = new RegExp("\\b" + s + "\\b");
+        for (var n = 0; n < e.length; ) {
+            e[n].className = e[n].className.replace(t, "")
+        }
+    }
+
+    function initAudioEle() {
+        var e = document.getElementById("audio_element_id");
+        if(e === null){
+            e = document.createElement("audio");
+            e.setAttribute("class", l);
+            e.setAttribute("curSongIndex", 0);
+            e.id = "audio_element_id";
+            e.loop = false;
+            e.bgcolor = 0;
+            e.addEventListener("canplay", function() {
+            setTimeout(function() {
+                x(k)
+            }, 500);
+            setTimeout(function() {
+                N();
+                p();
+                for (var e = 0; e < O.length; e++) {
+                    T(O[e])
+                }
+            }, 15500)
+        }, true);
+        e.addEventListener("ended", function() {
+            N();
+            h();
+            go();
+        }, true);
+        e.innerHTML = " <p>If you are reading this, it is because your browser does not support the audio element. We recommend that you get a new browser.</p> <p>";
+        document.body.appendChild(e);
+        }
+    }
+    
+    initAudioEle();
+    var e = 30;
+    var t = 30;
+    var n = 350;
+    var r = 350;
+
+    var curSongIndex = parseInt(document.getElementById("audio_element_id").getAttribute("curSongIndex"));
+    var i = songs[curSongIndex];
+    
+    var s = "mw-harlem_shake_me";
+    var o = "im_first";
+    var u = ["im_drunk", "im_baked", "im_trippin", "im_blown"];
+    var a = "mw-strobe_light";
+
+    /* harlem-shake-style.css，替换成你的位置，也可以直接使用：//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css */
+    var f = "//s3.amazonaws.com/moovweb-marketing/playground/harlem-shake-style.css";
+    
+    var l = "mw_added_css";
+    var b = g();
+    var w = y();
+    var C = document.getElementsByTagName("*");
+    var k = null;
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            if (E(A)) {
+                k = A;
+                break
+            }
+        }
+    }
+    if (A === null) {
+        console.warn("Could not find a node of the right size. Please try a different page.");
+        return
+    }
+    c();
+    S();
+    var O = [];
+    for (var L = 0; L < C.length; L++) {
+        var A = C[L];
+        if (v(A)) {
+            O.push(A)
+        }
+    }
+    })()'><i class="menu-item-icon fa fa-music fa-fw"></i>High一下</a> </li>
+          <!-- end High一下 -->
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav> </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tomcat安装配置与简单部署
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-07-05T10:00:00+08:00" content="2016-07-05">
+              2016-07-05
+            </time>
+          </span>
+          
+            <span class="post-updated">
+            &nbsp; | &nbsp; 更新于
+            <time itemprop="dateUpdated" datetime="2017-02-14T21:42:45+08:00" content="2017-02-14">
+              2017-02-14
+            </time>
+            </span>
+          
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/实践与总结/" itemprop="url" rel="index">
+                    <span itemprop="name">实践与总结</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+              &nbsp; | &nbsp;
+              <span class="page-pv">阅读次数 <i class="fa fa-eye"></i>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+              </span>
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Tomcat简介"><a href="#Tomcat简介" class="headerlink" title="Tomcat简介"></a>Tomcat简介</h1><blockquote>
+<p>Tomcat是一个免费开源的web服务器应用程序,使用java编程语言所编写，运行于jvm（java虚拟机）之上，轻量安全是其特性，适用于反访问量不大的中小型服务系统<br><a id="more"></a><br>Tomcat可以独立运行为一个web服务器，但其通常作为Apache web 服务的一个扩展，Apache处理html静态页面，tomcat处理动态内容</p>
+<p>如果您要了解这种技术的细节可以查阅<a href="http://tomcat.apache.org/tomcat-9.0-doc/index.html" target="_blank" rel="external">参考资料</a>。</p>
+</blockquote>
+<h1 id="Tomcat基础组件与框架"><a href="#Tomcat基础组件与框架" class="headerlink" title="Tomcat基础组件与框架"></a>Tomcat基础组件与框架</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">server：位于最外层，一个server即一个tomcat实例</div><div class="line">    connecter（连接器），为辅助组件，附加在引擎之上，将用户的请求定义至指定的虚拟主机</div><div class="line">    service：把连接器与引擎关联起来的组件</div><div class="line">    engine：运行虚拟主机的容器</div><div class="line">    host：虚拟主机</div><div class="line"></div><div class="line">    提醒：一个引擎内部可以定义多个虚拟主机，每个虚拟主机可定义多个context（别名）</div><div class="line">    </div><div class="line">    每个组件由“类”实现，分为如下几类：</div><div class="line">        顶级组件：server</div><div class="line">        服务组件：service</div><div class="line">        连接器组件：http，https，ajp</div><div class="line">        容器类：engine，host，context</div><div class="line"></div><div class="line">        被嵌套类组件：valve，logger，realm，loader，manager    </div><div class="line"></div><div class="line">    框架：    </div><div class="line">        <span class="tag">&lt;<span class="name">sever</span>&gt;</span>    </div><div class="line">            <span class="tag">&lt;<span class="name">service</span>&gt;</span>    </div><div class="line">                <span class="tag">&lt;<span class="name">connector</span>/&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">connectot</span>/&gt;</span></div><div class="line">                    <span class="tag">&lt;<span class="name">engine</span>&gt;</span></div><div class="line">                        <span class="tag">&lt;<span class="name">host</span>&gt;</span></div><div class="line">                            <span class="tag">&lt;<span class="name">context</span>/&gt;</span></div><div class="line">                            …</div><div class="line">                        <span class="tag">&lt;/<span class="name">host</span>&gt;</span></div><div class="line">                            …    </div><div class="line">                    <span class="tag">&lt;/<span class="name">engine</span>&gt;</span></div><div class="line">                <span class="tag">&lt;/<span class="name">service</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">server</span>&gt;</span></div></pre></td></tr></table></figure>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><blockquote>
+<p>准备一台虚拟机, 均为CentOS-7-x86_64最小化安装, iptables与SELinux均处于关闭状态, 配置好yum源(base和epel). 做好快照, 以便每次实验后快速恢复.</p>
+</blockquote>
+<h1 id="tomcat安装"><a href="#tomcat安装" class="headerlink" title="tomcat安装"></a>tomcat安装</h1><blockquote>
+<p>综上所述，tomcat是用Java语言研发，运行于jvm(java virtual machine)之上，所以要安装的话需要提供JDK开发平台。<br>由此，安装可分为两步：<br>JDK+tomcat</p>
+</blockquote>
+<h2 id="OracleJDK-Tomcat-binary"><a href="#OracleJDK-Tomcat-binary" class="headerlink" title="OracleJDK+Tomcat(binary)"></a>OracleJDK+Tomcat(binary)</h2><p>使用Oracle官方提供的JDK安装包和Apache官方提供的Tomcat二进制安装包来安装, 请自行去官方站点下载<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"># 安装OracleJDK</div><div class="line">[root@<span class="number">1478</span>a474 ~]# rpm -ivh jdk<span class="number">-7</span>u79-linux-x64.rpm </div><div class="line">Preparing...                          ################################# [<span class="number">100</span>%]</div><div class="line">Updating / installing...</div><div class="line">   <span class="number">1</span>:jdk<span class="number">-2000</span>:<span class="number">1.7</span><span class="number">.0</span>_79-fcs            ################################# [<span class="number">100</span>%]</div><div class="line">Unpacking JAR files...</div><div class="line">	rt.jar...</div><div class="line">	jsse.jar...</div><div class="line">	charsets.jar...</div><div class="line">	tools.jar...</div><div class="line">	localedata.jar...</div><div class="line">	jfxrt.jar...</div><div class="line">[root@<span class="number">1478</span>a474 ~]# java -version</div><div class="line">java version <span class="string">"1.7.0_79"</span></div><div class="line">Java(TM) SE Runtime Environment (build <span class="number">1.7</span><span class="number">.0</span>_79-b15)</div><div class="line">Java HotSpot(TM) <span class="number">64</span>-Bit Server VM (build <span class="number">24.79</span>-b02, mixed mode)</div><div class="line"># 安装Tomcat</div><div class="line">[root@<span class="number">1478</span>a474 ~]# tar -xf apache-tomcat<span class="number">-7.0</span><span class="number">.57</span>.tar.gz -C /usr/local/</div><div class="line">[root@<span class="number">1478</span>a474 ~]# ln -s apache-tomcat<span class="number">-7.0</span><span class="number">.57</span>/ /usr/local/tomcat</div><div class="line">[root@<span class="number">1478</span>a474 ~]# tree -L <span class="number">1</span> /usr/local/tomcat/</div><div class="line">/usr/local/tomcat/</div><div class="line">├── bin	# 脚本及启动时用到的类</div><div class="line">├── conf # 配置文件</div><div class="line">├── lib	# 类库</div><div class="line">├── LICENSE</div><div class="line">├── logs	# 日志文件</div><div class="line">├── NOTICE</div><div class="line">├── RELEASE-NOTES</div><div class="line">├── RUNNING.txt</div><div class="line">├── temp	# 临时文件</div><div class="line">├── webapps	# 应用程序默认部署目录</div><div class="line">└── work	# 工作目录, jsp代码编译成<span class="keyword">class</span>文件装入JVM运行, 生成<span class="keyword">class</span>文件就存放在此目录.</div><div class="line"></div><div class="line"><span class="number">7</span> directories, <span class="number">4</span> files</div><div class="line"># 需要导出环境变量</div><div class="line">[root@<span class="number">1478</span>a474 ~]# echo <span class="string">'export PATH=/usr/local/tomcat/bin:$PATH'</span> &gt; /etc/profile.d/tomcat.sh</div><div class="line">[root@<span class="number">1478</span>a474 ~]# exec bash</div><div class="line"># 似乎也不用特别设置CATALINA_BASE和JAVA_HOME环境变量, 都自动识别出来了.</div><div class="line">[root@<span class="number">1478</span>a474 ~]# catalina.sh version</div><div class="line">Using CATALINA_BASE:   /usr/local/tomcat</div><div class="line">Using CATALINA_HOME:   /usr/local/tomcat</div><div class="line">Using CATALINA_TMPDIR: /usr/local/tomcat/temp</div><div class="line">Using JRE_HOME:        /usr</div><div class="line">Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar</div><div class="line">Server version: Apache Tomcat/<span class="number">7.0</span><span class="number">.57</span></div><div class="line">Server built:   Nov <span class="number">3</span> <span class="number">2014</span> <span class="number">08</span>:<span class="number">39</span>:<span class="number">16</span> UTC</div><div class="line">Server number:  <span class="number">7.0</span><span class="number">.57</span><span class="number">.0</span></div><div class="line">OS Name:        Linux</div><div class="line">OS Version:     <span class="number">3.10</span><span class="number">.0</span><span class="number">-327.</span>el7.x86_64</div><div class="line">Architecture:   amd64</div><div class="line">JVM Version:    <span class="number">1.7</span><span class="number">.0</span>_79-b15</div><div class="line">JVM Vendor:     Oracle Corporation</div><div class="line"># 直接启动</div><div class="line">[root@<span class="number">1478</span>a474 ~]# catalina.sh start</div><div class="line">Using CATALINA_BASE:   /usr/local/tomcat</div><div class="line">Using CATALINA_HOME:   /usr/local/tomcat</div><div class="line">Using CATALINA_TMPDIR: /usr/local/tomcat/temp</div><div class="line">Using JRE_HOME:        /usr</div><div class="line">Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar</div><div class="line">Tomcat started.</div><div class="line"># 监听了三个端口, <span class="number">8080</span>是http监控端口, <span class="number">8009</span>是ajp协议监控端口, <span class="number">8005</span>端口是控制端口, 可以用来关闭tomcat. </div><div class="line">[root@<span class="number">1478</span>a474 ~]# ss -tnl</div><div class="line">State      Recv-Q Send-Q           Local Address:Port                          Peer Address:Port              </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                          *:<span class="number">22</span>                                       *:*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                  <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">25</span>                                       *:*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                         :::<span class="number">8009</span>                                    :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                         :::<span class="number">8080</span>                                    :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                         :::<span class="number">22</span>                                      :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                        ::<span class="number">1</span>:<span class="number">25</span>                                      :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">1</span>             ::ffff:<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">8005</span>                                    :::*</div><div class="line"># 可以看到JVM是以root用户身份启动的, 这个是不安全的. </div><div class="line"># 官方是建议使用普通用户来启动的, 这也是为什么默认使用<span class="number">8080</span>端口而不<span class="number">80</span>端口的原因, 因为只有管理员身份启动的进程才能监听在特权端口(<span class="number">1</span><span class="number">-1024</span>)上.</div><div class="line">[root@<span class="number">1478</span>a474 ~]# ps aux | grep -v grep | grep java</div><div class="line">root      <span class="number">30867</span>  <span class="number">3.6</span>  <span class="number">6.8</span> <span class="number">1544928</span> <span class="number">68260</span> pts/<span class="number">2</span>   Sl   <span class="number">21</span>:<span class="number">24</span>   <span class="number">0</span>:<span class="number">05</span> /usr/bin/java -Djava.util.logging.config.file=/usr/local/tomca......</div><div class="line"># 所以建立一个普通用户来启动tomcat</div><div class="line">[root@<span class="number">1478</span>a474 ~]# useradd -r tomcat</div><div class="line">[root@<span class="number">1478</span>a474 ~]# chown -R tomcat:tomcat /usr/local/tomcat/</div><div class="line">[root@<span class="number">1478</span>a474 ~]# ps aux | grep -v grep | grep java</div><div class="line">tomcat    <span class="number">31726</span>  <span class="number">167</span>  <span class="number">6.2</span> <span class="number">1343180</span> <span class="number">62448</span> ?       Sl   <span class="number">21</span>:<span class="number">44</span>   <span class="number">0</span>:<span class="number">03</span> /usr/bin/java -Djava.util.logging.config.file=/usr/local/tomca......</div></pre></td></tr></table></figure></p>
+<h2 id="yum源安装"><a href="#yum源安装" class="headerlink" title="yum源安装"></a>yum源安装</h2><p>使用centos官方yum中提供的OpenJDK与Tomcat安装包来安装.</p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"># 提供了三个版本的, 根据实际需要选择. 一般生产环境追求的是稳定, 不会激进地采用最新版本.</div><div class="line">[root@1478a474 ~]# yum list | grep -i openjdk</div><div class="line">java-<span class="number">1.6</span><span class="meta">.0</span>-openjdk.x86_64                   <span class="number">1</span>:<span class="number">1.6</span><span class="meta">.0</span><span class="meta">.36</span>-<span class="number">1.13</span><span class="meta">.8</span><span class="meta">.1</span>.el7_1  local    </div><div class="line">java-<span class="number">1.6</span><span class="meta">.0</span>-openjdk-demo.x86_64              <span class="number">1</span>:<span class="number">1.6</span><span class="meta">.0</span><span class="meta">.36</span>-<span class="number">1.13</span><span class="meta">.8</span><span class="meta">.1</span>.el7_1  local    </div><div class="line">java-<span class="number">1.6</span><span class="meta">.0</span>-openjdk-devel.x86_64             <span class="number">1</span>:<span class="number">1.6</span><span class="meta">.0</span><span class="meta">.36</span>-<span class="number">1.13</span><span class="meta">.8</span><span class="meta">.1</span>.el7_1  local    </div><div class="line">java-<span class="number">1.6</span><span class="meta">.0</span>-openjdk-javadoc.x86_64           <span class="number">1</span>:<span class="number">1.6</span><span class="meta">.0</span><span class="meta">.36</span>-<span class="number">1.13</span><span class="meta">.8</span><span class="meta">.1</span>.el7_1  local    </div><div class="line">java-<span class="number">1.6</span><span class="meta">.0</span>-openjdk-src.x86_64               <span class="number">1</span>:<span class="number">1.6</span><span class="meta">.0</span><span class="meta">.36</span>-<span class="number">1.13</span><span class="meta">.8</span><span class="meta">.1</span>.el7_1  local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk.x86_64                   <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-accessibility.x86_64     <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-demo.x86_64              <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-devel.x86_64             <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-headless.x86_64          <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-javadoc.noarch           <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-src.x86_64               <span class="number">1</span>:<span class="number">1.7</span><span class="meta">.0</span><span class="meta">.91</span>-<span class="number">2.6</span><span class="meta">.2</span><span class="meta">.3</span>.el7     local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk.x86_64                   <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-accessibility.x86_64     <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-accessibility-debug.x86_64</div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-debug.x86_64             <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-demo.x86_64              <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-demo-debug.x86_64        <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-devel.x86_64             <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-devel-debug.x86_64       <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-headless.x86_64          <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-headless-debug.x86_64    <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-javadoc.noarch           <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-javadoc-debug.noarch     <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-src.x86_64               <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local    </div><div class="line">java-<span class="number">1.8</span><span class="meta">.0</span>-openjdk-src-debug.x86_64         <span class="number">1</span>:<span class="number">1.8</span><span class="meta">.0</span><span class="meta">.65</span>-<span class="number">3.</span>b17.el7       local</div><div class="line"># 选择<span class="number">1.7</span>, 中庸之道.</div><div class="line">[root@1478a474 ~]# yum install -y java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-devel java-<span class="number">1.7</span><span class="meta">.0</span>-openjdk-headless</div><div class="line"># 再来安装tomcat</div><div class="line">[root@1478a474 ~]# yum install -y tomcat tomcat-lib tomcat-webapps tomcat-admin-webapps</div><div class="line"># 好像也不用配什么JAVA_HOME还有CATALINA_BASE这些环境变量, 直接就可以启动了.</div><div class="line">[root@1478a474 ~]# systemctl start tomcat.service</div><div class="line"># 这个<span class="number">8005</span>端口好像监听会慢一些, 总是得等一会才能看到. </div><div class="line">[root@1478a474 ~]# <span class="built_in">ss</span> -tnl</div><div class="line">State      Recv-Q Send-Q           Local Address:Port                          Peer Address:Port              </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                          *:<span class="number">22</span>                                       *:*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                  <span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">25</span>                                       *:*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                         :::<span class="number">8009</span>                                    :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                         :::<span class="number">8080</span>                                    :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">128</span>                         :::<span class="number">22</span>                                      :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">100</span>                        ::<span class="number">1</span>:<span class="number">25</span>                                      :::*                  </div><div class="line">LISTEN     <span class="number">0</span>      <span class="number">1</span>             ::ffff:<span class="number">127.0</span><span class="meta">.0</span><span class="meta">.1</span>:<span class="number">8005</span>                                    :::*</div><div class="line"># 如果要配的话, 除了可以配置环境变量, 也可以修改/etc/sysconfig/tomcat这个文件.</div><div class="line">[root@1478a474 ~]# cat /etc/sysconfig/tomcat</div><div class="line">...</div><div class="line"># Where your java installation lives</div><div class="line">#JAVA_HOME=<span class="string">"/usr/lib/jvm/java"</span></div><div class="line"></div><div class="line"># Where your tomcat installation lives</div><div class="line">#CATALINA_BASE=<span class="string">"/usr/share/tomcat"</span></div><div class="line">#CATALINA_HOME=<span class="string">"/usr/share/tomcat"</span></div><div class="line">#JASPER_HOME=<span class="string">"/usr/share/tomcat"</span></div><div class="line">#CATALINA_TMPDIR=<span class="string">"/var/cache/tomcat/temp"</span></div><div class="line"></div><div class="line"># 这里面还可以配置jvm的启动参数, 比如指定使用内存大小. </div><div class="line"># 这个在大内存的时候有用, 因为JVM有个32G内存限制, 使用超过32G内存性能反而会下降. </div><div class="line"># 所以如果内存超过32G时, 最好分多个JVM实例启动, 每个JVM实例使用不超过32G内存.</div><div class="line"># -Xms：初始值</div><div class="line"># -Xmx：最大值</div><div class="line"># -Xmn：最小值</div><div class="line">#JAVA_OPTS=<span class="string">"-Xms512m -Xmx1024m"</span></div><div class="line">...</div><div class="line"></div><div class="line"># 可以看到JVM是以tomcat用户身份启动的, 所以安全问题也不用操心了.</div><div class="line">[root@1478a474 ~]# ps aux | grep -v grep | grep java</div><div class="line">tomcat    <span class="number">30217</span>  <span class="number">1.8</span>  <span class="number">9.1</span> <span class="number">1932192</span> <span class="number">91672</span> ?       Ssl  <span class="number">20</span>:<span class="number">40</span>   <span class="number">0</span>:<span class="number">15</span> java -classpath /usr/share/tomcat/bin/bootstrap.jar:/usr/share/tomc...</div></pre></td></tr></table></figure>
+<h1 id="管理接口用户认证"><a href="#管理接口用户认证" class="headerlink" title="管理接口用户认证"></a>管理接口用户认证</h1><p>用浏览器打开<a href="http://172.18.71.130:8080" target="_blank" rel="external">http://172.18.71.130:8080</a>, 默认主页是tomcat的管理接口.</p>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat1.png" alt=""></p>
+<p>但是访问管理接口是需要通过身份认证的, 这需要在<code>tomcat-users.xml</code>配置角色/用户/口令. <code>yum</code>源安装时, 此文件是放在<code>/etc/tomcat</code>目录中, 二进制包安装时此文件是放在<code>/usr/local/tomcat/conf</code>目录中.<br><code>Server Status</code>是查看服务器运行状态的管理接口, 对应的角色是<code>manager-status</code>.<br><code>Manager App</code>是应用程序管理接口, 对应的角色是<code>manager-gui</code>.<br><code>Host Manager</code>是虚拟主机管理接口, 对应的角色是<code>admin-gui</code>.<br>为某管理接口创建认证用户就是要在<code>tomcat-users.xml</code>配置文件中创建用户和口令, 并属于对应的角色. 以为<code>Manager App</code>创建认证用户为例.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[root@1478a474 ~]# vim /etc/tomcat/tomcat-users.xml</div><div class="line"><span class="tag">&lt;<span class="name">tomcat-users</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">role</span> <span class="attr">rolename</span>=<span class="string">"manager-gui"</span>/&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">user</span> <span class="attr">username</span>=<span class="string">"tomcat"</span> <span class="attr">password</span>=<span class="string">"magedu"</span> <span class="attr">roles</span>=<span class="string">"manager-gui"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">tomcat-users</span>&gt;</span></div><div class="line">[root@1478a474 ~]# systemctl restart tomcat.service</div></pre></td></tr></table></figure></p>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat_2.gif" alt=""></p>
+<h1 id="应用部署"><a href="#应用部署" class="headerlink" title="应用部署"></a>应用部署</h1><p>在应用程序部署目录<code>webapps</code>下创建一个新应用<code>demo</code>.</p>
+<p><code>WEB-INF</code> 私有资源目录, 通常存放当前应用自用的<code>web.xml</code>.<br><code>META-INF</code> 私有资源目录, 通常存放当前应用自用的<code>context.xml</code>.<br><code>classes</code> 此应用的私有类.<br><code>lib</code> 此应用的私有类, 被打包为<code>jar</code>格式类.<br><code>index.jsp</code> 此应用的主页.</p>
+<figure class="highlight erb"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="xml">[root@1478a474 ~]# mkdir -p /var/lib/tomcat/webapps/demo/&#123;classes,META-INF,WEB-INF,lib&#125;</span></div><div class="line">[root@1478a474 ~]# cat <span class="tag">&lt;&lt; <span class="attr">EOF</span> &gt;</span> /var/lib/tomcat/webapps/demo/index.jsp</div><div class="line"><span class="tag">&lt;<span class="name">%</span></span><span class="ruby">@ page language=<span class="string">"java"</span> </span><span class="xml"><span class="tag">%&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>TomcatA<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">"red"</span>&gt;</span>TomcatA.magedu.com<span class="tag">&lt;/<span class="name">font</span>&gt;</span><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">align</span>=<span class="string">"centre"</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>Session ID<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">%</span></span><span class="ruby"> session.setAttribute(<span class="string">"magedu.com"</span>,<span class="string">"magedu.com"</span>); </span><span class="xml"><span class="tag">%&gt;</span></span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span></span><span class="ruby"> session.getId() </span><span class="xml"><span class="tag">%&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></div><div class="line">      <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>Created on<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span></span><span class="ruby"> session.getCreationTime() </span><span class="xml"><span class="tag">%&gt;</span><span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></div><div class="line">     <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div><div class="line">EOF</div></pre></td></tr></table></figure>
+<p><img src="http://o9c1bfnxp.bkt.clouddn.com/2016-07-tomcat/tomcat3.png" alt=""></p>
+<h1 id="虚拟主机"><a href="#虚拟主机" class="headerlink" title="虚拟主机"></a>虚拟主机</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">[root@1478a474 ~]# vim /etc/tomcat/server.xml</div><div class="line">...</div><div class="line"><span class="comment">&lt;!-- 将默认虚拟主机改为自定义的虚拟主机www.twoyang.net --&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">Engine</span> <span class="attr">name</span>=<span class="string">"Catalina"</span> <span class="attr">defaultHost</span>=<span class="string">"www.twoyang.net"</span>&gt;</span></div><div class="line">  ...</div><div class="line">  <span class="tag">&lt;<span class="name">Host</span> <span class="attr">name</span>=<span class="string">"localhost"</span>  <span class="attr">appBase</span>=<span class="string">"webapps"</span></span></div><div class="line">        <span class="attr">unpackWARs</span>=<span class="string">"true"</span> <span class="attr">autoDeploy</span>=<span class="string">"true"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">Valve</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> <span class="attr">directory</span>=<span class="string">"logs"</span></span></div><div class="line">           <span class="attr">prefix</span>=<span class="string">"localhost_access_log."</span> <span class="attr">suffix</span>=<span class="string">".txt"</span></div><div class="line">           <span class="attr">pattern</span>=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</div><div class="line"></div><div class="line">  <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></div><div class="line">  <span class="comment">&lt;!-- 自定义虚拟主机www.twoyang.net, 应用基础路径为/data/webapps. --&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Host</span> <span class="attr">name</span>=<span class="string">"www.twoyang.net"</span>  <span class="attr">appBase</span>=<span class="string">"/data/webapps"</span></span></div><div class="line">        <span class="attr">unpackWARs</span>=<span class="string">"true"</span> <span class="attr">autoDeploy</span>=<span class="string">"true"</span>&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">Valve</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> <span class="attr">directory</span>=<span class="string">"logs"</span></span></div><div class="line">           <span class="attr">prefix</span>=<span class="string">"localhost_access_log."</span> <span class="attr">suffix</span>=<span class="string">".txt"</span></div><div class="line">           <span class="attr">pattern</span>=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</div><div class="line">  <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Engine</span>&gt;</span></div><div class="line">...</div><div class="line"></div><div class="line">[root@1478a474 ~]# mkdir -p /data/webapps</div><div class="line">[root@1478a474 ~]# mv /var/lib/tomcat/webapps/demo/ /data/webapps/</div><div class="line">[root@1478a474 ~]# chown -R tomcat:tomcat /data/webapps</div><div class="line">[root@1478a474 ~]# systemctl restart tomcat.service</div><div class="line"># 增加本地对www.twoyang.net的解析</div><div class="line">[root@1478a474 ~]# echo "172.18.71.130 www.twoyang.net" &gt;&gt; /etc/hosts</div><div class="line">[root@1478a474 ~]# curl http://www.twoyang.net:8080/demo/</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>TomcatA<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">font</span> <span class="attr">color</span>=<span class="string">"red"</span>&gt;</span>TomcatA.magedu.com<span class="tag">&lt;/<span class="name">font</span>&gt;</span><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">align</span>=<span class="string">"centre"</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>Session ID<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">    </div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>B733951E170B4A86839C70C9C633EB2B<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">      <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>Created on<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">td</span>&gt;</span>1465651810125<span class="tag">&lt;/<span class="name">td</span>&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>#反向代理</p>
+<p>使用<code>nginx</code>或<code>haproxy</code>作为前端反向代理时, 只能走<code>http</code>协议. 只有使用<code>httpd</code>作为前端反向代理时, 才能走<code>ajp</code>协议.<br>而通过<code>httpd</code>来向后做反向代理时, 可以分为几种模块, 一种是通过<code>mode_proxy_http</code>模块, 一种是通过<code>mode_proxy_ajp</code>模块, 还有一种是用过<code>mod_jk</code>模块. 其中第三种模块是一种比较老的方式, 多见于一些较老的<code>httpd</code>版本, 后来已经被<code>mode_proxy_ajp</code>模块所取代, 但是目前仍然有一些企业在使用.<br>不过既然后来已经被淘汰了, 就不演示它了, 真的要用了再去研究吧. 只演示一下使用<code>httpd</code>分别通过<code>http</code>协议和<code>ajp</code>协议来进行反向代理.</p>
+<h2 id="mode-proxy-http"><a href="#mode-proxy-http" class="headerlink" title="mode_proxy_http"></a>mode_proxy_http</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># yum install -y httpd</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># httpd -M | grep proxy_http</span></div><div class="line"> proxy_http_module (shared)</div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># vim /etc/httpd/conf.d/proxy_http.conf</span></div><div class="line"><span class="comment"># 用于控制在http首部是否使用Via, 主要用于在多级代理中控制代理请求的流向.</span></div><div class="line"><span class="comment"># 默认为Off, 即不启用此功能; On表示每个请求和响应报文均添加Via.</span></div><div class="line"><span class="comment"># Full表示每个Via行都会添加当前apache服务器的版本号信息.</span></div><div class="line"><span class="comment"># Block表示每个代理请求报文中的Via都会被移除.</span></div><div class="line">ProxyVia Off</div><div class="line"><span class="comment"># 是否开启apache正向代理的功能, 启用此项时为了代理http协议必须启用mod_proxy_http模块.</span></div><div class="line"><span class="comment"># 同时, 如果为apache设置了ProxyPass, 则必须将ProxyRequests设置为Off.</span></div><div class="line">ProxyRequests Off</div><div class="line"><span class="comment"># 如果启用此功能, 代理会将用户请求报文中的Host行发送给后端的服务器, 而不再使用ProxyPass指定的服务器地址.</span></div><div class="line"><span class="comment"># 如果想在反向代理中支持虚拟主机, 则需要开启此项, 否则就无需打开此功能.</span></div><div class="line">ProxyPreserveHost Off</div><div class="line"><span class="comment"># 将请求反向代理至后端主机</span></div><div class="line">ProxyPass / http://172.18.71.130:8080/</div><div class="line"><span class="comment"># 用于让apache调整HTTP重定向响应报文中的Location, Content-Location及URI标签所对应的URL.</span></div><div class="line"><span class="comment"># 在反向代理环境中必须使用此指令避免重定向报文绕过proxy服务器.</span></div><div class="line">ProxyPassReverse / http://172.18.71.130:8080/</div><div class="line"><span class="variable">&lt;Proxy *&gt;</span></div><div class="line">  Require all granted</div><div class="line"><span class="variable">&lt;/Proxy&gt;</span></div><div class="line"><span class="variable">&lt;Location  / &gt;</span></div><div class="line">  Require all granted</div><div class="line"><span class="variable">&lt;/Location&gt;</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># httpd -t</span></div><div class="line">Syntax OK</div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># systemctl start httpd.service</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># ss -tnl | grep -w 80</span></div><div class="line">LISTEN     0      128         :::80                      :::<span class="symbol">*</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># curl http://172.18.71.130/demo/</span></div><div class="line"></div><div class="line"><span class="variable">&lt;html&gt;</span></div><div class="line">  <span class="variable">&lt;head&gt;</span><span class="variable">&lt;title&gt;</span>TomcatA<span class="variable">&lt;/title&gt;</span><span class="variable">&lt;/head&gt;</span></div><div class="line">  <span class="variable">&lt;body&gt;</span></div><div class="line">    <span class="variable">&lt;h1&gt;</span><span class="variable">&lt;font color="red"&gt;</span>TomcatA.magedu.com<span class="variable">&lt;/font&gt;</span><span class="variable">&lt;/h1&gt;</span></div><div class="line">    <span class="variable">&lt;table align="centre" border="1"&gt;</span></div><div class="line">      <span class="variable">&lt;tr&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>Session ID<span class="variable">&lt;/td&gt;</span></div><div class="line">    </div><div class="line">        <span class="variable">&lt;td&gt;</span>BADEAC947662D40AF3B7662014B10742<span class="variable">&lt;/td&gt;</span></div><div class="line">      <span class="variable">&lt;/tr&gt;</span></div><div class="line">      <span class="variable">&lt;tr&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>Created on<span class="variable">&lt;/td&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>1465654377253<span class="variable">&lt;/td&gt;</span></div><div class="line">     <span class="variable">&lt;/tr&gt;</span></div><div class="line">    <span class="variable">&lt;/table&gt;</span></div><div class="line">  <span class="variable">&lt;/body&gt;</span></div><div class="line"><span class="variable">&lt;/html&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="mode-proxy-ajp"><a href="#mode-proxy-ajp" class="headerlink" title="mode_proxy_ajp"></a>mode_proxy_ajp</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># yum install -y httpd</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># httpd -M | grep proxy_ajp</span></div><div class="line"> proxy_ajp_module (shared)</div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># mv /etc/httpd/conf.d/proxy_http.conf&#123;,.bak&#125;</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># vim /etc/httpd/conf.d/proxy_ajp.conf</span></div><div class="line">ProxyVia Off</div><div class="line">ProxyRequests Off</div><div class="line">ProxyPreserveHost Off</div><div class="line"><span class="comment"># 与走http协议的配置基本一致, 只是这个地方需要使用ajp协议和响应的8009端口.</span></div><div class="line">ProxyPass / ajp://172.18.71.130:8009/</div><div class="line">ProxyPassReverse / ajp://172.18.71.130:8009/</div><div class="line"><span class="variable">&lt;Proxy *&gt;</span></div><div class="line">  Require all granted</div><div class="line"><span class="variable">&lt;/Proxy&gt;</span></div><div class="line"><span class="variable">&lt;Location  / &gt;</span></div><div class="line">  Require all granted</div><div class="line"><span class="variable">&lt;/Location&gt;</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># httpd -t</span></div><div class="line">Syntax OK</div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># systemctl restart httpd.service</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># ss -tnl | grep -w 80</span></div><div class="line">LISTEN     0      128         :::80                      :::<span class="symbol">*</span></div><div class="line">[root<span class="meta">@1478a474</span> ~]<span class="comment"># curl http://172.18.71.130/demo/</span></div><div class="line"></div><div class="line"><span class="variable">&lt;html&gt;</span></div><div class="line">  <span class="variable">&lt;head&gt;</span><span class="variable">&lt;title&gt;</span>TomcatA<span class="variable">&lt;/title&gt;</span><span class="variable">&lt;/head&gt;</span></div><div class="line">  <span class="variable">&lt;body&gt;</span></div><div class="line">    <span class="variable">&lt;h1&gt;</span><span class="variable">&lt;font color="red"&gt;</span>TomcatA.magedu.com<span class="variable">&lt;/font&gt;</span><span class="variable">&lt;/h1&gt;</span></div><div class="line">    <span class="variable">&lt;table align="centre" border="1"&gt;</span></div><div class="line">      <span class="variable">&lt;tr&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>Session ID<span class="variable">&lt;/td&gt;</span></div><div class="line">    </div><div class="line">        <span class="variable">&lt;td&gt;</span>BADEAC947662D40AF3B7662014B10742<span class="variable">&lt;/td&gt;</span></div><div class="line">      <span class="variable">&lt;/tr&gt;</span></div><div class="line">      <span class="variable">&lt;tr&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>Created on<span class="variable">&lt;/td&gt;</span></div><div class="line">        <span class="variable">&lt;td&gt;</span>1465654377253<span class="variable">&lt;/td&gt;</span></div><div class="line">     <span class="variable">&lt;/tr&gt;</span></div><div class="line">    <span class="variable">&lt;/table&gt;</span></div><div class="line">  <span class="variable">&lt;/body&gt;</span></div><div class="line"><span class="variable">&lt;/html&gt;</span></div></pre></td></tr></table></figure>
+<p>其实<code>tomcat</code>一侧也是需要配置的, 只不过<code>tomcat</code>有默认的<code>Connector</code>配置. 如果<code>tomcat</code>没有使用默认配置, 那么<code>httpd</code>也需要做相应修改.<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@1478a474 ~]# vim /etc/tomcat/server.xml</div><div class="line"><span class="tag">&lt;<span class="name">Service</span> <span class="attr">name</span>=<span class="string">"Catalina"</span>&gt;</span></div><div class="line">...</div><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span></span></div><div class="line">               <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span></div><div class="line">               <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8009"</span> <span class="attr">protocol</span>=<span class="string">"AJP/1.3"</span> <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></div><div class="line">...</div><div class="line"><span class="tag">&lt;/<span class="name">Service</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>参考<a href="http://twoyang.net" target="_blank" rel="external">http://twoyang.net</a></p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>连1毛钱都不给我?！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-image.jpg" alt="Yort WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-image.jpg" alt="Yort Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+<footer class="post-footer">
+
+    
+
+    
+        <div class="copyright" style="clear:both;">
+           <h3>文档信息</h3>
+           <p><span>文章作者: </span><a href="/" title="访问 Yort 的个人博客"> Yort</a></p>
+           <p><span>文章标题：</span><a href="/posts/977dfd0f/">Tomcat安装配置与简单部署</a></p>
+           <p><span>原文链接：</span><a href="/posts/977dfd0f/" title="Tomcat安装配置与简单部署">http://yort.xin/posts/977dfd0f/</a></p>
+           <p><span>版权声明：</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" title="自由转载-非商用-非衍生-保持署名 (创意共享3.0许可证)">自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</a></p>
+           <p><strong>为方便溯源，避免陈旧错误知识的误导，转载请保留以上信息</strong></p>
+        </div>
+    
+
+    
+
+    
+        <div class="post-tags">
+          
+            <a href="/tags/web/" rel="tag">#web</a>
+          
+        </div>
+    
+         
+
+        <div class="posts-recommend">
+            <h3>更多文章</h3>
+               <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/posts/638d5663/">KVM虚拟Mac OS X Sierra</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/eb0f8299/">samba服务器搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/7b381b54/">Python函数定义&调用</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/110e9b1f/">lnmp环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/ecf0dfea/">Django小项目之留言板</a></li><li class="post-list-item"><a class="post-list-link" href="/posts/37f2eeef/">Python进阶</a></li></ul>  
+        </div>
+
+    
+
+    
+
+    
+  
+  
+</footer>
+
+
+
+
+  </article>
+
+
+
+
+
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="Yort" />
+          <p class="site-author-name" itemprop="name">Yort</p>
+          <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为却安慰自己平凡可贵。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">34</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyongtao" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:zhaozyt@foxmail.com" target="_blank" title="Email">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                  Email
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.liaoxuefeng.com/" title="廖雪峰" target="_blank">廖雪峰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/yort2016" title="写Python的博客" target="_blank">写Python的博客</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/z_yttt" title="写其它杂事的博客" target="_blank">写其它杂事的博客</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Tomcat简介"><span class="nav-number">1.</span> <span class="nav-text">Tomcat简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tomcat基础组件与框架"><span class="nav-number">2.</span> <span class="nav-text">Tomcat基础组件与框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备工作"><span class="nav-number">3.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tomcat安装"><span class="nav-number">4.</span> <span class="nav-text">tomcat安装</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OracleJDK-Tomcat-binary"><span class="nav-number">4.1.</span> <span class="nav-text">OracleJDK+Tomcat(binary)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yum源安装"><span class="nav-number">4.2.</span> <span class="nav-text">yum源安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#管理接口用户认证"><span class="nav-number">5.</span> <span class="nav-text">管理接口用户认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用部署"><span class="nav-number">6.</span> <span class="nav-text">应用部署</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟主机"><span class="nav-number">7.</span> <span class="nav-text">虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#mode-proxy-http"><span class="nav-number">7.1.</span> <span class="nav-text">mode_proxy_http</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mode-proxy-ajp"><span class="nav-number">7.2.</span> <span class="nav-text">mode_proxy_ajp</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yort</span>
+</div>
+
+
+<div>
+<span id="sitetime"></span>
+<script language=javascript>
+function siteTime(){
+window.setTimeout("siteTime()", 1000);
+var seconds = 1000
+var minutes = seconds * 60
+var hours = minutes * 60
+var days = hours * 24
+var years = days * 365
+var today = new Date()
+var todayYear = today.getFullYear()
+var todayMonth = today.getMonth()
+var todayDate = today.getDate()
+var todayHour = today.getHours()
+var todayMinute = today.getMinutes()
+var todaySecond = today.getSeconds()
+/* Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+year - 作为date对象的年份，为4位年份值
+month - 0-11之间的整数，做为date对象的月份
+day - 1-31之间的整数，做为date对象的天数
+hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+minutes - 0-59之间的整数，做为date对象的分钟数
+seconds - 0-59之间的整数，做为date对象的秒数
+microseconds - 0-999之间的整数，做为date对象的毫秒数 */
+var t1 = Date.UTC(2016,05,14,11,19,00)
+var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond)
+var diff = t2-t1
+var diffYears = Math.floor(diff/years)
+var diffDays = Math.floor((diff/days)-diffYears*365)
+var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours)
+var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes)
+var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds)
+document.getElementById("sitetime").innerHTML=" 本站已运行 "+diffYears+" 年 "+diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒"
+}
+siteTime()
+</script>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">本站访客数 <i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span>人次</span>
+  
+
+  
+    <span class="site-pv">本站总点击 <i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span>次</span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+       search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+    'use strict';
+    $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+            // get the contents from search data
+            isfetched = true;
+            $('.popup').detach().appendTo('.header-inner');
+            var datas = $( "entry", xmlResponse ).map(function() {
+                return {
+                    title: $( "title", this ).text(),
+                    content: $("content",this).text(),
+                    url: $( "url" , this).text()
+                };
+            }).get();
+            var $input = document.getElementById(search_id);
+            var $resultContent = document.getElementById(content_id);
+            $input.addEventListener('input', function(){
+                var matchcounts = 0;
+                var str='<ul class=\"search-result-list\">';
+                var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                $resultContent.innerHTML = "";
+                if (this.value.trim().length > 1) {
+                // perform local searching
+                datas.forEach(function(data) {
+                    var isMatch = true;
+                    var content_index = [];
+                    var data_title = data.title.trim().toLowerCase();
+                    var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                    var data_url = data.url;
+                    var index_title = -1;
+                    var index_content = -1;
+                    var first_occur = -1;
+                    // only match artiles with not empty titles and contents
+                    if(data_title != '' && data_content != '') {
+                        keywords.forEach(function(keyword, i) {
+                            index_title = data_title.indexOf(keyword);
+                            index_content = data_content.indexOf(keyword);
+                            if( index_title < 0 && index_content < 0 ){
+                                isMatch = false;
+                            } else {
+                                if (index_content < 0) {
+                                    index_content = 0;
+                                }
+                                if (i == 0) {
+                                    first_occur = index_content;
+                                }
+                            }
+                        });
+                    }
+                    // show search results
+                    if (isMatch) {
+                        matchcounts += 1;
+                        str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                        var content = data.content.trim().replace(/<[^>]+>/g,"");
+                        if (first_occur >= 0) {
+                            // cut out 100 characters
+                            var start = first_occur - 20;
+                            var end = first_occur + 80;
+                            if(start < 0){
+                                start = 0;
+                            }
+                            if(start == 0){
+                                end = 50;
+                            }
+                            if(end > content.length){
+                                end = content.length;
+                            }
+                            var match_content = content.substring(start, end);
+                            // highlight all keywords
+                            keywords.forEach(function(keyword){
+                                var regS = new RegExp(keyword, "gi");
+                                match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                            });
+
+                            str += "<p class=\"search-result\">" + match_content +"...</p>"
+                        }
+                        str += "</li>";
+                    }
+                })};
+                str += "</ul>";
+                if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+                if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+                $resultContent.innerHTML = str;
+            });
+            proceedsearch();
+        }
+    });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script type="text/javascript" async src="//push.zhanzhang.baidu.com/push.js">
+</script>
+
+
+<!-- 背景动画 -->
+<!-- script type="text/javascript" src="/js/src/particle.js"></script -->
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

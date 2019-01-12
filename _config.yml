@@ -1,0 +1,110 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: Yort's Blog
+subtitle:
+description: 最怕一生碌碌无为却安慰自己平凡可贵。
+author: Yort
+language: zh-Hans
+timezone:
+
+# URL
+## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
+url: http://yort.xin
+root: /
+#permalink: :year/:month/:day/:title/ 文章链接
+permalink: posts/:abbrlink/
+permalink_defaults:
+
+# abbrlink config 文章链接唯一化
+abbrlink:
+  alg: crc32  # 算法：crc16(default) and crc32 
+  rep: hex    # 进制：dec(default) and hex
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# Writing
+new_post_name: :title.md # File name of new posts
+default_layout: post
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: true
+  tab_replace:
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 10
+pagination_dir: page
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+theme: next
+
+# 站内搜索
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+
+#头像
+avatar: /images/avatar.png
+
+# 自动生成sitemap
+sitemap:
+  path: sitemap.xml
+baidusitemap:
+  path: baidusitemap.xml
+
+#多说
+#duoshuo_shortname: zhaoyongtao
+
+# 多说分享服务
+duoshuo_share: false
+
+# JiaThis 分享服务
+#jiathis: true
+
+# 百度分享服务
+#baidushare: true
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: 
+    coding: git@git.coding.net:zhaoyongtao/zhaoyongtao.git,master
+    #github: https://github.com/zhaoyongtao/zhaoyongtao.github.io.git,master
+    github: git@github.com:zhaoyongtao/zhaoyongtao.github.io.git,master
+    oschina: git@git.oschina.net:yort/blog.git,master
